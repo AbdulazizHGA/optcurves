@@ -7,7 +7,7 @@ abstract: >-
   steps, for L-smooth convex and strongly convex functions.
 type: software
 authors:
-  - name: "Abdulaziz"
+  - given-names: "Abdulaziz"
     email: abdulaziz787hlal@gmail.com
 version: 0.1.0
 date-released: 2026-10-19
