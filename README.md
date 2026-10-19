@@ -1,5 +1,8 @@
 # optcurves: can the gradient-descent optimization curve be concave several steps in a row?
 
+[![Lean](https://github.com/AbdulazizHGA/optcurves/actions/workflows/lean.yml/badge.svg)](https://github.com/AbdulazizHGA/optcurves/actions/workflows/lean.yml)
+[![Python](https://github.com/AbdulazizHGA/optcurves/actions/workflows/python.yml/badge.svg)](https://github.com/AbdulazizHGA/optcurves/actions/workflows/python.yml)
+
 Gradient descent with constant step size h/L on an L-smooth convex function produces values f(x₀), f(x₁), f(x₂), …
 Barzilai, Shamir and Zamani ([TMLR 2025, arXiv:2503.10138](https://arxiv.org/abs/2503.10138)) showed that this
 *optimization curve* is convex for every h ≤ 1.75, and that it can fail to be convex for 1.75 < h < 2. They left open
@@ -72,9 +75,10 @@ All six declarations depend only on `[propext, Classical.choice, Quot.sound]`.
 * **Scope.** The hypothesis `hI` is the interpolation inequality of 1-smooth convex functions,
   f_j + ⟨g_j, x_i − x_j⟩ + ½‖g_i − g_j‖² ≤ f_i, between every two iterates. Every 1-smooth convex function satisfies
   it (Nesterov 2004, Thm. 2.1.5), but that bridge lemma is **not** formalized here.
-* **Checked by:** Lean 4.35.0 + Mathlib on live.lean-lang.org (19 Oct 2026). The
-  [Lean workflow](.github/workflows/lean.yml) (`leanprover/lean-action` with the Mathlib cache and `axiom-audit`,
-  plus a script that checks every `#print axioms` line) is pending its first run.
+* **Checked by:** the [Lean workflow](.github/workflows/lean.yml) on every push: Lean 4.35.0 with Mathlib
+  v4.35.0, `leanprover/lean-action` with `axiom-audit` (all declarations under `Optcurves` within the three
+  standard axioms), plus [scripts/check_axioms.py](scripts/check_axioms.py), which checks every `#print axioms`
+  line. Also checked on live.lean-lang.org (19 Oct 2026).
 
 ### 3. A picture of two consecutive violations `[exact]`
 
