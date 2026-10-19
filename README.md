@@ -1,7 +1,23 @@
-# optcurves: can the gradient-descent optimization curve be concave several steps in a row?
+# optcurves: gradient descent optimization curves, convexity and consecutive violations
 
 [![Lean](https://github.com/AbdulazizHGA/optcurves/actions/workflows/lean.yml/badge.svg)](https://github.com/AbdulazizHGA/optcurves/actions/workflows/lean.yml)
 [![Python](https://github.com/AbdulazizHGA/optcurves/actions/workflows/python.yml/badge.svg)](https://github.com/AbdulazizHGA/optcurves/actions/workflows/python.yml)
+
+`optcurves` studies **consecutive convexity violations of gradient descent optimization curves** for smooth
+convex and strongly convex functions. It combines **performance estimation problems (PEP)** using PEPit and
+semidefinite programming with **exact rational certificates**, counterexamples, and selected **Lean 4 formal
+proofs**. This repository includes the Python code, research data, figures, and reproducible experiments.
+
+**بالعربية:** يدرس المشروع تحدّب منحنيات التحسين في طريقة الانحدار التدريجي، ومتى يمكن فقدان التحدّب في خطوات
+متتالية للدوال المحدبة وقوية التحدّب. ويشمل تقدير الأداء، وشهادات رياضية بحساب كسري دقيق، وأمثلة مضادة،
+وبراهين مختارة متحقّقًا منها في Lean 4. [اقرأ الملخص العربي](#ملخص-بالعربية).
+
+[Results](#results) · [Method](#method) · [Reproduce](#reproduce) ·
+[Related work](#related-work-and-literature-check) · [Citation and license](#citation-and-license)
+
+## Research question
+
+**Can the gradient descent optimization curve be concave for several consecutive steps?**
 
 Gradient descent with constant step size h/L on an L-smooth convex function produces values f(x₀), f(x₁), f(x₂), …
 Barzilai, Shamir and Zamani ([TMLR 2025, arXiv:2503.10138](https://arxiv.org/abs/2503.10138)) showed that this

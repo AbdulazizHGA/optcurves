@@ -6,6 +6,8 @@ abstract: >-
   when the optimization curve of gradient descent with constant step size can be concave at several consecutive
   steps, for L-smooth convex and strongly convex functions.
 type: software
+url: "https://github.com/AbdulazizHGA/optcurves"
+repository-code: "https://github.com/AbdulazizHGA/optcurves"
 authors:
   - given-names: "Abdulaziz"
     email: abdulaziz787hlal@gmail.com
@@ -15,8 +17,15 @@ license: Apache-2.0
 keywords:
   - gradient descent
   - optimization curve
+  - consecutive convexity violations
   - performance estimation
+  - PEPit
+  - semidefinite programming
   - convex optimization
+  - strongly convex functions
+  - exact rational certificates
+  - counterexamples
+  - formal verification
   - Lean 4
 references:
   - type: article

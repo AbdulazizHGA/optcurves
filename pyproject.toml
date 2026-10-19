@@ -9,6 +9,19 @@ description = "Consecutive convexity violations of gradient-descent optimization
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.10"
+keywords = [
+    "gradient descent",
+    "optimization curves",
+    "convex optimization",
+    "strong convexity",
+    "performance estimation",
+    "PEPit",
+    "semidefinite programming",
+    "exact certificates",
+    "counterexamples",
+    "Lean 4",
+    "formal verification",
+]
 dependencies = [
     "PEPit>=0.5.1",
     "cvxpy>=1.9",
@@ -19,6 +32,12 @@ dependencies = [
     "scipy>=1.14",
     "matplotlib>=3.9",
 ]
+
+[project.urls]
+Repository = "https://github.com/AbdulazizHGA/optcurves"
+Documentation = "https://github.com/AbdulazizHGA/optcurves#readme"
+Issues = "https://github.com/AbdulazizHGA/optcurves/issues"
+Citation = "https://github.com/AbdulazizHGA/optcurves/blob/main/CITATION.cff"
 
 [project.optional-dependencies]
 test = ["pytest>=8"]
