@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: "If you use this software or its results, please cite it as below."
+title: "optcurves: consecutive convexity violations of gradient-descent optimization curves"
+abstract: >-
+  Performance-estimation study, exact rational certificates and counterexamples, and Lean-verified theorems on
+  when the optimization curve of gradient descent with constant step size can be concave at several consecutive
+  steps, for L-smooth convex and strongly convex functions.
+type: software
+authors:
+  - name: "Lursha Dev"
+    email: usa99921@gmail.com
+version: 0.1.0
+date-released: 2026-10-19
+license: Apache-2.0
+keywords:
+  - gradient descent
+  - optimization curve
+  - performance estimation
+  - convex optimization
+  - Lean 4
+references:
+  - type: article
+    title: "Are Convex Optimization Curves Convex?"
+    authors:
+      - family-names: Barzilai
+        given-names: Guy
+      - family-names: Shamir
+        given-names: Ohad
+      - family-names: Zamani
+        given-names: Moslem
+    journal: "Transactions on Machine Learning Research"
+    year: 2025
+    identifiers:
+      - type: other
+        value: "arXiv:2503.10138"
