@@ -115,7 +115,7 @@ For L-smooth μ-strongly convex f (κ = L/μ), the threshold for n consecutive v
 as κ → 1. It matches all 30 computed values (κ from 1.05 to 10⁴) within 4.3 × 10⁻⁶, the size of the bisection
 tolerance; it was found by fitting integer quadratics to the numbers and is **not proved**. Every h_n(κ) we computed
 is larger than its convex counterpart and decreases in κ. For 17 of the 92 thresholds, all with κ ≤ 3, at most 8 of the
-roughly 25 solves fell back to SCS; the count is stored next to every threshold in
+29 solves fell back to SCS; the count is stored next to every threshold in
 [results/strong.json](results/strong.json).
 
 ![Thresholds against the condition number](figures/strong_threshold.png)
