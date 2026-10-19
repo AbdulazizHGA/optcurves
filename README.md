@@ -112,7 +112,7 @@ A second plottable example, three consecutive violations at h = 199/100 in ℝ²
 local search (200 starts) found no strictly feasible one-dimensional example at h = 1.9 (n = 2) or h = 1.99 (n = 3);
 this is not a proof that one dimension is impossible.
 
-### 4. Strongly convex functions `[numerical]`, with a conjectured closed form
+### 4. Strongly convex functions `[numerical]`, a conjectured closed form, and an exact check at κ = 7/5
 
 For L-smooth μ-strongly convex f (κ = L/μ), the threshold for n consecutive violations, PEP with ‖x₀ − x*‖ ≤ 1:
 
@@ -134,6 +134,36 @@ is larger than its convex counterpart and decreases in κ. For 17 of the 92 thre
 29 solves fell back to SCS; the count is stored next to every threshold in
 [results/strong.json](results/strong.json).
 
+**Exact check at κ = 7/5 `[exact]`.** There the conjecture gives the rational value h₁ = 9/5, so it can be tested in
+exact arithmetic. One violation v₁ > 0 for 1-smooth 5/7-strongly convex f ("impossible": for every such f on any
+real inner-product space and every starting point; "possible": for some f: ℝ → ℝ):
+
+| h | v₁ > 0 | evidence |
+|---|---|---|
+| 9/5 − 10⁻ᵏ, k = 3, 4, 5, 6 | impossible | certificate with positive definite Gram part |
+| **9/5** | **impossible**, and v₁ = 0 is attained | tight certificate, below |
+| 9/5 + 10⁻ᵏ, k = 3, 4, 5, 6 | possible | counterexample in ℚ¹ |
+
+So **h₁(7/5) ∈ [9/5, 9/5 + 10⁻⁶]** in the sense of section 1 (no monotonicity in h is proved), and the left end is
+the conjectured value itself. With the interpolation inequalities of 1-smooth μ-strongly convex functions
+(Taylor, Hendrickx and Glineur 2017, Thm. 4)
+
+Q_pq = f_p − f_q − ⟨g_q, x_p − x_q⟩ − (‖g_p − g_q‖² + μ‖x_p − x_q‖² − 2μ⟨g_p − g_q, x_p − x_q⟩) / (2(1 − μ)) ≥ 0,
+
+the certificate at h = 9/5 is the identity (in x₀, g₀, g₁, g₂, f₀, f₁, f₂, with x₁ = x₀ − (9/5)g₀ and x₂ = x₁ − (9/5)g₁)
+
+v₁ + (8/5) Q₀₁ + (3/5) Q₂₀ + (2/5) Q₂₁ + (89/50) ‖g₀ + (139/89) g₁ + (15/89) g₂‖² + (245/356) ‖g₁ + (11/7) g₂‖² = 0.
+
+Its Gram part has rank 2 with null vector (16, −11, 7), and the bound v₁ ≤ 0 is sharp: the one-dimensional data
+x* = 0, x₀ = 1, g = (1, −11/16, 7/16), f = (1/2, 305/1024, 49/512) satisfy every interpolation inequality and have
+v₁ = 0. Unlike the convex case, linear functions are not in the class, so no facial reduction is needed and the
+certificates below 9/5 have a positive definite Gram part. Above 9/5 the max-slack SDP optimum has numerical rank 1,
+with gradients close to (16, −11, 7)/16, hence the one-dimensional counterexamples. Files: the entries with
+`"mu": "5/7"` in [certificates/](certificates/) and [counterexamples/](counterexamples/), written by
+`python -m optcurves.certificate` and `python -m optcurves.counterexample`. This is a single value of κ; the closed
+form for h₁(κ) remains a conjecture. (The PEP bisection at κ = 1.4 gives [1.80000008, 1.80000011]; the offset of
+about 10⁻⁷ above 9/5 is its tolerance, since values ≤ 10⁻⁷ count as "no violation".)
+
 ![Thresholds against the condition number](figures/strong_threshold.png)
 
 `python -m optcurves.study strong && python -m optcurves.figures`
@@ -148,11 +178,14 @@ is larger than its convex counterpart and decreases in κ. For 17 of the 92 thre
    every term vanish, which forces S·1 = 0 for the Gram part S (facial reduction). We impose it, maximize the
    smallest eigenvalue of the reduced form in coordinates g_a − g_{n+1}, round to rationals, repair the linear
    equalities exactly, and prove positive definiteness with an exact LDLᵀ, which is also the sum of squares that
-   Lean receives.
+   Lean receives. For μ-strongly convex f the interpolation inequalities gain the μ terms and linear functions
+   leave the class, so nothing forces a face: below the threshold the full S is positive definite. At a threshold
+   S is singular; there the certificate is given in closed form, and an LDLᵀ with a zero pivot proves S ⪰ 0.
 3. **Counterexamples** ([src/optcurves/counterexample.py](src/optcurves/counterexample.py)). Rounding the PEP
    optimum fails, since many inequalities are tight there. Instead we maximize the smallest slack of all
    interpolation inequalities and violations (an SDP over the Gram matrix, or a small nonlinear program in ℝ²),
-   factor, round to rationals and check exactly.
+   factor, round to rationals and check exactly. At κ = 7/5 the SDP optimum has numerical rank 1 and is truncated
+   to ℝ¹ before rounding.
 4. **Lean** ([src/optcurves/lean_gen.py](src/optcurves/lean_gen.py)). Each certificate becomes a theorem whose proof
    feeds the interpolation inequalities and the squares to `linarith`.
 
@@ -163,7 +196,8 @@ The PEP layer is cross-checked against the two hand-built SDPs in the tests.
 * Exact statements are about the listed step sizes only; nothing is proved for all h in an interval.
 * The Lean theorems assume the interpolation inequalities (bridge lemma not formalized).
 * The counterexamples rely on the interpolation theorem of Taylor, Hendrickx and Glineur (2017).
-* Strongly convex results are numerical, and the closed form for h₁(κ) is a conjecture.
+* Strongly convex results are numerical, except the exact bracket h₁(7/5) ∈ [9/5, 9/5 + 10⁻⁶] for one violation
+  at κ = 7/5; the closed form for h₁(κ) is a conjecture.
 * Only gradient descent with constant steps. Heavy ball, Nesterov and proximal methods are not studied.
 
 ## Reproduce
@@ -180,7 +214,8 @@ pip install -e ".[test]"
 Single steps: `python -m optcurves.study consecutive|strong`, `python -m optcurves.certificate`,
 `python -m optcurves.counterexample`, `python -m optcurves.lean_gen`, `python -m optcurves.figures`, `pytest`.
 The tests check every certificate and counterexample in exact arithmetic, that tampering breaks them, that the exact
-brackets have width ≤ 10⁻⁴ and contain the numerical thresholds, and that the Lean file matches the generator.
+brackets have width ≤ 10⁻⁴ (≤ 10⁻⁶ at κ = 7/5) and contain the numerical thresholds, and that the Lean file
+matches the generator.
 
 Lean (needs elan; downloads the Mathlib cache):
 
@@ -226,6 +261,9 @@ that the results are new.
   تعتمد إلا على المسلّمات الثلاث القياسية. فرضياتها متباينات الاستيفاء، ولمّة الجسر إلى الدوال غير مبرهنة.
 - **[عددي]** للدوال قوية التحدب: العتبات ترتفع كلما صغر κ = L/μ. و**[حدسية]** للانكسار الواحد:
   h₁(κ) = (1 + κ) − √((1 + κ)² − (7κ + 1)/2)، وتطابق كل القيم المحسوبة بفرق أقل من 4.3 × 10⁻⁶، لكنها غير مبرهنة.
+- **[دقيق]** عند κ = 7/5، حيث تعطي الحدسية القيمة الكسرية 9/5: الانكسار الواحد مستحيل عند h = 9/5 بالضبط
+  (شهادة مماسّة، والمساواة v₁ = 0 تتحقق بدالة في متغير واحد)، وممكن عند h = 9/5 + 10⁻⁶ بدالة في متغير واحد.
+  أي أن h₁(7/5) في [9/5، 9/5 + 10⁻⁶]، متسقة مع الحدسية. هذه قيمة واحدة لـ κ، فالحدسية ما زالت غير مبرهنة.
 
 **ما بقي مفتوحاً:** برهان أن مجموعة الخطوات السيئة فترة، وصيغة مغلقة لـ h₂ وما بعدها، وبرهان الحدسية، وطرق
 أخرى مثل Heavy Ball وNesterov.

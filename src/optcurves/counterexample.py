@@ -1,12 +1,14 @@
 """Exact counterexamples: rational data on which gradient descent breaks curve convexity n times in a row.
 
 A counterexample is rational data  x* = 0, g* = 0, f* = 0  and  (x_k, g_k, f_k), k = 0..n+1, in Q^d with
-x_{k+1} = x_k - h g_k, such that
-  (i)  every interpolation inequality of 1-smooth convex functions holds between every two points
-       (including x*):  f_p - f_q - <g_q, x_p - x_q> - 1/2 ||g_p - g_q||^2 >= 0, and
+x_{k+1} = x_k - h g_k, and a modulus 0 <= mu < 1 ("mu" in the file, 0 if absent), such that
+  (i)  every interpolation inequality of 1-smooth mu-strongly convex functions holds between every two points
+       (including x*):  f_p - f_q - <g_q, x_p - x_q>
+                        - (||g_p - g_q||^2 + mu ||x_p - x_q||^2 - 2 mu <g_p - g_q, x_p - x_q>) / (2 (1 - mu)) >= 0
+       (for mu = 0 the last term is 1/2 ||g_p - g_q||^2, the 1-smooth convex case), and
   (ii) v_k = 2 f_k - f_{k-1} - f_{k+1} > 0 for k = 1..n.
 By the interpolation theorem of Taylor, Hendrickx & Glineur (Math. Program. 2017, Thm. 4), (i) is
-equivalent to the existence of a 1-smooth convex f: R^d -> R with f(x_k) = f_k and grad f(x_k) = g_k
+equivalent to the existence of a 1-smooth mu-strongly convex f: R^d -> R with f(x_k) = f_k and grad f(x_k) = g_k
 (and minimizer x* = 0, since g* = 0). Gradient descent from x_0 then visits exactly x_0, ..., x_{n+1}.
 Both (i) and (ii) are checked in exact rational arithmetic; the theorem is the only external input.
 
@@ -33,6 +35,9 @@ def trajectory(h, x0, grads):
 def check_exact(ce):
     """Exact check of (i) and (ii). Returns (ok, min interpolation slack, violations) as Fractions."""
     h = F(ce["h"])
+    mu = F(ce.get("mu", "0"))
+    if not 0 <= mu < 1:
+        raise ValueError(f"mu = {mu} is not in [0, 1)")
     x0 = [F(a) for a in ce["x0"]]
     g = [[F(a) for a in gk] for gk in ce["g"]]
     f = [F(a) for a in ce["f"]]
@@ -41,16 +46,21 @@ def check_exact(ce):
     for k, xk in enumerate(trajectory(h, x0, g)):
         pts[k] = (xk, g[k], f[k])
     dot = lambda u, v: sum(a * b for a, b in zip(u, v))
-    slack = min(
-        fp - fq - dot(gq, [a - b for a, b in zip(xp, xq)]) - dot([a - b for a, b in zip(gp, gq)],
-                                                                 [a - b for a, b in zip(gp, gq)]) / 2
-        for (xp, gp, fp), (xq, gq, fq) in itertools.permutations(pts.values(), 2))
+
+    def interp(p, q):
+        (xp, gp, fp), (xq, gq, fq) = p, q
+        dx = [a - b for a, b in zip(xp, xq)]
+        dg = [a - b for a, b in zip(gp, gq)]
+        return fp - fq - dot(gq, dx) - (dot(dg, dg) + mu * dot(dx, dx) - 2 * mu * dot(dg, dx)) / (2 * (1 - mu))
+
+    slack = min(interp(p, q) for p, q in itertools.permutations(pts.values(), 2))
     viol = [2 * f[k] - f[k - 1] - f[k + 1] for k in range(1, len(f) - 1)]
     return slack >= 0 and all(v > 0 for v in viol), slack, viol
 
 
-def _sdp(h, n):
-    """Max-slack data via the Gram matrix of (x_0, g_0..g_N); returns (X, f, t), X with rows = coordinates."""
+def _sdp(h, n, mu=0.0, rank=None):
+    """Max-slack data via the Gram matrix of (x_0, g_0..g_N); returns (X, f, t), X with rows = coordinates.
+    rank=r keeps only the r largest eigenvalues of the Gram matrix (for an optimum of numerical rank r)."""
     import cvxpy as cp
     N = n + 1
     P = N + 2
@@ -68,17 +78,21 @@ def _sdp(h, n):
     ip = lambda u, v: cp.sum(cp.multiply(G, np.outer(u, v)))
     cons = [ip(pos[0], pos[0]) <= 1]
     for p, q in itertools.permutations(pos, 2):
-        dg = grad[p] - grad[q]
-        cons.append(fval(p) - fval(q) - ip(grad[q], pos[p] - pos[q]) - 0.5 * ip(dg, dg) >= t)
+        dg, dx = grad[p] - grad[q], pos[p] - pos[q]
+        if mu == 0:
+            curv = 0.5 * ip(dg, dg)
+        else:
+            curv = (ip(dg, dg) + mu * ip(dx, dx) - 2 * mu * ip(dg, dx)) / (2 * (1 - mu))
+        cons.append(fval(p) - fval(q) - ip(grad[q], pos[p] - pos[q]) - curv >= t)
     cons += [2 * fv[k] - fv[k - 1] - fv[k + 1] >= t for k in range(1, n + 1)]
     cp.Problem(cp.Maximize(t), cons).solve(solver="CLARABEL")
     lam, V = np.linalg.eigh(G.value)
-    keep = lam > 1e-9 * lam.max()
+    keep = lam > 1e-9 * lam.max() if rank is None else np.arange(P) >= P - rank
     X = (V[:, keep] * np.sqrt(lam[keep])).T
     return X, fv.value, float(t.value)
 
 
-def _nlp(h, n, d, trials=200, seed=0):
+def _nlp(h, n, d, trials=200, seed=0, mu=0.0):
     """Max-slack data in fixed dimension d (local search with random restarts)."""
     from scipy.optimize import minimize
     N = n + 1
@@ -93,7 +107,11 @@ def _nlp(h, n, d, trials=200, seed=0):
         for k in range(N + 1):
             x[k], g[k] = cur.copy(), X[:, 1 + k]
             cur = cur - h * g[k]
-        c = [f[p] - f[q] - g[q] @ (x[p] - x[q]) - 0.5 * np.sum((g[p] - g[q]) ** 2) - z[-1] for p, q in pairs]
+        c = []
+        for p, q in pairs:
+            dg, dx = g[p] - g[q], x[p] - x[q]
+            curv = 0.5 * np.sum(dg ** 2) if mu == 0 else (dg @ dg + mu * dx @ dx - 2 * mu * dg @ dx) / (2 * (1 - mu))
+            c.append(f[p] - f[q] - g[q] @ dx - curv - z[-1])
         c += [2 * f[k] - f[k - 1] - f[k + 1] - z[-1] for k in range(1, n + 1)]
         return np.array(c + [1 - X[:, 0] @ X[:, 0]])
 
@@ -109,11 +127,13 @@ def _nlp(h, n, d, trials=200, seed=0):
     return best[:d * P].reshape(d, P), best[d * P:d * P + N + 1], float(best[-1])
 
 
-def find(h, n, dim=None, denominators=(10, 100, 1000, 10**4, 10**5, 10**6, 10**7, 10**8)):
-    """Exact counterexample at step h (a rational string) with n consecutive violations, or None.
-    dim=None: SDP (any dimension); dim=d: search in R^d."""
-    hq = F(h)
-    found = _sdp(float(hq), n) if dim is None else _nlp(float(hq), n, dim)
+def find(h, n, dim=None, mu="0", rank=None,
+         denominators=(10, 100, 1000, 10**4, 10**5, 10**6, 10**7, 10**8)):
+    """Exact counterexample at step h (a rational string) with n consecutive violations over 1-smooth
+    mu-strongly convex f, or None. dim=None: SDP (any dimension; rank=r truncates its optimum to R^r);
+    dim=d: search in R^d."""
+    hq, muq = F(h), F(mu)
+    found = _sdp(float(hq), n, float(muq), rank) if dim is None else _nlp(float(hq), n, dim, mu=float(muq))
     if found is None:
         return None
     X, fv, t = found
@@ -121,10 +141,12 @@ def find(h, n, dim=None, denominators=(10, 100, 1000, 10**4, 10**5, 10**6, 10**7
         return None
     for D in denominators:
         r = lambda a: F(float(a)).limit_denominator(D)
-        ce = {"h": str(hq), "n": n,
-              "x0": [str(r(a)) for a in X[:, 0]],
-              "g": [[str(r(a)) for a in X[:, 1 + k]] for k in range(n + 2)],
-              "f": [str(r(a)) for a in fv]}
+        ce = {"h": str(hq), "n": n}
+        if muq:
+            ce["mu"] = str(muq)
+        ce.update(x0=[str(r(a)) for a in X[:, 0]],
+                  g=[[str(r(a)) for a in X[:, 1 + k]] for k in range(n + 2)],
+                  f=[str(r(a)) for a in fv])
         ok, slack, viol = check_exact(ce)
         if ok:
             ce.update(dim=len(ce["x0"]), numeric_slack=t, denominator_bound=D,
@@ -136,19 +158,29 @@ def find(h, n, dim=None, denominators=(10, 100, 1000, 10**4, 10**5, 10**6, 10**7
 # (h, n, dim): dim=None is the SDP (tight, just above the numerical h_n); dim=2 gives plottable examples.
 TARGETS = [("3727/2000", 2, None), ("19/10", 2, 2), ("19001/10000", 3, None), ("199/100", 3, 2),
            ("38393/20000", 4, None), ("38645/20000", 5, None), ("9706/5000", 6, None)]
+# (h, n, mu, rank): one violation for mu = 5/7 (kappa = 7/5), 9/5 + 10^-k above the conjectured h_1(7/5) = 9/5.
+# The SDP optimum is numerically of rank 1 (second eigenvalue ~1e-9 against ~2.7), so it is truncated to R^1.
+STRONG_TARGETS = [("1801/1000", 1, "5/7", 1), ("18001/10000", 1, "5/7", 1), ("180001/100000", 1, "5/7", 1),
+                  ("1800001/1000000", 1, "5/7", 1)]
 
 
 def main():
     out = ROOT / "counterexamples"
     out.mkdir(exist_ok=True)
-    for h, n, dim in TARGETS:
-        ce = find(h, n, dim)
-        print(f"h = {h} ({float(F(h)):.4f}), n = {n}, dim = {dim or 'any'}: "
+    jobs = [dict(h=h, n=n, dim=dim) for h, n, dim in TARGETS]
+    jobs += [dict(h=h, n=n, mu=mu, rank=rank) for h, n, mu, rank in STRONG_TARGETS]
+    for job in jobs:
+        h, n, mu = job["h"], job["n"], job.get("mu", "0")
+        ce = find(**job)
+        label = (f"dim = {job['dim'] or 'any'}" if mu == "0"
+                 else f"mu = {mu}, SDP truncated to rank {job['rank']}")
+        print(f"h = {h} ({float(F(h)):.4f}), n = {n}, {label}: "
               + (f"ok in R^{ce['dim']}, denominators <= {ce['denominator_bound']}, "
                  f"violations {[f'{float(F(v)):.2e}' for v in ce['violations']]}" if ce else "FAILED"),
               flush=True)
         if ce:
-            (out / f"n{n}_h{h.replace('/', '_')}_d{ce['dim']}.json").write_text(json.dumps(ce, indent=1) + "\n")
+            tag = "" if mu == "0" else f"_mu{mu.replace('/', '_')}"
+            (out / f"n{n}_h{h.replace('/', '_')}{tag}_d{ce['dim']}.json").write_text(json.dumps(ce, indent=1) + "\n")
 
 
 if __name__ == "__main__":
