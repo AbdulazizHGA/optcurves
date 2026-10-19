@@ -125,9 +125,11 @@ def find_certificate(h, n, denominators=(100, 1000, 10**4, 10**5, 10**6, 10**7))
             continue
         if params.shape[0]:
             continue
+        if not all(v.is_Rational for v in sol):
+            continue
         z = list(zr)
         for k, m in enumerate(pivots):
-            z[m] = sp.nsimplify(sol[k])
+            z[m] = sol[k]
         cert = {"h": str(sp.Rational(h)), "n": n, "N": N,
                 "claim": " + ".join(f"w_{k} v_{k}" for k in range(1, n + 1)) + " <= 0",
                 "class": "1-smooth convex functions on any real inner-product space (no minimizer assumed)",
@@ -187,7 +189,7 @@ def verify(cert_file):
 
 # (h, n): the first per n is the one just below the numerical threshold h_n (tightest exact bound).
 TARGETS = [("9317/5000", 2), ("3/2", 2), ("9/5", 2), ("37/20", 2), ("93/50", 2),
-           ("19/10", 3), ("47/25", 3), ("3839/2000", 4), ("19321/10000", 5), ("19411/10000", 6)]
+           ("19/10", 3), ("47/25", 3), ("38391/20000", 4), ("38643/20000", 5), ("19411/10000", 6)]
 
 
 def main():

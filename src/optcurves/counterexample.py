@@ -135,7 +135,7 @@ def find(h, n, dim=None, denominators=(10, 100, 1000, 10**4, 10**5, 10**6, 10**7
 
 # (h, n, dim): dim=None is the SDP (tight, just above the numerical h_n); dim=2 gives plottable examples.
 TARGETS = [("3727/2000", 2, None), ("19/10", 2, 2), ("19001/10000", 3, None), ("199/100", 3, 2),
-           ("19197/10000", 4, None), ("19323/10000", 5, None), ("9706/5000", 6, None)]
+           ("38393/20000", 4, None), ("38645/20000", 5, None), ("9706/5000", 6, None)]
 
 
 def main():

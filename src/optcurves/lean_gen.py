@@ -32,6 +32,8 @@ Setting (L = 1; the general case follows by rescaling f): gradient descent `x (k
 (Nesterov 2004, Thm 2.1.5), but that bridge lemma is *not* proved here.
 -/
 
+namespace Optcurves
+
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 /-- Interpolation inequality for a 1-smooth convex function between points `i` and `j`. -/
@@ -123,7 +125,8 @@ def generate(targets=LEAN_TARGETS):
         name = "no_consecutive_" + stem
         body.append(theorem(cert, name))
         names += [name + "_weighted", name]
-    body += [f"#print axioms {nm}" for nm in names]
+    body.append("end Optcurves\n")
+    body += [f"#print axioms Optcurves.{nm}" for nm in names]
     return "\n".join(body) + "\n"
 
 

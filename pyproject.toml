@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "optcurves"
+version = "0.1.0"
+description = "Consecutive convexity violations of gradient-descent optimization curves: PEP study, exact certificates, Lean proofs"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+dependencies = [
+    "PEPit>=0.5.1",
+    "cvxpy>=1.9",
+    "clarabel>=0.11",
+    "scs>=3.2",
+    "sympy>=1.14",
+    "numpy>=2.0",
+    "scipy>=1.14",
+    "matplotlib>=3.9",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

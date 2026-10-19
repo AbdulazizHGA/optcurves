@@ -13,6 +13,8 @@ Setting (L = 1; the general case follows by rescaling f): gradient descent `x (k
 (Nesterov 2004, Thm 2.1.5), but that bridge lemma is *not* proved here.
 -/
 
+namespace Optcurves
+
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 /-- Interpolation inequality for a 1-smooth convex function between points `i` and `j`. -/
@@ -179,9 +181,11 @@ theorem no_consecutive_n3_h19_10 (x g : ℕ → E) (f : ℕ → ℝ)
   have := no_consecutive_n3_h19_10_weighted x g f hgd hI
   linarith
 
-#print axioms no_consecutive_n2_h9_5_weighted
-#print axioms no_consecutive_n2_h9_5
-#print axioms no_consecutive_n2_h9317_5000_weighted
-#print axioms no_consecutive_n2_h9317_5000
-#print axioms no_consecutive_n3_h19_10_weighted
-#print axioms no_consecutive_n3_h19_10
+end Optcurves
+
+#print axioms Optcurves.no_consecutive_n2_h9_5_weighted
+#print axioms Optcurves.no_consecutive_n2_h9_5
+#print axioms Optcurves.no_consecutive_n2_h9317_5000_weighted
+#print axioms Optcurves.no_consecutive_n2_h9317_5000
+#print axioms Optcurves.no_consecutive_n3_h19_10_weighted
+#print axioms Optcurves.no_consecutive_n3_h19_10

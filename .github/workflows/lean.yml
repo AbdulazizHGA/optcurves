@@ -1,0 +1,22 @@
+name: Lean
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build with Mathlib cache and audit axioms
+        uses: leanprover/lean-action@v1.6.2
+        with:
+          lake-package-directory: lean
+          axiom-audit: true
+      - name: Check every '#print axioms' line
+        working-directory: lean
+        run: |
+          lake env lean Optcurves/Certificates.lean 2>&1 | tee axioms.log
+          python3 ../scripts/check_axioms.py axioms.log Optcurves/Certificates.lean
