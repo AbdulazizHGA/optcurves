@@ -6,12 +6,14 @@
 `optcurves` studies **consecutive convexity violations of gradient descent optimization curves** for smooth
 convex and strongly convex functions. It combines **performance estimation problems (PEP)** using PEPit and
 semidefinite programming with **exact rational certificates**, counterexamples, selected **Lean 4 formal
-proofs**, and a symbolic proof of the **exact one-violation threshold for strongly convex functions**. This
-repository includes the Python code, research data, figures, and reproducible experiments.
+proofs**, and symbolic proofs of the **exact one-violation threshold for strongly convex functions** and of the
+**exact worst-case violation above it**. This repository includes the Python code, research data, figures, and
+reproducible experiments.
 
 **بالعربية:** يدرس المشروع تحدّب منحنيات التحسين في طريقة الانحدار التدريجي، ومتى يمكن فقدان التحدّب في خطوات
 متتالية للدوال المحدبة وقوية التحدّب. ويشمل تقدير الأداء، وشهادات رياضية بحساب كسري دقيق، وأمثلة مضادة،
-وبراهين مختارة متحقّقًا منها في Lean 4، وبرهانًا رمزيًا للعتبة الدقيقة لانكسار واحد في الدوال قوية التحدّب.
+وبراهين مختارة متحقّقًا منها في Lean 4، وبرهانًا رمزيًا للعتبة الدقيقة لانكسار واحد في الدوال قوية التحدّب،
+وللقيمة القصوى الدقيقة للانكسار فوق هذه العتبة.
 [اقرأ الملخص العربي](#ملخص-بالعربية).
 
 [Results](#results) · [Method](#method) · [Reproduce](#reproduce) ·
@@ -26,7 +28,7 @@ Barzilai, Shamir and Zamani ([TMLR 2025, arXiv:2503.10138](https://arxiv.org/abs
 *optimization curve* is convex for every h ≤ 1.75, and that it can fail to be convex for 1.75 < h < 2. They left open
 "whether the optimization curve might be concave for several consecutive steps". This repository answers that
 question for gradient descent and, for a single violation, proves the exact threshold for strongly convex
-functions (section 4).
+functions and the exact worst-case violation above it (section 4).
 
 Write v_k = 2 f(x_k) − f(x_{k−1}) − f(x_{k+1}) (curve violation at step k; the curve is convex at k iff v_k ≤ 0).
 *n consecutive violations* means v_k > 0 for n consecutive values of k.
@@ -116,7 +118,7 @@ A second plottable example, three consecutive violations at h = 199/100 in ℝ²
 local search (200 starts) found no strictly feasible one-dimensional example at h = 1.9 (n = 2) or h = 1.99 (n = 3);
 this is not a proof that one dimension is impossible.
 
-### 4. Strongly convex functions: the exact threshold for one violation `[exact]`, PEP thresholds `[numerical]`
+### 4. Strongly convex functions: the exact threshold and worst case for one violation `[exact]`, PEP thresholds `[numerical]`
 
 For L-smooth μ-strongly convex f (κ = L/μ), the threshold for n consecutive violations, PEP with ‖x₀ − x*‖ ≤ 1
 `[numerical]`, next to the exact h₁(κ) of the theorem below:
@@ -176,7 +178,7 @@ Q_pq = f_p − f_q − ⟨g_q, x_p − x_q⟩ − (‖g_p − g_q‖² + μ‖x_
   x₂ = x₁ − hg₁ = 2(h − 1)²/D, g₂ = x₂, f₂ = x₂²/2.
 
   Nine of the twelve interpolation inequalities hold with equality: the six among x*, x₀, x₂ (data of x²/2) and
-  Q_*1, Q₀₁, Q₂₁. The other three are Q_1* = h(h − 1)³(1 − μ)(2 + h − h²μ)/D²,
+  Q_\*1, Q₀₁, Q₂₁. The other three are Q_1\* = h(h − 1)³(1 − μ)(2 + h − h²μ)/D²,
   Q₁₀ = h²(h − 1)²(1 − μ)(1 + 2h − h²μ)/D² and Q₁₂ = h²(h − 1)³(1 − μ)(3 − hμ)/D², all ≥ 0 for 1 ≤ h < 2. And
   **v₁ = −h² q / (2D)**, positive exactly when h > h₁(κ). By the interpolation theorem these data come from a
   1-smooth μ-strongly convex f: ℝ → ℝ, and gradient descent from x₀ = 1 visits x₁ and x₂.
@@ -196,11 +198,49 @@ formalized in Lean. With μ = 0 the same formulas give λ = (3/2, 1/2, 1/2),
 Σ S_ab⟨g_a, g_b⟩ = (1/8)‖g₀ + g₁ − 2g₂‖² + ((7 − 4h)/8)‖g₀ − g₁‖² and v₁ = −h²(7 − 4h)/(2(2 + h²)): they recover
 the threshold 7/4 of Barzilai, Shamir and Zamani for convex f.
 
-`[conjecture]` *The worst case above the threshold.* For h₁(κ) < h < 2 the data of part 2 appear to be the worst
-case: the PEP maximum of v₁ over ‖x₀ − x*‖ ≤ 1 equals their value h²(−q) / (2(2 + h²(1 − μ))) within a relative
-1.5 × 10⁻⁷ at 20 points (κ from 1.1 to 100, h from h₁(κ) + 0.01 to 1.99); the tests check four points. For μ = 0
-the formula reads h²(4h − 7) / (2(2 + h²)), which is 0.0618 at h = 1.8. A proof would need a certificate that also
-uses the minimizer.
+**Theorem `[exact]` (the worst case of one violation).** Let 0 ≤ μ < 1, 0 < h < 2, q = 2μh² − 4(1 + μ)h + μ + 7
+as above and D = 2 + h²(1 − μ). For every 1-smooth μ-strongly convex f (for μ = 0: convex with a minimizer) on any
+real inner-product space, every minimizer x* and every starting point x₀,
+
+**v₁ ≤ c ‖x₀ − x\*‖²  with  c = h² max(0, −q) / (2D)**,
+
+and the bound is attained for every h: by x₀ = x* when h ≤ h₁(κ) (then c = 0; this is part 1, and for μ = 0, where
+h₁ = 7/4, the theorem of Barzilai, Shamir and Zamani), and by the one-dimensional data of part 2 when
+h₁(κ) < h < 2. So the PEP worst case of one violation, the largest v₁ over f and ‖x₀ − x*‖ ≤ 1, is exactly
+h² max(0, −q) / (2D) (times L for a general L). For μ = 0 it is h²(4h − 7)/(2(2 + h²)) for 7/4 < h < 2, for
+example 0.0618 at h = 1.8.
+
+*Proof for h₁(κ) < h < 2.* Then q < 0, and q = (1 − μ)(7 − 4h) + 2μ(2 − h)² shows h > 7/4. Add the minimizer as a
+fourth point (g* = 0) and put c = h²(−q)/(2D) and y = x₀ − x*. The identity
+
+  v₁ − c‖y‖² + 2c (Q_\*0 + Q_2\*) + 2(h − 1) Q₀₁ + λ₂₀ Q₂₀ + 2(2 − h) Q₂₁ + Σ_ab S_ab ⟨u_a, u_b⟩ = 0,
+  u = (y, g₀, g₁, g₂),
+
+holds with λ₂₀ = 2(h − 1)E/D, E = (1 − μ)(1 + (2 − h)(1 + h)) + μ((h − 1)³ + 2(2 − h)), and S = W / (2(1 − μ)D) for
+an explicit polynomial matrix W (`W_MATRIX` in [src/optcurves/worstcase.py](src/optcurves/worstcase.py)). The five
+multipliers are positive, and f(x*) cancels in Q_\*0 + Q_2\*. The LDLᵀ of W in the pivot order g₂, g₁, g₀, y has the
+pivots D, D(μD − 2q), h²(−q)P/(μD − 2q) and 0, where P = −2q + μT and
+T = (1 − μ)(h² + 8(h − 3/2)) + 2μ((h − 1)⁴ + 4(h − 1)(2 − h) + 1) + 2h³(2 − h)μ(1 − μ). Since q < 0 and h > 7/4,
+T ≥ 0 and the first three pivots are positive; the third square is ‖g₀ − y‖². Hence v₁ ≤ c‖y‖². On the data of
+part 2 the five inequalities used hold with equality, the data vector u = (1, 1, g₁, x₂) spans the kernel of W, and
+v₁ = c.
+
+On the threshold q = 0 this certificate becomes the one of part 1: 2c = 0, and the other multipliers and the Gram
+matrix differ from those of part 1 by multiples of q (for example, part 1's λ₀₁ = (3 + μ − 2hμ)/(2 − hμ) equals
+2(h − 1) + q/(2 − hμ)). So the two certificates join continuously at h₁(κ). With μ = 0 the formulas give
+c = h²(4h − 7)/(2(2 + h²)), λ₂₀ = 2(h − 1)(3 + h − h²)/(2 + h²) and the third pivot h²(4h − 7). The certificate was
+found from the equality case: complementary slackness with the data of part 2 forces λ = 0 on the three slack
+inequalities (Q_1\*, Q₁₀, Q₁₂) and puts the data vector in the kernel of S. That leaves four free multipliers, and a
+numerical scan showed that Q_\*1, Q_\*2, Q_0\* and Q₀₂ can be dropped as well, which fixes the rest.
+
+*How it is checked.* `python -m optcurves.worstcase` verifies every identity above in exact polynomial arithmetic in
+h and μ (SymPy), the certificate identity with symbolic vectors x*, x₀, g₀, g₁, g₂ in ℝ².
+[tests/test_worstcase.py](tests/test_worstcase.py) also checks the identity in Fractions with independent code at
+random rational points, that the certificate is valid (exact LDLᵀ) exactly when q < 0, that it equals the certificate
+of part 1 at rational points of the threshold curve, and that the violations of every stored counterexample obey the
+bound. Numerically, the PEP maximum of v₁ over ‖x₀ − x*‖ ≤ 1 agrees with h²(−q)/(2D) within a relative 1.5 × 10⁻⁷
+at 20 points (κ from 1.1 to 100, h from h₁(κ) + 0.01 to 1.99); four points are in the tests. The proof is not
+formalized in Lean.
 
 **The case κ = 7/5 `[exact]`, which led to the proof.** There h₁ = 9/5 is rational, so before the theorem the
 formula could be tested in exact arithmetic. One violation v₁ > 0 for 1-smooth 5/7-strongly convex f ("impossible":
@@ -262,20 +302,19 @@ The PEP layer is cross-checked against the two hand-built SDPs in the tests.
 
 ## Limitations
 
-* Apart from the one-violation theorem of section 4 (every h and every κ > 1), exact statements are about the
+* Apart from the one-violation theorems of section 4 (every h and every κ > 1), exact statements are about the
   listed step sizes only; for two or more consecutive violations nothing is proved for all h in an interval.
 * The Lean theorems assume the interpolation inequalities (bridge lemma not formalized).
 * The counterexamples, and the "possible" half of the theorem, rely on the interpolation theorem of Taylor,
   Hendrickx and Glineur (2017).
-* For strongly convex f only one violation is settled exactly (section 4); the thresholds for two or more
-  consecutive violations are numerical, with no closed form proposed, and the worst-case value of v₁ above
-  h₁(κ) is a conjecture.
-* The theorem of section 4 is checked by SymPy (exact symbolic identities), not by Lean.
+* For strongly convex f only one violation is settled exactly (section 4: its threshold and its worst-case
+  value); the thresholds for two or more consecutive violations are numerical, with no closed form proposed.
+* The theorems of section 4 are checked by SymPy (exact symbolic identities), not by Lean.
 * Only gradient descent with constant steps. Heavy ball, Nesterov and proximal methods are not studied.
 
 ## Reproduce
 
-Python ≥ 3.10. Every number above comes from these commands (6 minutes in total on an M1 laptop, mostly
+Python ≥ 3.10. Every number above comes from these commands (about 7 minutes in total on an M1 laptop, mostly
 `study strong`). On our machine a full rerun reproduced every JSON file, the Lean file and the figures
 byte for byte:
 
@@ -285,11 +324,11 @@ pip install -e ".[test]"
 ```
 
 Single steps: `python -m optcurves.study consecutive|strong`, `python -m optcurves.certificate`,
-`python -m optcurves.counterexample`, `python -m optcurves.theorem`, `python -m optcurves.lean_gen`,
-`python -m optcurves.figures`, `pytest`. The tests check every certificate and counterexample in exact arithmetic,
-that tampering breaks them, that the exact brackets have width ≤ 10⁻⁴ (≤ 10⁻⁶ at κ = 7/5) and contain the numerical
-thresholds, every step of the proof in section 4 with exact instances on both sides of h₁(κ), and that the Lean file
-matches the generator.
+`python -m optcurves.counterexample`, `python -m optcurves.theorem`, `python -m optcurves.worstcase`,
+`python -m optcurves.lean_gen`, `python -m optcurves.figures`, `pytest`. The tests check every certificate and
+counterexample in exact arithmetic, that tampering breaks them, that the exact brackets have width ≤ 10⁻⁴ (≤ 10⁻⁶
+at κ = 7/5) and contain the numerical thresholds, every step of the two proofs in section 4 with exact instances on
+both sides of h₁(κ), and that the Lean file matches the generator.
 
 Lean (needs elan; downloads the Mathlib cache):
 
@@ -319,7 +358,8 @@ Literature check on 18–19 October 2026: Semantic Scholar citations of arXiv:25
 found nothing relevant); arXiv API searches for "optimization curve" with convex, consecutive, strongly convex and
 Lean (only the papers above); GitHub search of repositories, code and issues, including PEPit and PEPFlow. We found
 no work on consecutive violations or on the strongly convex threshold. Indexes lag, so this is evidence, not proof,
-that the results are new.
+that the results are new. The worst-case theorem of section 4 was proved on 20 October 2026, after this check, and
+has not yet been checked against the literature.
 
 ## ملخص بالعربية
 
@@ -340,11 +380,15 @@ that the results are new.
   وعند h = h₁(κ) تتحقق المساواة v₁ = 0. فمجموعة الخطوات السيئة هي الفترة (h₁(κ)، 2) بالضبط. تحقّقنا من كل
   متطابقات البرهان رمزيًا في SymPy (لا في Lean). كانت الصيغة حدسية مستخلصة من الأرقام، وحالة κ = 7/5 (حيث
   h₁ = 9/5) هي التي كشفت بنية البرهان. ومع μ = 0 تعطي الصيغ نفسها العتبة المعروفة 7/4.
-- **[حدسية]** فوق العتبة يبدو أن هذا المثال أحادي البعد هو الحالة الأسوأ: أكبر قيمة لـ v₁ مع ‖x₀ − x*‖ ≤ 1 تساوي
-  h²(−q) / (2(2 + h²(1 − μ)))، حيث q = 2μh² − 4(1 + μ)h + μ + 7، بتطابق عددي نسبي حتى 1.5 × 10⁻⁷ في 20 نقطة.
+- **[دقيق، مبرهنة]** وفوق العتبة، هذا المثال أحادي البعد هو الحالة الأسوأ بالضبط: لكل دالة 1-ملساء μ-قوية التحدب
+  (ومع μ = 0 لكل دالة محدبة لها نقطة صغرى) ولكل نقطة بداية يتحقق v₁ ≤ c‖x₀ − x*‖² حيث
+  c = h²(−q) / (2(2 + h²(1 − μ)))، وq = 2μh² − 4(1 + μ)h + μ + 7، والمساواة تتحقق. البرهان شهادة من خمس متباينات
+  استيفاء تشمل النقطة الصغرى x*، وهي امتداد لشهادة العتبة نفسها بعد تجاوزها، وتحقّقنا منها رمزيًا في SymPy.
+  ومع μ = 0 تصبح القيمة القصوى h²(4h − 7) / (2(2 + h²)) للدوال المحدبة. كانت هذه القيمة حدسية مستخلصة من
+  تطابق عددي حتى 1.5 × 10⁻⁷ في 20 نقطة.
 
 **ما بقي مفتوحاً:** برهان أن مجموعة الخطوات السيئة فترة لانكسارين متتاليين فأكثر، وصيغة مغلقة لـ h₂ وما بعدها،
-وبرهان القيمة الأسوأ لـ v₁ فوق العتبة، وصياغة برهان العتبة h₁(κ) في Lean، وطرق أخرى مثل Heavy Ball وNesterov.
+وصياغة برهانَي العتبة h₁(κ) والقيمة الأسوأ في Lean، وطرق أخرى مثل Heavy Ball وNesterov.
 
 ## Citation and license
 

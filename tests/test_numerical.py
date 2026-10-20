@@ -27,7 +27,8 @@ def test_pep_signs(h, n, positive):
 
 
 def test_pep_one_violation_matches_known_slope():
-    # Worst single violation grows linearly past 7/4 (PEP value at 1.80 is 0.0618, ||x0 - x*|| <= 1).
+    # Worst single violation past 7/4 is h^2 (4h - 7) / (2 (2 + h^2)) for ||x0 - x*|| <= 1 (worstcase.py, mu = 0):
+    # 0.0618 at h = 1.8.
     assert abs(pep.max_min_violation(1.8, 1) - 0.0618) < 1e-3
 
 
@@ -108,9 +109,9 @@ def test_strong_pep_h1_matches_theorem():
 
 @pytest.mark.parametrize("mu, h", [(2 / 3, 1.9), (0.5, 1.95), (0.1, 1.85), (0.0, 1.8)])
 def test_strong_worst_case_matches_extremal_data(mu, h):
-    """[conjecture] Above h_1(kappa) the one-dimensional data of theorem.py are the worst case: the PEP maximum of v_1
-    over ||x_0 - x*|| <= 1 equals their value -h^2 q / (2 D), D = 2 + h^2 (1 - mu) (for mu = 0: h^2 (4h - 7) /
-    (2 (2 + h^2)), 0.0618 at h = 1.8)."""
+    """Above h_1(kappa) the one-dimensional data of theorem.py are the worst case (proved in worstcase.py): the PEP
+    maximum of v_1 over ||x_0 - x*|| <= 1 equals their value -h^2 q / (2 D), D = 2 + h^2 (1 - mu) (for mu = 0:
+    h^2 (4h - 7) / (2 (2 + h^2)), 0.0618 at h = 1.8). Since the value is proved, this checks the PEP pipeline."""
     q = 2 * mu * h**2 - 4 * (1 + mu) * h + mu + 7
     v_data = -h**2 * q / (2 * (2 + h**2 * (1 - mu)))
     assert v_data > 0
