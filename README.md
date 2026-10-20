@@ -35,8 +35,8 @@ Write v_k = 2 f(x_k) − f(x_{k−1}) − f(x_{k+1}) (curve violation at step k;
 
 **Tags.** `[exact]` = checked in exact arithmetic (SymPy/Fractions: rational numbers, or polynomial identities in
 symbolic parameters such as h and μ; no floating point).
-`[Lean-verified]` = checked by the Lean 4 kernel with Mathlib. `[numerical]` = performance-estimation (PEP)
-SDP solved in floating point. `[conjecture]` = a formula that fits numerical data, nothing more.
+`[Lean-verified]` = checked by the Lean 4 kernel with Mathlib. `[numerical]` = floating-point computation:
+performance-estimation (PEP) SDPs, or a numerical search.
 Throughout, L = 1 (rescaling f covers every L), steps are h/L, and "convex" means L-smooth convex.
 
 ## Results
@@ -119,7 +119,7 @@ steps 1 and 2 (v₁ = 0.00513, v₂ = 0.00643, exact rationals in
 `python -m optcurves.counterexample && python -m optcurves.figures`
 
 A second plottable example, three consecutive violations at h = 199/100 in ℝ², is in
-[counterexamples/n3_h199_100_d2.json](counterexamples/n3_h199_100_d2.json). `[numerical, heuristic]` A multistart
+[counterexamples/n3_h199_100_d2.json](counterexamples/n3_h199_100_d2.json). `[numerical]` A multistart
 local search (200 starts) found no strictly feasible one-dimensional example at h = 1.9 (n = 2) or h = 1.99 (n = 3);
 this is not a proof that one dimension is impossible.
 
@@ -315,8 +315,10 @@ definite Gram part. Above 9/5 the max-slack SDP optimum has numerical rank 1, wi
 4. **Lean** ([src/optcurves/lean_gen.py](src/optcurves/lean_gen.py)). Three certificates (h = 9/5 and 9317/5000 for
    n = 2, h = 19/10 for n = 3; `LEAN_TARGETS`) become theorems whose proofs feed the interpolation inequalities and
    the squares to `linarith`. The other certificates are checked in exact arithmetic only.
-5. **Symbolic proof** ([src/optcurves/theorem.py](src/optcurves/theorem.py)). The theorem of section 4: multipliers,
-   Gram matrix and extremal data in closed form in (h, μ), every identity checked by SymPy polynomial arithmetic.
+5. **Symbolic proofs** ([src/optcurves/theorem.py](src/optcurves/theorem.py) and
+   [src/optcurves/worstcase.py](src/optcurves/worstcase.py)). The two theorems of section 4, the threshold h₁(κ) and
+   the worst case above it: multipliers, Gram matrices and extremal data in closed form in (h, μ), every identity
+   checked by SymPy polynomial arithmetic.
 
 The PEP layer is cross-checked against the two hand-built SDPs in the tests.
 
