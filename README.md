@@ -335,9 +335,9 @@ The PEP layer is cross-checked against the two hand-built SDPs in the tests.
 
 ## Reproduce
 
-Python ≥ 3.11 (CVXPY 1.8 and later need it; tested with Python 3.13). Every number above comes from these commands
-(about 6 minutes in total on an M1 laptop, mostly `study strong`). On our machine a full rerun reproduced every JSON
-file, the Lean file and the figures byte for byte:
+Python ≥ 3.11 (CVXPY 1.8 and later need it; the tests pass with Python 3.11 and 3.13). Every number above comes
+from these commands (about 6 minutes in total on an M1 laptop, mostly `study strong`). On our machine a full rerun
+with Python 3.13 reproduced every JSON file, the Lean file and the figures byte for byte:
 
 ```bash
 pip install -e ".[test]"
