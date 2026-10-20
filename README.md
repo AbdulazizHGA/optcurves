@@ -5,12 +5,14 @@
 
 `optcurves` studies **consecutive convexity violations of gradient descent optimization curves** for smooth
 convex and strongly convex functions. It combines **performance estimation problems (PEP)** using PEPit and
-semidefinite programming with **exact rational certificates**, counterexamples, and selected **Lean 4 formal
-proofs**. This repository includes the Python code, research data, figures, and reproducible experiments.
+semidefinite programming with **exact rational certificates**, counterexamples, selected **Lean 4 formal
+proofs**, and a symbolic proof of the **exact one-violation threshold for strongly convex functions**. This
+repository includes the Python code, research data, figures, and reproducible experiments.
 
 **بالعربية:** يدرس المشروع تحدّب منحنيات التحسين في طريقة الانحدار التدريجي، ومتى يمكن فقدان التحدّب في خطوات
 متتالية للدوال المحدبة وقوية التحدّب. ويشمل تقدير الأداء، وشهادات رياضية بحساب كسري دقيق، وأمثلة مضادة،
-وبراهين مختارة متحقّقًا منها في Lean 4. [اقرأ الملخص العربي](#ملخص-بالعربية).
+وبراهين مختارة متحقّقًا منها في Lean 4، وبرهانًا رمزيًا للعتبة الدقيقة لانكسار واحد في الدوال قوية التحدّب.
+[اقرأ الملخص العربي](#ملخص-بالعربية).
 
 [Results](#results) · [Method](#method) · [Reproduce](#reproduce) ·
 [Related work](#related-work-and-literature-check) · [Citation and license](#citation-and-license)
@@ -23,12 +25,14 @@ Gradient descent with constant step size h/L on an L-smooth convex function prod
 Barzilai, Shamir and Zamani ([TMLR 2025, arXiv:2503.10138](https://arxiv.org/abs/2503.10138)) showed that this
 *optimization curve* is convex for every h ≤ 1.75, and that it can fail to be convex for 1.75 < h < 2. They left open
 "whether the optimization curve might be concave for several consecutive steps". This repository answers that
-question for gradient descent, and extends the threshold to strongly convex functions.
+question for gradient descent and, for a single violation, proves the exact threshold for strongly convex
+functions (section 4).
 
 Write v_k = 2 f(x_k) − f(x_{k−1}) − f(x_{k+1}) (curve violation at step k; the curve is convex at k iff v_k ≤ 0).
 *n consecutive violations* means v_k > 0 for n consecutive values of k.
 
-**Tags.** `[exact]` = checked in exact rational arithmetic (SymPy/Fractions, no floating point).
+**Tags.** `[exact]` = checked in exact arithmetic (SymPy/Fractions: rational numbers, or polynomial identities in
+symbolic parameters such as h and μ; no floating point).
 `[Lean-verified]` = checked by the Lean 4 kernel with Mathlib. `[numerical]` = performance-estimation (PEP)
 SDP solved in floating point. `[conjecture]` = a formula that fits numerical data, nothing more.
 Throughout, L = 1 (rescaling f covers every L), steps are h/L, and "convex" means L-smooth convex.
@@ -112,11 +116,12 @@ A second plottable example, three consecutive violations at h = 199/100 in ℝ²
 local search (200 starts) found no strictly feasible one-dimensional example at h = 1.9 (n = 2) or h = 1.99 (n = 3);
 this is not a proof that one dimension is impossible.
 
-### 4. Strongly convex functions `[numerical]`, a conjectured closed form, and an exact check at κ = 7/5
+### 4. Strongly convex functions: the exact threshold for one violation `[exact]`, PEP thresholds `[numerical]`
 
-For L-smooth μ-strongly convex f (κ = L/μ), the threshold for n consecutive violations, PEP with ‖x₀ − x*‖ ≤ 1:
+For L-smooth μ-strongly convex f (κ = L/μ), the threshold for n consecutive violations, PEP with ‖x₀ − x*‖ ≤ 1
+`[numerical]`, next to the exact h₁(κ) of the theorem below:
 
-| κ | h₁(κ) | h₂(κ) | h₃(κ) | conjecture for h₁(κ) |
+| κ | h₁(κ) | h₂(κ) | h₃(κ) | exact h₁(κ) (theorem) |
 |---|---|---|---|---|
 | 1.1 | 1.8551 | 1.9850 | 1.9866 | 1.8551 |
 | 1.5 | 1.7929 | 1.9414 | 1.9596 | 1.7929 |
@@ -126,17 +131,80 @@ For L-smooth μ-strongly convex f (κ = L/μ), the threshold for n consecutive v
 | 100 | 1.7503 | 1.8662 | 1.9027 | 1.7503 |
 | ∞ (μ = 0) | 1.7500 | 1.8634 | 1.9001 | 1.75 |
 
-`[conjecture]` **h₁(κ) = (1 + κ) − √((1 + κ)² − (7κ + 1)/2)**, i.e. the smaller root of
-2h² − 4(1 + κ)h + 7κ + 1 = 0. It gives 7/4 as κ → ∞, exactly 9/5 at κ = 7/5, 3 − √6/2 at κ = 2, and tends to 2
-as κ → 1. It matches all 30 computed values (κ from 1.05 to 10⁴) within 4.3 × 10⁻⁶, the size of the bisection
-tolerance; it was found by fitting integer quadratics to the numbers and is **not proved**. Every h_n(κ) we computed
-is larger than its convex counterpart and decreases in κ. For 17 of the 92 thresholds, all with κ ≤ 3, at most 8 of the
-29 solves fell back to SCS; the count is stored next to every threshold in
-[results/strong.json](results/strong.json).
+Every h_n(κ) we computed is larger than its convex counterpart and decreases in κ (for n = 1 this is part 4 of the
+theorem). For 17 of the 92 thresholds, all with κ ≤ 3, at most 8 of the 29 solves fell back to SCS; the count is
+stored next to every threshold in [results/strong.json](results/strong.json). At all 30 values of κ (1.05 to 10⁴)
+the PEP value of h₁(κ) is within 4.4 × 10⁻⁶ of the theorem. Since the closed form is proved, this measures the PEP
+pipeline: where every solve used Clarabel, the PEP value lies 5 × 10⁻⁸ to 1.3 × 10⁻⁷ above h₁(κ) (violations
+≤ 10⁻⁷ count as none); the larger gaps, up to 4.3 × 10⁻⁶ above and once 1.3 × 10⁻⁶ below (κ = 1.05), occur only
+where some solves fell back to SCS.
 
-**Exact check at κ = 7/5 `[exact]`.** There the conjecture gives the rational value h₁ = 9/5, so it can be tested in
-exact arithmetic. One violation v₁ > 0 for 1-smooth 5/7-strongly convex f ("impossible": for every such f on any
-real inner-product space and every starting point; "possible": for some f: ℝ → ℝ):
+**Theorem `[exact]` (one violation, every κ).** Let L = 1, 0 < μ < 1, κ = 1/μ, 0 < h < 2, and
+
+**h₁(κ) = (1 + κ) − √((1 + κ)² − (7κ + 1)/2)**, the smaller root of 2h² − 4(1 + κ)h + 7κ + 1 = 0.
+
+1. If h ≤ h₁(κ), then v₁ = 2f(x₁) − f(x₀) − f(x₂) ≤ 0 for every 1-smooth μ-strongly convex f on any real
+   inner-product space and every starting point x₀ (no minimizer needed). Applied at each step: the whole
+   optimization curve is convex.
+2. If h₁(κ) < h < 2, then v₁ > 0 for some 1-smooth μ-strongly convex f: ℝ → ℝ with a minimizer.
+3. At h = h₁(κ) the bound of part 1 is attained: v₁ = 0 for one-dimensional data.
+4. h₁(κ) decreases strictly from 2 (κ → 1) to 7/4 (κ → ∞); for example h₁(7/5) = 9/5 and h₁(2) = 3 − √6/2.
+
+So for one violation the set of bad step sizes is exactly the interval (h₁(κ), 2). The formula was first found by
+fitting integer quadratics to the PEP numbers (it was listed here as a conjecture); the exact study at κ = 7/5 below
+exposed the certificate that proves it. The literature check below found no earlier statement of this threshold.
+
+*Proof.* Put q = 2μh² − 4(1 + μ)h + μ + 7 = μ(2h² − 4(1 + κ)h + 7κ + 1). Since q(0) = 7 + μ > 0 > μ − 1 = q(2)
+and q is convex in h, for 0 < h < 2 we have q ≥ 0 iff h ≤ h₁(κ). The interpolation inequalities of 1-smooth
+μ-strongly convex functions (Taylor, Hendrickx and Glineur 2017, Thm. 4) are
+
+Q_pq = f_p − f_q − ⟨g_q, x_p − x_q⟩ − (‖g_p − g_q‖² + μ‖x_p − x_q‖² − 2μ⟨g_p − g_q, x_p − x_q⟩) / (2(1 − μ)) ≥ 0.
+
+* *Impossible for h ≤ h₁(κ).* The identity (in x₀, g₀, g₁, g₂, f₀, f₁, f₂, with x₁ = x₀ − hg₀ and x₂ = x₁ − hg₁)
+
+  v₁ + λ₀₁ Q₀₁ + λ₂₀ Q₂₀ + λ₂₁ Q₂₁ + Σ_ab S_ab ⟨g_a, g_b⟩ = 0
+
+  holds with λ₀₁ = (3 + μ − 2hμ)/(2 − hμ), λ₂₀ = (1 + μ − hμ)/(2 − hμ), λ₂₁ = (1 − μ)/(2 − hμ) and
+  S = W / (2(1 − μ)(2 − hμ)) for an explicit polynomial matrix W (`W_MATRIX` in
+  [src/optcurves/theorem.py](src/optcurves/theorem.py)). The multipliers are positive, and W ⪰ 0 when q ≥ 0,
+  because the LDLᵀ of W in the pivot order g₁, g₀, g₂ has the pivots W₁₁ = (4 − 2h) + h²μ(2 − hμ) > 0, then
+  m / W₁₁ with m = W₀₀W₁₁ − W₀₁² = q·(μ(h²μ − 2h + 1)² + 1 − μ) + μ(1 − μ) > 0, and det W / m with
+  det W = h²μ(1 − μ)(2 − hμ)³ q ≥ 0. Hence v₁ ≤ 0.
+* *Possible for h₁(κ) < h < 2.* Take one-dimensional data with minimizer x* = 0 and D = 2 + h²(1 − μ):
+
+  x₀ = 1, g₀ = 1, f₀ = 1/2; x₁ = 1 − h, g₁ = −(h − 1)(2 + h(1 − μ))/D, f₁ = x₁²/2 − (g₁ − x₁)²/(2(1 − μ));
+  x₂ = x₁ − hg₁ = 2(h − 1)²/D, g₂ = x₂, f₂ = x₂²/2.
+
+  Nine of the twelve interpolation inequalities hold with equality: the six among x*, x₀, x₂ (data of x²/2) and
+  Q_*1, Q₀₁, Q₂₁. The other three are Q_1* = h(h − 1)³(1 − μ)(2 + h − h²μ)/D²,
+  Q₁₀ = h²(h − 1)²(1 − μ)(1 + 2h − h²μ)/D² and Q₁₂ = h²(h − 1)³(1 − μ)(3 − hμ)/D², all ≥ 0 for 1 ≤ h < 2. And
+  **v₁ = −h² q / (2D)**, positive exactly when h > h₁(κ). By the interpolation theorem these data come from a
+  1-smooth μ-strongly convex f: ℝ → ℝ, and gradient descent from x₀ = 1 visits x₁ and x₂.
+* *Equality at h = h₁(κ).* There q = 0: the same data have v₁ = 0, and (g₀, g₁, g₂) spans the kernel of W.
+* *Monotonicity.* With R = (1 + κ)² − (7κ + 1)/2 = (κ − 1)(κ − 1/2), dh₁/dκ = 1 − (κ − 3/4)/√R < 0 because
+  (κ − 3/4)² − R = 1/16, and h₁(κ) = ((7κ + 1)/2) / (1 + κ + √R) → 7/4.
+
+*How it is checked.* `python -m optcurves.theorem` verifies every identity above in exact polynomial arithmetic in
+the symbols h, μ, κ (SymPy, no sampling, no floating point). The certificate identity is checked with symbolic
+vectors in ℝ²; it is linear in the inner products of x₀, g₀, g₁, g₂, and Gram matrices of vectors in ℝ² span all
+symmetric matrices, so every coefficient vanishes and it holds in every real inner-product space. The signs are
+then read off the displayed forms.
+[tests/test_theorem.py](tests/test_theorem.py) also ties W to the Gram-matrix code of `certificate.py`, runs the exact
+checkers of `certificate.py` and `counterexample.py` on both sides at random rational (h, μ), and checks the equality
+case at rational points of the threshold curve (h = t, μ = (4t − 7)/(2t² − 4t + 1), 7/4 < t < 2). The proof is not
+formalized in Lean. With μ = 0 the same formulas give λ = (3/2, 1/2, 1/2),
+Σ S_ab⟨g_a, g_b⟩ = (1/8)‖g₀ + g₁ − 2g₂‖² + ((7 − 4h)/8)‖g₀ − g₁‖² and v₁ = −h²(7 − 4h)/(2(2 + h²)): they recover
+the threshold 7/4 of Barzilai, Shamir and Zamani for convex f.
+
+`[conjecture]` *The worst case above the threshold.* For h₁(κ) < h < 2 the data of part 2 appear to be the worst
+case: the PEP maximum of v₁ over ‖x₀ − x*‖ ≤ 1 equals their value h²(−q) / (2(2 + h²(1 − μ))) within a relative
+1.5 × 10⁻⁷ at 20 points (κ from 1.1 to 100, h from h₁(κ) + 0.01 to 1.99); the tests check four points. For μ = 0
+the formula reads h²(4h − 7) / (2(2 + h²)), which is 0.0618 at h = 1.8. A proof would need a certificate that also
+uses the minimizer.
+
+**The case κ = 7/5 `[exact]`, which led to the proof.** There h₁ = 9/5 is rational, so before the theorem the
+formula could be tested in exact arithmetic. One violation v₁ > 0 for 1-smooth 5/7-strongly convex f ("impossible":
+for every such f on any real inner-product space and every starting point; "possible": for some f: ℝ → ℝ):
 
 | h | v₁ > 0 | evidence |
 |---|---|---|
@@ -144,25 +212,24 @@ real inner-product space and every starting point; "possible": for some f: ℝ �
 | **9/5** | **impossible**, and v₁ = 0 is attained | tight certificate, below |
 | 9/5 + 10⁻ᵏ, k = 3, 4, 5, 6 | possible | counterexample in ℚ¹ |
 
-So **h₁(7/5) ∈ [9/5, 9/5 + 10⁻⁶]** in the sense of section 1 (no monotonicity in h is proved), and the left end is
-the conjectured value itself. With the interpolation inequalities of 1-smooth μ-strongly convex functions
-(Taylor, Hendrickx and Glineur 2017, Thm. 4)
+This bracketed h₁(7/5) in [9/5, 9/5 + 10⁻⁶]; the theorem gives h₁(7/5) = 9/5. The certificate at h = 9/5 is the
+identity (with x₁ = x₀ − (9/5)g₀ and x₂ = x₁ − (9/5)g₁)
 
-Q_pq = f_p − f_q − ⟨g_q, x_p − x_q⟩ − (‖g_p − g_q‖² + μ‖x_p − x_q‖² − 2μ⟨g_p − g_q, x_p − x_q⟩) / (2(1 − μ)) ≥ 0,
+v₁ + (8/5) Q₀₁ + (3/5) Q₂₀ + (2/5) Q₂₁ + (89/50) ‖g₀ + (139/89) g₁ + (15/89) g₂‖² + (245/356) ‖g₁ + (11/7) g₂‖² = 0,
 
-the certificate at h = 9/5 is the identity (in x₀, g₀, g₁, g₂, f₀, f₁, f₂, with x₁ = x₀ − (9/5)g₀ and x₂ = x₁ − (9/5)g₁)
-
-v₁ + (8/5) Q₀₁ + (3/5) Q₂₀ + (2/5) Q₂₁ + (89/50) ‖g₀ + (139/89) g₁ + (15/89) g₂‖² + (245/356) ‖g₁ + (11/7) g₂‖² = 0.
-
-Its Gram part has rank 2 with null vector (16, −11, 7), and the bound v₁ ≤ 0 is sharp: the one-dimensional data
-x* = 0, x₀ = 1, g = (1, −11/16, 7/16), f = (1/2, 305/1024, 49/512) satisfy every interpolation inequality and have
-v₁ = 0. Unlike the convex case, linear functions are not in the class, so no facial reduction is needed and the
-certificates below 9/5 have a positive definite Gram part. Above 9/5 the max-slack SDP optimum has numerical rank 1,
-with gradients close to (16, −11, 7)/16, hence the one-dimensional counterexamples. Files: the entries with
-`"mu": "5/7"` in [certificates/](certificates/) and [counterexamples/](counterexamples/), written by
-`python -m optcurves.certificate` and `python -m optcurves.counterexample`. This is a single value of κ; the closed
-form for h₁(κ) remains a conjecture. (The PEP bisection at κ = 1.4 gives [1.80000008, 1.80000011]; the offset of
-about 10⁻⁷ above 9/5 is its tolerance, since values ≤ 10⁻⁷ count as "no violation".)
+which is the theorem's certificate at (h, μ) = (9/5, 5/7). Its Gram part has rank 2 with null vector (16, −11, 7),
+and the one-dimensional data x* = 0, x₀ = 1, g = (1, −11/16, 7/16), f = (1/2, 305/1024, 49/512) (the theorem's data
+at that point) satisfy every interpolation inequality and have v₁ = 0. With λ₁₀ = λ₁₂ = 0 the linear equations
+leave a two-parameter family λ₀₁ = a, λ₀₂ = b, λ₂₀ = a + b − 1, λ₂₁ = 2 − a (independent of h and μ). In general
+8(1 − μ)² det S = (a, b, 1) M (a, b, 1)ᵀ with det M = h⁶μ(2 − hμ)²q², which is how the quadratic of h₁(κ) appeared;
+the theorem uses the member b = 0, where det S = h²μq / (8(1 − μ)²). Unlike the convex case, linear
+functions are not in the class, so no facial reduction is needed and the certificates below 9/5 have a positive
+definite Gram part. Above 9/5 the max-slack SDP optimum has numerical rank 1, with gradients close to
+(16, −11, 7)/16, hence the one-dimensional counterexamples. Files: the entries with `"mu": "5/7"` in
+[certificates/](certificates/) and [counterexamples/](counterexamples/), written by
+`python -m optcurves.certificate` and `python -m optcurves.counterexample`. (The PEP bisection at κ = 1.4 gives
+[1.80000008, 1.80000011]; the offset of about 10⁻⁷ above 9/5 is its tolerance, since values ≤ 10⁻⁷ count as
+"no violation".)
 
 ![Thresholds against the condition number](figures/strong_threshold.png)
 
@@ -188,16 +255,22 @@ about 10⁻⁷ above 9/5 is its tolerance, since values ≤ 10⁻⁷ count as "n
    to ℝ¹ before rounding.
 4. **Lean** ([src/optcurves/lean_gen.py](src/optcurves/lean_gen.py)). Each certificate becomes a theorem whose proof
    feeds the interpolation inequalities and the squares to `linarith`.
+5. **Symbolic proof** ([src/optcurves/theorem.py](src/optcurves/theorem.py)). The theorem of section 4: multipliers,
+   Gram matrix and extremal data in closed form in (h, μ), every identity checked by SymPy polynomial arithmetic.
 
 The PEP layer is cross-checked against the two hand-built SDPs in the tests.
 
 ## Limitations
 
-* Exact statements are about the listed step sizes only; nothing is proved for all h in an interval.
+* Apart from the one-violation theorem of section 4 (every h and every κ > 1), exact statements are about the
+  listed step sizes only; for two or more consecutive violations nothing is proved for all h in an interval.
 * The Lean theorems assume the interpolation inequalities (bridge lemma not formalized).
-* The counterexamples rely on the interpolation theorem of Taylor, Hendrickx and Glineur (2017).
-* Strongly convex results are numerical, except the exact bracket h₁(7/5) ∈ [9/5, 9/5 + 10⁻⁶] for one violation
-  at κ = 7/5; the closed form for h₁(κ) is a conjecture.
+* The counterexamples, and the "possible" half of the theorem, rely on the interpolation theorem of Taylor,
+  Hendrickx and Glineur (2017).
+* For strongly convex f only one violation is settled exactly (section 4); the thresholds for two or more
+  consecutive violations are numerical, with no closed form proposed, and the worst-case value of v₁ above
+  h₁(κ) is a conjecture.
+* The theorem of section 4 is checked by SymPy (exact symbolic identities), not by Lean.
 * Only gradient descent with constant steps. Heavy ball, Nesterov and proximal methods are not studied.
 
 ## Reproduce
@@ -212,9 +285,10 @@ pip install -e ".[test]"
 ```
 
 Single steps: `python -m optcurves.study consecutive|strong`, `python -m optcurves.certificate`,
-`python -m optcurves.counterexample`, `python -m optcurves.lean_gen`, `python -m optcurves.figures`, `pytest`.
-The tests check every certificate and counterexample in exact arithmetic, that tampering breaks them, that the exact
-brackets have width ≤ 10⁻⁴ (≤ 10⁻⁶ at κ = 7/5) and contain the numerical thresholds, and that the Lean file
+`python -m optcurves.counterexample`, `python -m optcurves.theorem`, `python -m optcurves.lean_gen`,
+`python -m optcurves.figures`, `pytest`. The tests check every certificate and counterexample in exact arithmetic,
+that tampering breaks them, that the exact brackets have width ≤ 10⁻⁴ (≤ 10⁻⁶ at κ = 7/5) and contain the numerical
+thresholds, every step of the proof in section 4 with exact instances on both sides of h₁(κ), and that the Lean file
 matches the generator.
 
 Lean (needs elan; downloads the Mathlib cache):
@@ -259,14 +333,18 @@ that the results are new.
   كسرية، يتحول إلى دالة فعلية بمبرهنة الاستيفاء لـ Taylor وHendrickx وGlineur (2017).
 - **[Lean]** ست مبرهنات (عند 9/5 و1.8634 لانكسارين، وعند 19/10 لثلاثة) تحققت منها نواة Lean مع Mathlib، ولا
   تعتمد إلا على المسلّمات الثلاث القياسية. فرضياتها متباينات الاستيفاء، ولمّة الجسر إلى الدوال غير مبرهنة.
-- **[عددي]** للدوال قوية التحدب: العتبات ترتفع كلما صغر κ = L/μ. و**[حدسية]** للانكسار الواحد:
-  h₁(κ) = (1 + κ) − √((1 + κ)² − (7κ + 1)/2)، وتطابق كل القيم المحسوبة بفرق أقل من 4.3 × 10⁻⁶، لكنها غير مبرهنة.
-- **[دقيق]** عند κ = 7/5، حيث تعطي الحدسية القيمة الكسرية 9/5: الانكسار الواحد مستحيل عند h = 9/5 بالضبط
-  (شهادة مماسّة، والمساواة v₁ = 0 تتحقق بدالة في متغير واحد)، وممكن عند h = 9/5 + 10⁻⁶ بدالة في متغير واحد.
-  أي أن h₁(7/5) في [9/5، 9/5 + 10⁻⁶]، متسقة مع الحدسية. هذه قيمة واحدة لـ κ، فالحدسية ما زالت غير مبرهنة.
+- **[عددي]** للدوال قوية التحدب: العتبات ترتفع كلما صغر κ = L/μ.
+- **[دقيق، مبرهنة]** لانكسار واحد في الدوال قوية التحدب، ولكل κ > 1، العتبة هي بالضبط
+  h₁(κ) = (1 + κ) − √((1 + κ)² − (7κ + 1)/2). إذا كان h ≤ h₁(κ) فالانكسار مستحيل لكل دالة في أي فضاء ضرب داخلي
+  (شهادة من ثلاث متباينات استيفاء بمعاملات صريحة في h وμ)، وإذا كان h₁(κ) < h < 2 فهو ممكن بدالة في متغير واحد،
+  وعند h = h₁(κ) تتحقق المساواة v₁ = 0. فمجموعة الخطوات السيئة هي الفترة (h₁(κ)، 2) بالضبط. تحقّقنا من كل
+  متطابقات البرهان رمزيًا في SymPy (لا في Lean). كانت الصيغة حدسية مستخلصة من الأرقام، وحالة κ = 7/5 (حيث
+  h₁ = 9/5) هي التي كشفت بنية البرهان. ومع μ = 0 تعطي الصيغ نفسها العتبة المعروفة 7/4.
+- **[حدسية]** فوق العتبة يبدو أن هذا المثال أحادي البعد هو الحالة الأسوأ: أكبر قيمة لـ v₁ مع ‖x₀ − x*‖ ≤ 1 تساوي
+  h²(−q) / (2(2 + h²(1 − μ)))، حيث q = 2μh² − 4(1 + μ)h + μ + 7، بتطابق عددي نسبي حتى 1.5 × 10⁻⁷ في 20 نقطة.
 
-**ما بقي مفتوحاً:** برهان أن مجموعة الخطوات السيئة فترة، وصيغة مغلقة لـ h₂ وما بعدها، وبرهان الحدسية، وطرق
-أخرى مثل Heavy Ball وNesterov.
+**ما بقي مفتوحاً:** برهان أن مجموعة الخطوات السيئة فترة لانكسارين متتاليين فأكثر، وصيغة مغلقة لـ h₂ وما بعدها،
+وبرهان القيمة الأسوأ لـ v₁ فوق العتبة، وصياغة برهان العتبة h₁(κ) في Lean، وطرق أخرى مثل Heavy Ball وNesterov.
 
 ## Citation and license
 

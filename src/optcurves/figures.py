@@ -18,8 +18,8 @@ MARKERS = {1: "o", 2: "s", 3: "^"}
 INK, MUTED, GRID = "#3d3c37", "#8a887f", "#e4e2dc"
 
 
-def h1_conjecture(kappa):
-    """Conjectured threshold for one violation, mu-strongly convex, kappa = L/mu (numerical evidence only)."""
+def h1_closed_form(kappa):
+    """Exact threshold for one violation, mu-strongly convex, kappa = L/mu (proved in theorem.py)."""
     return (1 + kappa) - math.sqrt((1 + kappa) ** 2 - (7 * kappa + 1) / 2)
 
 
@@ -61,8 +61,8 @@ def strong(plt):
     finite = [r for r in st["rows"] if r["kappa"] != "inf"]
     inf_row = next(r for r in st["rows"] if r["kappa"] == "inf")
     ks = np.geomspace(1.0001, 1e4, 400)
-    ax.plot(ks, [h1_conjecture(k) for k in ks], color=INK, linewidth=1, linestyle="--",
-            label="conjecture for h$_1$(κ)")
+    ax.plot(ks, [h1_closed_form(k) for k in ks], color=INK, linewidth=1, linestyle="--",
+            label="h$_1$(κ), exact (theorem)")
     for n in (1, 2, 3):
         pts = [(r["kappa"], r[f"h{n}"]["lo"]) for r in finite if r[f"h{n}"]]
         ax.plot([p[0] for p in pts], [p[1] for p in pts], color=COLORS[n], linewidth=0, marker=MARKERS[n],

@@ -5,8 +5,9 @@ from fractions import Fraction
 from pathlib import Path
 
 import pytest
+import sympy as sp
 
-from optcurves import certificate, counterexample, figures, pep
+from optcurves import certificate, counterexample, figures, pep, theorem
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -62,8 +63,9 @@ def test_strong_sdps_agree_with_pepit(h):
 
 
 @pytest.mark.parametrize("kappa", [2.0, 7 / 5, 10.0])
-def test_h1_conjecture_spot(kappa):
-    h1 = figures.h1_conjecture(kappa)
+def test_h1_closed_form_against_pepit(kappa):
+    h1 = figures.h1_closed_form(kappa)
+    assert abs(h1 - float(theorem.h1(sp.nsimplify(kappa)))) < 1e-12
     assert pep.max_min_violation(h1 - 2e-3, 1, mu=1 / kappa) <= pep.TOL
     assert pep.max_min_violation(h1 + 2e-3, 1, mu=1 / kappa) > pep.TOL
 
@@ -91,3 +93,25 @@ def test_strong_results_consistent_with_exact_bracket():
     lo = max(float(Fraction(c["h"])) for c in _jsons("certificates") if c.get("mu") == "5/7")
     hi = min(float(Fraction(c["h"])) for c in _jsons("counterexamples") if c.get("mu") == "5/7")
     assert lo == 1.8 and lo <= row["h1"]["lo"] <= row["h1"]["hi"] <= hi
+
+
+def test_strong_pep_h1_matches_theorem():
+    """Every PEP threshold h_1(kappa) in results/strong.json (30 finite kappa and mu = 0) lies within 5e-6 of the exact
+    h_1(kappa) of theorem.py. Since the closed form is proved, this measures the PEP pipeline (violation tolerance
+    1e-7, SCS fallback for kappa <= 3); the largest gap is 4.4e-6, at kappa = 1.15."""
+    rows = json.loads((ROOT / "results" / "strong.json").read_text())["rows"]
+    assert len(rows) == 31
+    for r in rows:
+        exact = 1.75 if r["kappa"] == "inf" else figures.h1_closed_form(r["kappa"])
+        assert max(abs(r["h1"]["lo"] - exact), abs(r["h1"]["hi"] - exact)) < 5e-6, r["kappa"]
+
+
+@pytest.mark.parametrize("mu, h", [(2 / 3, 1.9), (0.5, 1.95), (0.1, 1.85), (0.0, 1.8)])
+def test_strong_worst_case_matches_extremal_data(mu, h):
+    """[conjecture] Above h_1(kappa) the one-dimensional data of theorem.py are the worst case: the PEP maximum of v_1
+    over ||x_0 - x*|| <= 1 equals their value -h^2 q / (2 D), D = 2 + h^2 (1 - mu) (for mu = 0: h^2 (4h - 7) /
+    (2 (2 + h^2)), 0.0618 at h = 1.8)."""
+    q = 2 * mu * h**2 - 4 * (1 + mu) * h + mu + 7
+    v_data = -h**2 * q / (2 * (2 + h**2 * (1 - mu)))
+    assert v_data > 0
+    assert abs(pep.max_min_violation(h, 1, mu=mu) - v_data) <= 1e-4 * v_data

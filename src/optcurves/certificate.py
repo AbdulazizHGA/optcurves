@@ -266,7 +266,7 @@ def filename(h, n, mu="0"):
 # (h, n): the first per n is the one just below the numerical threshold h_n (tightest exact bound).
 TARGETS = [("9317/5000", 2), ("3/2", 2), ("9/5", 2), ("37/20", 2), ("93/50", 2),
            ("19/10", 3), ("47/25", 3), ("38391/20000", 4), ("38643/20000", 5), ("19411/10000", 6)]
-# (h, n, mu): one violation for mu = 5/7 (kappa = 7/5), 9/5 - 10^-k below the conjectured h_1(7/5) = 9/5.
+# (h, n, mu): one violation for mu = 5/7 (kappa = 7/5), 9/5 - 10^-k below h_1(7/5) = 9/5 (theorem.py).
 STRONG_TARGETS = [("1799/1000", 1, "5/7"), ("17999/10000", 1, "5/7"), ("179999/100000", 1, "5/7"),
                   ("1799999/1000000", 1, "5/7")]
 # Closed-form certificate at h = 9/5 itself, where every certificate is tight (margin 0). With lam_10 = lam_12 = 0

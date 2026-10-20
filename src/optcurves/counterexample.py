@@ -158,7 +158,7 @@ def find(h, n, dim=None, mu="0", rank=None,
 # (h, n, dim): dim=None is the SDP (tight, just above the numerical h_n); dim=2 gives plottable examples.
 TARGETS = [("3727/2000", 2, None), ("19/10", 2, 2), ("19001/10000", 3, None), ("199/100", 3, 2),
            ("38393/20000", 4, None), ("38645/20000", 5, None), ("9706/5000", 6, None)]
-# (h, n, mu, rank): one violation for mu = 5/7 (kappa = 7/5), 9/5 + 10^-k above the conjectured h_1(7/5) = 9/5.
+# (h, n, mu, rank): one violation for mu = 5/7 (kappa = 7/5), 9/5 + 10^-k above h_1(7/5) = 9/5 (theorem.py).
 # The SDP optimum is numerically of rank 1 (second eigenvalue ~1e-9 against ~2.7), so it is truncated to R^1.
 STRONG_TARGETS = [("1801/1000", 1, "5/7", 1), ("18001/10000", 1, "5/7", 1), ("180001/100000", 1, "5/7", 1),
                   ("1800001/1000000", 1, "5/7", 1)]

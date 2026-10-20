@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 # Skip "._*" AppleDouble files (macOS writes them on exFAT/FAT volumes).
 CERTS = sorted(p for p in (ROOT / "certificates").glob("*.json") if not p.name.startswith("._"))
 CES = sorted(p for p in (ROOT / "counterexamples").glob("*.json") if not p.name.startswith("._"))
-# Strongly convex files carry "mu" (here 5/7, kappa = 7/5, where the conjectured h_1 is exactly 9/5).
+# Strongly convex files carry "mu" (here 5/7, kappa = 7/5, where the threshold h_1 of theorem.py is exactly 9/5).
 STRONG_CERTS = [p for p in CERTS if "mu" in json.loads(p.read_text())]
 STRONG_CES = [p for p in CES if "mu" in json.loads(p.read_text())]
 CONVEX_CERTS = [p for p in CERTS if p not in STRONG_CERTS]
@@ -93,13 +93,13 @@ def test_lean_file_up_to_date():
     assert (ROOT / "lean" / "Optcurves" / "Certificates.lean").read_text() == lean_gen.generate()
 
 
-# --- mu = 5/7 (kappa = 7/5): one violation, conjectured threshold h_1(7/5) = 9/5 ---
+# --- mu = 5/7 (kappa = 7/5): one violation, threshold h_1(7/5) = 9/5 (proved for all kappa in theorem.py) ---
 
 def test_strong_exact_bracket():
-    """A certificate at exactly the conjectured h_1(7/5) and counterexamples above it, the closest within 1e-6."""
+    """A certificate at exactly h_1(7/5) and counterexamples above it, the closest within 1e-6."""
     kappa = sp.Rational(7, 5)
-    conjecture = (1 + kappa) - sp.sqrt((1 + kappa) ** 2 - (7 * kappa + 1) / 2)
-    assert conjecture == sp.Rational(9, 5)
+    closed_form = (1 + kappa) - sp.sqrt((1 + kappa) ** 2 - (7 * kappa + 1) / 2)
+    assert closed_form == sp.Rational(9, 5)
     certs = [json.loads(p.read_text()) for p in STRONG_CERTS]
     ces = [json.loads(p.read_text()) for p in STRONG_CES]
     assert all(c["mu"] == "5/7" and c["n"] == 1 for c in certs + ces)
