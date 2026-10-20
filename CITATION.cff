@@ -4,11 +4,11 @@ title: "optcurves: consecutive convexity violations of gradient-descent optimiza
 abstract: >-
   Performance-estimation study, exact rational certificates and counterexamples, and Lean-verified theorems on
   when the optimization curve of gradient descent with constant step size can be concave at several consecutive
-  steps, for L-smooth convex and strongly convex functions. For one violation and mu-strongly convex functions,
-  symbolic (SymPy-checked) proofs give the exact step-size threshold
-  h_1(kappa) = (1 + kappa) - sqrt((1 + kappa)^2 - (7 kappa + 1)/2), kappa = L/mu, and the exact worst-case
-  violation above it, h^2 max(0, -q) / (2 (2 + h^2 (1 - mu))) ||x_0 - x*||^2 with
-  q = 2 mu h^2 - 4 (1 + mu) h + mu + 7.
+  steps, for L-smooth convex and strongly convex functions. For one violation and L-smooth mu-strongly convex
+  functions, with step size h/L, kappa = L/mu and m = mu/L = 1/kappa, symbolic (SymPy-checked) proofs give the
+  exact threshold h_1(kappa) = (1 + kappa) - sqrt((1 + kappa)^2 - (7 kappa + 1)/2) (for 0 < h < 2, no f has a
+  violation exactly when h <= h_1(kappa)) and the exact worst-case violation above it,
+  L h^2 max(0, -q) / (2 (2 + h^2 (1 - m))) ||x_0 - x*||^2 with q = 2 m h^2 - 4 (1 + m) h + m + 7.
 type: software
 url: "https://github.com/AbdulazizHGA/optcurves"
 repository-code: "https://github.com/AbdulazizHGA/optcurves"

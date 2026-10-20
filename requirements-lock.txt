@@ -1,0 +1,39 @@
+# Exact package versions behind results/*.json, the figures and the byte-for-byte rerun described in README.md
+# (Python 3.13.5, macOS arm64). To install that environment:
+#     pip install -r requirements-lock.txt && pip install -e . --no-deps
+# pyproject.toml keeps open lower bounds; CI tests the newest versions on Python 3.11 and 3.13.
+# Contents: the dependency closure of pyproject.toml (dependencies and the test extra) as installed there.
+cffi==2.1.1
+clarabel==0.11.1
+cloudpickle==3.1.2
+contourpy==1.4.0
+cvxpy==1.9.3
+cycler==0.12.1
+fonttools==4.67.0
+highspy==1.15.1
+iniconfig==2.3.1
+jinja2==3.1.6
+joblib==1.6.0
+kiwisolver==1.5.1
+markupsafe==3.0.4
+matplotlib==3.11.2
+mpmath==1.3.0
+numpy==2.5.4
+osqp==1.1.3
+packaging==26.3
+pandas==3.0.6
+pepit==0.5.1
+pillow==13.0.0
+pluggy==1.7.0
+pycparser==3.11
+pygments==2.21.0
+pyparsing==3.3.3
+pytest==9.1.1
+python-dateutil==2.9.0.post0
+qdldl==0.1.9.post1
+scipy==1.18.1
+scs==3.3.1
+setuptools==84.0.0
+six==1.17.0
+sparsediffpy==0.6.1
+sympy==1.14.0

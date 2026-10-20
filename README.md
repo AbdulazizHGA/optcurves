@@ -112,16 +112,19 @@ All six declarations depend only on `[propext, Classical.choice, Quot.sound]`.
 A 1-smooth convex f: ℝ² → ℝ with minimizer x* = 0 on which gradient descent with h = 19/10 breaks convexity at
 steps 1 and 2 (v₁ = 0.00513, v₂ = 0.00643, exact rationals in
 [counterexamples/n2_h19_10_d2.json](counterexamples/n2_h19_10_d2.json)). The contours are those of the largest
-1-smooth convex interpolant of the data, evaluated with its dual formula; it reproduces the stored values.
+1-smooth convex interpolant of the data. Its dual formula is a small quadratic program over a simplex, solved exactly
+(up to rounding) face by face at each grid point; the tests check its optimality conditions on the whole plotting
+grid. It reproduces the stored values.
 
 ![Two-dimensional counterexample at h = 19/10](figures/counterexample_2d.png)
 
 `python -m optcurves.counterexample && python -m optcurves.figures`
 
 A second plottable example, three consecutive violations at h = 199/100 in ℝ², is in
-[counterexamples/n3_h199_100_d2.json](counterexamples/n3_h199_100_d2.json). `[numerical]` A multistart
-local search (200 starts) found no strictly feasible one-dimensional example at h = 1.9 (n = 2) or h = 1.99 (n = 3);
-this is not a proof that one dimension is impossible.
+[counterexamples/n3_h199_100_d2.json](counterexamples/n3_h199_100_d2.json). `[numerical]` The same max-slack local
+search restricted to ℝ¹ (200 random starts) finds no strictly feasible example at h = 1.9 (n = 2) or h = 1.99 (n = 3):
+its best margins, 4 × 10⁻¹⁴ and 2 × 10⁻¹⁴, are at the rounding level, against 6.6 × 10⁻³ and 1.1 × 10⁻² in ℝ²
+([results/side.json](results/side.json)). This is not a proof that one dimension is impossible.
 
 ### 4. Strongly convex functions: the exact threshold and worst case for one violation `[exact]`, PEP thresholds `[numerical]`
 
@@ -257,9 +260,9 @@ h and μ (SymPy), the certificate identity with symbolic vectors x*, x₀, g₀,
 [tests/test_worstcase.py](tests/test_worstcase.py) also checks the identity in Fractions with independent code at
 random rational points, that the certificate is valid (exact LDLᵀ) exactly when q < 0, that it equals the certificate
 of part 1 at rational points of the threshold curve, and that the violations of every stored counterexample obey the
-bound. Numerically, the PEP maximum of v₁ over ‖x₀ − x*‖ ≤ 1 agrees with h²(−q)/(2D) within a relative 1.5 × 10⁻⁷
-at 20 points (κ from 1.1 to 100, h from h₁(κ) + 0.01 to 1.99); four points are in the tests. The proof is not
-formalized in Lean.
+bound. Numerically, the PEP maximum of v₁ over ‖x₀ − x*‖ ≤ 1 agrees with h²(−q)/(2D) within a relative 1.6 × 10⁻⁷
+at 20 points (κ = 1.1, 1.5, 2, 10 and 100; h = h₁(κ) + 0.01, (h₁(κ) + 2)/2, 1.95 and 1.99), all solved to "optimal"
+([results/side.json](results/side.json)); four of them are also in the tests. The proof is not formalized in Lean.
 
 **The case κ = 7/5 `[exact]`, which led to the proof.** There h₁ = 9/5 is rational, so before the theorem the
 formula could be tested in exact arithmetic. One violation v₁ > 0 for 1-smooth 5/7-strongly convex f ("impossible":
@@ -338,24 +341,28 @@ The PEP layer is cross-checked against the two hand-built SDPs in the tests.
 
 ## Reproduce
 
-Python ≥ 3.11 (CVXPY 1.8 and later need it; the tests pass with Python 3.11 and 3.13). Every number above comes
-from these commands (about 6 minutes in total on an M1 laptop, mostly `study strong`). On our machine a full rerun
-with Python 3.13 reproduced every JSON file, the Lean file and the figures byte for byte:
+Python ≥ 3.11 (CVXPY 1.8 and later need it; the tests pass with Python 3.11 and 3.13). Every number above comes from
+these commands (about 7 minutes in total on an M1 laptop, mostly `study strong` and `side`). On our machine a full
+rerun with Python 3.13 reproduced every JSON file, the Lean file and the figures byte for byte:
 
 ```bash
 pip install -e ".[test]"
 ./reproduce.sh          # study, certificates, counterexamples, Lean file, figures, tests
 ```
 
+[requirements-lock.txt](requirements-lock.txt) pins the exact package versions of that run (Python 3.13, macOS
+arm64): `pip install -r requirements-lock.txt && pip install -e . --no-deps` installs them instead of the newest.
+
 Single steps: `python -m optcurves.study consecutive|strong`, `python -m optcurves.certificate`,
-`python -m optcurves.counterexample`, `python -m optcurves.theorem`, `python -m optcurves.worstcase`,
-`python -m optcurves.lean_gen`, `python -m optcurves.figures`, `pytest`. The tests check every certificate and
-counterexample in exact arithmetic, that tampering breaks them, that the exact brackets have width ≤ 10⁻⁴ (≤ 10⁻⁶
-at κ = 7/5) and contain the numerical thresholds, that both ends of every PEP bracket were decided by solves that
-reached "optimal" (with no jump across a full-width bracket), every step of the two proofs in section 4 with exact
-instances on both sides of h₁(κ), and that the Lean file matches the generator. If any certificate or
-counterexample cannot be regenerated, its generator exits with an error, so `reproduce.sh` stops instead of testing
-the old file.
+`python -m optcurves.counterexample`, `python -m optcurves.side` (the 20-point check and the search in ℝ¹),
+`python -m optcurves.theorem`, `python -m optcurves.worstcase`, `python -m optcurves.lean_gen`,
+`python -m optcurves.figures`, `pytest`. The tests check every certificate and counterexample in exact arithmetic,
+that tampering breaks them, that the exact brackets have width ≤ 10⁻⁴ (≤ 10⁻⁶ at κ = 7/5) and contain the numerical
+thresholds, that both ends of every PEP bracket were decided by solves that reached "optimal" (with no jump across a
+full-width bracket), every step of the two proofs in section 4 with exact instances on both sides of h₁(κ), the
+optimality conditions of the contour values on the plotting grid, the side experiments, and that the Lean file
+matches the generator. If any certificate or counterexample cannot be regenerated, its generator exits with an error,
+so `reproduce.sh` stops instead of testing the old file.
 
 Lean (needs elan; downloads the Mathlib cache):
 
@@ -419,8 +426,9 @@ that the results are new.
   كسرية، يتحول إلى دالة فعلية بمبرهنة الاستيفاء لـ Taylor وHendrickx وGlineur (2017).
 - **[Lean]** ست مبرهنات (عند 9/5 و1.8634 لانكسارين، وعند 19/10 لثلاثة) تحققت منها نواة Lean مع Mathlib، ولا
   تعتمد إلا على المسلّمات الثلاث القياسية. فرضياتها متباينات الاستيفاء، ولمّة الجسر إلى الدوال غير مبرهنة.
-- **[عددي]** للدوال قوية التحدب: العتبات ترتفع كلما صغر κ = L/μ. النقاط التي لا يبلغ فيها أيٌّ من المحلّلين
-  (Clarabel ثم SCS) حلًّا دقيقًا لا تُستعمل في الحكم، فتبقى خمس فترات مفتوحة.
+- **[عددي]** للدوال قوية التحدب: العتبات ترتفع كلما صغر κ = L/μ. النقاط التي لا يصل فيها أيٌّ من المحلّلين
+  (Clarabel ثم SCS) إلى الحالة optimal ضمن تسامحه لا تُستعمل في الحكم، فتبقى خمس فترات مفتوحة. والحالة optimal
+  نفسها نتيجة عددية، لا برهان بحساب كسري.
 - **[دقيق]** عند κ = 1.05 ثلاثة انكسارات متتالية ممكنة عند h = 1.999 (مثال مضاد ببيانات كسرية في مستوى). كانت النسخة السابقة
   تقبل قيمة SCS غير الدقيقة فتقول إنه لا انكسار.
 - **[دقيق، مبرهنة]** لانكسار واحد في الدوال قوية التحدب، ولكل κ > 1، العتبة هي بالضبط
@@ -434,7 +442,7 @@ that the results are new.
   c = h²(−q) / (2(2 + h²(1 − μ)))، وq = 2μh² − 4(1 + μ)h + μ + 7، والمساواة تتحقق. البرهان شهادة من خمس متباينات
   استيفاء تشمل النقطة الصغرى x*، وهي امتداد لشهادة العتبة نفسها بعد تجاوزها، وتحقّقنا منها رمزيًا في SymPy.
   ومع μ = 0 تصبح القيمة القصوى h²(4h − 7) / (2(2 + h²)) للدوال المحدبة. كانت هذه القيمة حدسية مستخلصة من
-  تطابق عددي حتى 1.5 × 10⁻⁷ في 20 نقطة.
+  تطابق عددي حتى 1.6 × 10⁻⁷ في 20 نقطة.
 
 **ما بقي مفتوحاً:** برهان أن مجموعة الخطوات السيئة فترة لانكسارين متتاليين فأكثر، وصيغة مغلقة لـ h₂ وما بعدها،
 وصياغة برهانَي العتبة h₁(κ) والقيمة الأسوأ في Lean، وطرق أخرى مثل Heavy Ball وNesterov.

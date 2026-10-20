@@ -2,6 +2,7 @@
 
     python -m optcurves.figures     # writes figures/consecutive.png, strong_threshold.png, counterexample_2d.png
 """
+import itertools
 import json
 import math
 from fractions import Fraction as F
@@ -99,35 +100,60 @@ def interpolant(ce):
     """Largest 1-smooth convex interpolant of the counterexample data, evaluated by its dual formula
     f(x) = min over lam in the simplex of 1/2 ||sum lam_i (x - x_i + g_i)||^2 + sum lam_i (f_i - 1/2 ||g_i||^2)
     (the conjugate of the smallest 1-strongly convex function through the dual data, the maximum of the quadratic
-    lower bounds; conjugation reverses the order). Returns a vectorized f."""
-    h = F(ce["h"])
+    lower bounds; conjugation reverses the order). Returns a vectorized f.
+
+    The minimum is a convex quadratic program over the simplex, solved exactly (up to rounding) face by face: on a
+    face the KKT conditions are a linear system, and a face whose solution satisfies all of them (lam >= 0 and no
+    gradient entry outside the face below the multiplier) gives the minimum. Each point is solved on its own, so its
+    value does not depend on the other points of the call. f.kkt_residual is the largest KKT residual of the last
+    call."""
     g = [np.array([float(F(a)) for a in gk]) for gk in ce["g"]]
     x = [np.array([float(a) for a in xk]) for xk in _positions(ce)]
     fv = [float(F(a)) for a in ce["f"]]
     pts_x = np.array([np.zeros(len(x[0]))] + x)
     pts_g = np.array([np.zeros(len(x[0]))] + g)
     c = np.array([0.0] + [fk - 0.5 * gk @ gk for fk, gk in zip(fv, g)])
+    m = len(c)
 
-    def f(X, iters=3000):
-        A = X[:, None, :] - pts_x[None] + pts_g[None]          # (P, m, d)
-        lam = np.full((len(X), len(c)), 1.0 / len(c))
-        step = 1.0 / np.max(np.einsum("pmd,pmd->p", A, A))
-        for _ in range(iters):                                    # projected gradient on the simplex
-            v = np.einsum("pm,pmd->pd", lam, A)
-            grad = np.einsum("pmd,pd->pm", A, v) + c
-            lam = _proj_simplex(lam - step * grad)
-        v = np.einsum("pm,pmd->pd", lam, A)
-        return 0.5 * np.einsum("pd,pd->p", v, v) + lam @ c
+    def f(X):
+        A = X[:, None, :] - pts_x[None] + pts_g[None]          # (P, m, d): rows x - x_i + g_i
+        best, resid_best = np.full(len(X), np.inf), np.full(len(X), np.inf)
+        for r in range(1, m + 1):
+            for face in itertools.combinations(range(m), r):
+                S, out = list(face), [i for i in range(m) if i not in face]
+                K = np.zeros((len(X), r + 1, r + 1))             # [A_S A_S^T, -1; 1^T, 0] [lam_S; nu] = [-c_S; 1]
+                K[:, :r, :r] = np.einsum("pid,pjd->pij", A[:, S], A[:, S])
+                K[:, :r, r], K[:, r, :r] = -1.0, 1.0
+                rhs = np.zeros((len(X), r + 1))
+                rhs[:, :r], rhs[:, r] = -c[S], 1.0
+                sol = np.einsum("pij,pj->pi", np.linalg.pinv(K), rhs)
+                lam = np.zeros((len(X), m))
+                lam[:, S] = sol[:, :r]
+                nu = sol[:, r]
+                v = np.einsum("pm,pmd->pd", lam, A)
+                grad = np.einsum("pmd,pd->pm", A, v) + c          # gradient of the objective in lam
+                parts = [np.abs(lam.sum(axis=1) - 1), np.maximum(-lam, 0).max(axis=1),
+                         np.abs(grad[:, S] - nu[:, None]).max(axis=1)]
+                if out:
+                    parts.append(np.maximum(nu[:, None] - grad[:, out], 0).max(axis=1))
+                resid = np.max(parts, axis=0)
+                val = 0.5 * np.einsum("pd,pd->p", v, v) + lam @ c
+                take = (resid < 1e-9) & (val < best)
+                best[take], resid_best[take] = val[take], resid[take]
+        f.kkt_residual = float(resid_best.max())
+        return best
     return f
 
 
-def _proj_simplex(Y):
-    U = -np.sort(-Y, axis=1)
-    css = np.cumsum(U, axis=1) - 1
-    idx = np.arange(1, Y.shape[1] + 1)
-    rho = np.count_nonzero(U - css / idx > 0, axis=1)
-    theta = css[np.arange(len(Y)), rho - 1] / rho
-    return np.maximum(Y - theta[:, None], 0)
+def plot_grid(ce, points=140):
+    """Iterates of the counterexample and the grid on which its contours are drawn."""
+    xs = np.array([[float(a) for a in xk] for xk in _positions(ce)])
+    lo, hi = xs.min(axis=0), xs.max(axis=0)
+    pad = 0.35 * (hi - lo).max()
+    gx = np.linspace(min(lo[0], 0) - pad, max(hi[0], 0) + pad, points)
+    gy = np.linspace(min(lo[1], 0) - pad, max(hi[1], 0) + pad, points)
+    GX, GY = np.meshgrid(gx, gy)
+    return xs, GX, GY
 
 
 def _positions(ce):
@@ -141,15 +167,11 @@ def _positions(ce):
 def counterexample_2d(plt, name="n2_h19_10_d2.json"):
     ce = json.loads((ROOT / "counterexamples" / name).read_text())
     f = interpolant(ce)
-    xs = np.array([[float(a) for a in xk] for xk in _positions(ce)])
+    xs, GX, GY = plot_grid(ce)
     fv = [float(F(a)) for a in ce["f"]]
-    assert np.allclose(f(xs), fv, atol=1e-6), "interpolant does not reproduce the data"
-    lo, hi = xs.min(axis=0), xs.max(axis=0)
-    pad = 0.35 * (hi - lo).max()
-    gx = np.linspace(min(lo[0], 0) - pad, max(hi[0], 0) + pad, 140)
-    gy = np.linspace(min(lo[1], 0) - pad, max(hi[1], 0) + pad, 140)
-    GX, GY = np.meshgrid(gx, gy)
+    assert np.allclose(f(xs), fv, atol=1e-9), "interpolant does not reproduce the data"
     Z = f(np.column_stack([GX.ravel(), GY.ravel()])).reshape(GX.shape)
+    assert f.kkt_residual < 1e-9, "contour values not solved to optimality"
 
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(9, 4), dpi=150, gridspec_kw={"width_ratios": [1.15, 1]})
     a1.contour(GX, GY, Z, levels=18, colors=MUTED, linewidths=0.6)

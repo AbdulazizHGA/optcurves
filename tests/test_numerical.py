@@ -156,3 +156,22 @@ def test_strong_worst_case_matches_extremal_data(mu, h):
     v_data = -h**2 * q / (2 * (2 + h**2 * (1 - mu)))
     assert v_data > 0
     assert abs(pep.max_min_violation(h, 1, mu=mu) - v_data) <= 1e-4 * v_data
+
+
+def test_side_experiments():
+    """results/side.json (python -m optcurves.side): the PEP worst case of one violation against the closed form of
+    worstcase.py at 20 points, all solved to "optimal", and the max-slack search in R^1, whose best margins stay below
+    the feasibility tolerance 1e-9 while the same search in R^2 has margins of order 1e-2."""
+    side = json.loads((ROOT / "results" / "side.json").read_text())
+    pts = side["worst_case_pep"]["points"]
+    assert len(pts) == 20 and all(p["reliable"] for p in pts)
+    for p in pts:
+        mu, h = 1 / p["kappa"], p["h"]
+        q = 2 * mu * h**2 - 4 * (1 + mu) * h + mu + 7
+        assert abs(p["closed_form"] + h**2 * q / (2 * (2 + h**2 * (1 - mu)))) < 1e-15
+        assert abs(p["pep"] - p["closed_form"]) <= 2e-7 * p["closed_form"]
+    assert side["worst_case_pep"]["max_relative_error"] < 1.6e-7  # README: "within a relative 1.6e-7"
+    searches = side["one_dimensional_search"]
+    assert [(r["h"], r["n"]) for r in searches] == [("1.9", 2), ("1.99", 3)]
+    for r in searches:
+        assert (r["best_margin_R1"] is None or r["best_margin_R1"] < 1e-9) and r["margin_R2"] > 1e-3
