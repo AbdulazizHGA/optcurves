@@ -15,10 +15,15 @@ below can be rerun. A search that finds nothing is evidence, not proof, that a r
 | OpenAI, GPT-5 science report, [arXiv:2511.16072](https://arxiv.org/abs/2511.16072) | v1 | Section 1 (Bubeck) | GPT-5 Pro improved v1's 1/L to 1.5/L; internal models derived 1.75/L. Nothing on the size of a violation. |
 | Nagda, Raghavan, Thakurta, [arXiv:2509.18057](https://arxiv.org/abs/2509.18057) | latest | Context of the citation | Cites the paper only as an AI-assisted result later matched without AI. |
 
-Nearest prior result: the inequality that ends the proof of Theorem 1 of Barzilai et al. gives, for h > 7/4,
-v₁ ≤ (h/2 − 7/8)‖g₁ − g₀‖² ≤ h²(4h − 7)/8 · ‖x₀ − x*‖². That constant is (2 + h²)/4 times the exact one (checked in
-SymPy). In the gradient form the inequality holds with equality on the extremal one-dimensional data (checked in
-exact arithmetic at h = 9/5, 19/10 and 39/20); the slack is in ‖g₁ − g₀‖ ≤ h‖x₀ − x*‖.
+Nearest prior result: the inequality that ends the proof of Theorem 1 of Barzilai et al., with L = 1,
+
+−v₁ ≥ (7/8 − h/2)‖g₁ − g₀‖² + ½‖g₂ − (g₀ + g₁)/2‖².
+
+For h > 7/4, dropping the square gives v₁ ≤ (h/2 − 7/8)‖g₁ − g₀‖² ≤ h²(4h − 7)/8 · ‖x₀ − x*‖², a constant (2 + h²)/4
+times the exact one (checked in SymPy). The full inequality, with the square, holds with equality on the extremal
+one-dimensional data (checked in exact arithmetic at h = 9/5, 19/10 and 39/20). The shortened bound does not: at
+h = 9/5 it gives 0.0624220617 against v₁ = 0.0618320611. It loses twice, first the square and then the step
+‖g₁ − g₀‖ ≤ h‖x₀ − x*‖.
 
 ## Citing works of arXiv:2503.10138
 

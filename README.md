@@ -64,10 +64,11 @@ Throughout, L = 1 (rescaling f covers every L), steps are h/L, and "convex" mean
   f: ℝ^d → ℝ with a minimizer; gradient descent from x₀ then visits exactly the stored points. The theorem is the
   only external input.
 * So the exact data bracket each PEP threshold within 10⁻⁴: two consecutive violations are impossible at
-  h = 1.8634 and possible at h = 1.8635, three at h = 1.9 and h = 1.9001, and so on. This proves that the smallest
-  step with n consecutive violations is at most the right end (and at least 7/4, by Barzilai et al.). That it is
-  at least the left end needs the set of bad step sizes to be an interval (monotonicity in h), which we did *not*
-  prove; the PEP curves in the figure below suggest it.
+  h = 1.8634 and possible at h = 1.8635, three at h = 1.9 and h = 1.9001, and so on. The threshold h_n is the
+  infimum of the step sizes at which n consecutive violations are possible. Violations are strict, so it need not be
+  attained: for n = 1 the bad step sizes form the open interval (7/4, 2). The data prove that h_n is at most the
+  right end, and h_n ≥ 7/4 by Barzilai et al. That h_n is at least the left end needs the set of bad step sizes to be
+  an interval (monotonicity in h), which we did *not* prove; the PEP curves in the figure below suggest it.
 * `[numerical]` PEP thresholds: PEPit 0.5.1, Clarabel 0.11.1, "no violation" = worst case ≤ 10⁻⁷, bisection on
   [1.5, 1.9999]. A point that Clarabel leaves "inaccurate" is solved again with SCS 3.3.1 (eps = 1e-9). If SCS does
   not reach "optimal" either, the point is *unresolved*: it decides nothing, the bisection tries another point of the
@@ -427,9 +428,9 @@ repository; only its summary above records it.
 
 **ما ثبت:**
 - **[دقيق]** الانكساران المتتاليان مستحيلان عند h = 1.8634، وممكنان عند h = 1.8635. وبالمثل ثلاثة انكسارات:
-  مستحيلة عند 1.9 وممكنة عند 1.9001، ولأربعة وخمسة وستة نقطتان بينهما 10⁻⁴. فأصغر خطوة تسمح بانكسارين لا تتجاوز
-  1.8635. أما أنها لا تقل عن 1.8634 فيتطلب أن تكون الخطوات السيئة فترة، وهذا غير مبرهن (والقيمة العددية
-  h₂ ≈ 1.86345).
+  مستحيلة عند 1.9 وممكنة عند 1.9001، ولأربعة وخمسة وستة نقطتان بينهما 10⁻⁴. والعتبة h₂ هي الحد الأدنى (infimum)
+  للخطوات التي يمكن عندها انكساران متتاليان، وقد لا تُبلغ لأن الانكسار صارم. فهي لا تتجاوز 1.8635، ولا تقل عن 7/4.
+  أما أنها لا تقل عن 1.8634 فيتطلب أن تكون الخطوات السيئة فترة، وهذا غير مبرهن (والقيمة العددية h₂ ≈ 1.86345).
 - **[دقيق]** الاستحالة شهادة كسرية تصح لكل دالة محدبة L-ملساء في أي فضاء ضرب داخلي. والإمكان مثال مضاد ببيانات
   كسرية، يتحول إلى دالة فعلية بمبرهنة الاستيفاء لـ Taylor وHendrickx وGlineur (2017).
 - **[Lean]** ست مبرهنات (عند 9/5 و1.8634 لانكسارين، وعند 19/10 لثلاثة) تحققت منها نواة Lean مع Mathlib، ولا
