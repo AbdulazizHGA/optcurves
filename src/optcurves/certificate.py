@@ -286,8 +286,11 @@ def tight_certificate(spec):
 
 
 def main():
+    """Writes every certificate that is found. Exits with an error if any target fails, so that a stale file left
+    from an earlier run is never mistaken for a regenerated one (reproduce.sh stops there)."""
     out = ROOT / "certificates"
     out.mkdir(exist_ok=True)
+    failed = []
     for h, n, mu in [(h, n, "0") for h, n in TARGETS] + STRONG_TARGETS:
         cert = find_certificate(h, n, mu)
         status = (f"ok, w = {cert['w']}, denominators <= {cert['denominator_bound']}, "
@@ -296,12 +299,18 @@ def main():
         print(f"h = {h} ({float(sp.Rational(h)):.4f}), n = {n}{label}: {status}", flush=True)
         if cert:
             (out / filename(h, n, mu)).write_text(json.dumps(cert, indent=1) + "\n")
+        else:
+            failed.append(filename(h, n, mu))
     for spec in TIGHT:
         cert = tight_certificate(spec)
         print(f"h = {spec['h']}, n = {spec['n']}, mu = {spec['mu']}: "
               + (f"tight, lam = {cert['lam']}, kernel {cert['kernel']}" if cert else "FAILED"), flush=True)
         if cert:
             (out / filename(spec["h"], spec["n"], spec["mu"])).write_text(json.dumps(cert, indent=1) + "\n")
+        else:
+            failed.append(filename(spec["h"], spec["n"], spec["mu"]))
+    if failed:
+        raise SystemExit(f"{len(failed)} certificate(s) FAILED, not regenerated: {', '.join(failed)}")
 
 
 if __name__ == "__main__":

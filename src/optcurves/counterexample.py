@@ -165,10 +165,13 @@ STRONG_TARGETS = [("1801/1000", 1, "5/7", 1), ("18001/10000", 1, "5/7", 1), ("18
 
 
 def main():
+    """Writes every counterexample that is found. Exits with an error if any target fails, so that a stale file left
+    from an earlier run is never mistaken for a regenerated one (reproduce.sh stops there)."""
     out = ROOT / "counterexamples"
     out.mkdir(exist_ok=True)
     jobs = [dict(h=h, n=n, dim=dim) for h, n, dim in TARGETS]
     jobs += [dict(h=h, n=n, mu=mu, rank=rank) for h, n, mu, rank in STRONG_TARGETS]
+    failed = []
     for job in jobs:
         h, n, mu = job["h"], job["n"], job.get("mu", "0")
         ce = find(**job)
@@ -181,6 +184,10 @@ def main():
         if ce:
             tag = "" if mu == "0" else f"_mu{mu.replace('/', '_')}"
             (out / f"n{n}_h{h.replace('/', '_')}{tag}_d{ce['dim']}.json").write_text(json.dumps(ce, indent=1) + "\n")
+        else:
+            failed.append(f"h = {h}, n = {n}, {label}")
+    if failed:
+        raise SystemExit(f"{len(failed)} counterexample(s) FAILED, not regenerated: {'; '.join(failed)}")
 
 
 if __name__ == "__main__":

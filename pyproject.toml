@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Consecutive convexity violations of gradient-descent optimization curves: PEP study, exact certificates, Lean proofs"
 readme = "README.md"
 license = "Apache-2.0"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 keywords = [
     "gradient descent",
     "optimization curves",

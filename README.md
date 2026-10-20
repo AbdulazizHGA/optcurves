@@ -72,8 +72,10 @@ Throughout, L = 1 (rescaling f covers every L), steps are h/L, and "convex" mean
   at a free point. Two normalizations, ‖x₀ − x*‖ ≤ 1 (functions with a minimizer) and ‖∇f(x₀)‖ ≤ 1 (all
   functions), give thresholds within 3 × 10⁻⁵ of each other; the table shows the first. Both lie inside every
   exact bracket (checked in the tests).
-* Answer to the open question: yes, the curve can be concave at several consecutive steps, but each additional
-  step needs a larger step size; the thresholds approach 2 slowly (h₆ ≈ 1.9412).
+* Answer to the open question: yes, the curve can be concave at several consecutive steps. In our data each extra
+  step needs a larger step size: the PEP thresholds increase with n, by 0.113, 0.037, 0.020, 0.013 and 0.009 up to
+  h₆ ≈ 1.9412, and the exact brackets are disjoint and in the same order (with the caveat above: the bad step sizes
+  are not proved to form an interval). We computed n ≤ 6 only; whether h_n → 2 as n → ∞ is not known.
 
 ![Worst-case min(v₁, …, v_n) against h](figures/consecutive.png)
 
@@ -318,9 +320,9 @@ The PEP layer is cross-checked against the two hand-built SDPs in the tests.
 
 ## Reproduce
 
-Python ≥ 3.10. Every number above comes from these commands (about 7 minutes in total on an M1 laptop, mostly
-`study strong`). On our machine a full rerun reproduced every JSON file, the Lean file and the figures
-byte for byte:
+Python ≥ 3.11 (CVXPY 1.8 and later need it; tested with Python 3.13). Every number above comes from these commands
+(about 7 minutes in total on an M1 laptop, mostly `study strong`). On our machine a full rerun reproduced every JSON
+file, the Lean file and the figures byte for byte:
 
 ```bash
 pip install -e ".[test]"
@@ -332,7 +334,8 @@ Single steps: `python -m optcurves.study consecutive|strong`, `python -m optcurv
 `python -m optcurves.lean_gen`, `python -m optcurves.figures`, `pytest`. The tests check every certificate and
 counterexample in exact arithmetic, that tampering breaks them, that the exact brackets have width ≤ 10⁻⁴ (≤ 10⁻⁶
 at κ = 7/5) and contain the numerical thresholds, every step of the two proofs in section 4 with exact instances on
-both sides of h₁(κ), and that the Lean file matches the generator.
+both sides of h₁(κ), and that the Lean file matches the generator. If any certificate or counterexample cannot be
+regenerated, its generator exits with an error, so `reproduce.sh` stops instead of testing the old file.
 
 Lean (needs elan; downloads the Mathlib cache):
 
