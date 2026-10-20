@@ -154,7 +154,8 @@ where some solves fell back to SCS.
 
 So for one violation the set of bad step sizes is exactly the interval (h₁(κ), 2). The formula was first found by
 fitting integer quadratics to the PEP numbers (it was listed here as a conjecture); the exact study at κ = 7/5 below
-exposed the certificate that proves it. The literature check below found no earlier statement of this threshold.
+exposed the certificate that proves it. The literature checks below (18–20 October 2026) found no earlier statement of
+this threshold.
 
 *Proof.* Put q = 2μh² − 4(1 + μ)h + μ + 7 = μ(2h² − 4(1 + κ)h + 7κ + 1). Since q(0) = 7 + μ > 0 > μ − 1 = q(2)
 and q is convex in h, for 0 < h < 2 we have q ≥ 0 iff h ≤ h₁(κ). The interpolation inequalities of 1-smooth
@@ -208,7 +209,10 @@ and the bound is attained for every h: by x₀ = x* when h ≤ h₁(κ) (then c 
 h₁ = 7/4, the theorem of Barzilai, Shamir and Zamani), and by the one-dimensional data of part 2 when
 h₁(κ) < h < 2. So the PEP worst case of one violation, the largest v₁ over f and ‖x₀ − x*‖ ≤ 1, is exactly
 h² max(0, −q) / (2D) (times L for a general L). For μ = 0 it is h²(4h − 7)/(2(2 + h²)) for 7/4 < h < 2, for
-example 0.0618 at h = 1.8.
+example 0.0618 at h = 1.8. The literature check below (20 October 2026) found no earlier statement of this value,
+also not for μ = 0. The nearest is the inequality that ends the proof of Theorem 1 of Barzilai, Shamir and Zamani:
+for h > 7/4 it gives v₁ ≤ (h/2 − 7/8)‖g₁ − g₀‖² ≤ h²(4h − 7)/8 · ‖x₀ − x\*‖² (as ‖g₁ − g₀‖ ≤ h‖g₀‖ ≤ h‖x₀ − x\*‖),
+a constant (2 + h²)/4 times the exact one, that is 1.27 to 1.5 times as large.
 
 *Proof for h₁(κ) < h < 2.* Then q < 0, and q = (1 − μ)(7 − 4h) + 2μ(2 − h)² shows h > 7/4. Add the minimizer as a
 fourth point (g* = 0) and put c = h²(−q)/(2D) and y = x₀ − x*. The identity
@@ -358,8 +362,27 @@ Literature check on 18–19 October 2026: Semantic Scholar citations of arXiv:25
 found nothing relevant); arXiv API searches for "optimization curve" with convex, consecutive, strongly convex and
 Lean (only the papers above); GitHub search of repositories, code and issues, including PEPit and PEPFlow. We found
 no work on consecutive violations or on the strongly convex threshold. Indexes lag, so this is evidence, not proof,
-that the results are new. The worst-case theorem of section 4 was proved on 20 October 2026, after this check, and
-has not yet been checked against the literature.
+that the results are new.
+
+Second literature check on 20 October 2026, after the worst-case theorem of section 4 was proved. It covers that
+theorem, including its μ = 0 case h²(4h − 7)/(2(2 + h²)), and again h₁(κ). We read Barzilai, Shamir and Zamani
+(arXiv v1–v3 and the TMLR version) and Hieu (v1, the only version) in full. Neither states how large a violation can
+be, and neither mentions strong convexity (Hieu shows that quadratics, strongly convex or not, give convex curves for
+every h ≤ 2). The nearest result is the inequality that ends the proof of Theorem 1 of Barzilai et al.: for h > 7/4
+it gives the bound h²(4h − 7)/8 · ‖x₀ − x\*‖² shown in section 4, (2 + h²)/4 times the exact constant; the exact
+value, its attainment and the case μ > 0 are not there. (At μ = 0 the certificate of part 1 of the threshold theorem
+is that inequality term for term.) Citing works of arXiv:2503.10138: Semantic Scholar lists only Hieu, OpenAlex none
+(and none for Hieu), and Google Scholar's "cited by 3" list, empty on 19 October, now shows Hieu, the GPT-5 report
+above and Nagda, Raghavan and Thakurta ([arXiv:2509.18057](https://arxiv.org/abs/2509.18057)), who cite it only as
+an AI-assisted result later matched without AI. Le Duc and Liberti mention strong convexity only in a conjecture
+about the implicit (backward Euler) method. Keyword searches: the arXiv API (25 queries: "optimization curve(s)"
+with convex, strongly convex, worst case, gradient descent, proximal or heavy ball; 1.75/L; loss curve; discrete
+convexity; second difference; performance estimation), Semantic Scholar, Google Scholar, zbMATH Open (which does not
+index the paper) and a web search; GitHub code search ("optimization curve" with strongly convex, worst case, PEP or
+1.75) and the examples of PEPit (master, last pushed May 2026) and PEPFlow (main, September 2026). None of these
+states the worst-case size of a violation, for convex or strongly convex f, or the threshold h₁(κ). Not read: the
+OpenReview discussion of the TMLR paper, which sits behind a browser check. As above, this is evidence, not proof,
+that the results are new.
 
 ## ملخص بالعربية
 
