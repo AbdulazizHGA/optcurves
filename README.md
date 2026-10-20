@@ -41,7 +41,7 @@ Throughout, L = 1 (rescaling f covers every L), steps are h/L, and "convex" mean
 
 ## Results
 
-### 1. Consecutive violations happen, but only for larger steps
+### 1. Consecutive violations happen; their PEP thresholds grow with n
 
 | n consecutive violations | impossible at h = `[exact]` | possible at h = `[exact]` | PEP threshold h_n `[numerical]` |
 |---|---|---|---|
@@ -63,10 +63,11 @@ Throughout, L = 1 (rescaling f covers every L), steps are h/L, and "convex" mean
   theorem of Taylor, Hendrickx and Glineur (2017, Thm. 4), such data come from a genuine 1-smooth convex
   f: ℝ^d → ℝ with a minimizer; gradient descent from x₀ then visits exactly the stored points. The theorem is the
   only external input.
-* So each threshold is pinned to an interval of width 10⁻⁴: e.g. **h₂ ∈ [1.8634, 1.8635]** and
-  **h₃ ∈ [1.9, 1.9001]**, in the sense that violations are impossible at the left end and possible at the right
-  end. We did *not* prove that the set of bad step sizes is an interval (monotonicity in h); the PEP curves
-  in the figure below suggest it.
+* So the exact data bracket each PEP threshold within 10⁻⁴: two consecutive violations are impossible at
+  h = 1.8634 and possible at h = 1.8635, three at h = 1.9 and h = 1.9001, and so on. This proves that the smallest
+  step with n consecutive violations is at most the right end (and at least 7/4, by Barzilai et al.). That it is
+  at least the left end needs the set of bad step sizes to be an interval (monotonicity in h), which we did *not*
+  prove; the PEP curves in the figure below suggest it.
 * `[numerical]` PEP thresholds: PEPit 0.5.1, Clarabel 0.11.1, "no violation" = worst case ≤ 10⁻⁷, bisection on
   [1.5, 1.9999]. A point that Clarabel leaves "inaccurate" is solved again with SCS 3.3.1 (eps = 1e-9). If SCS does
   not reach "optimal" either, the point is *unresolved*: it decides nothing, the bisection tries another point of the
@@ -414,14 +415,21 @@ states the worst-case size of a violation, for convex or strongly convex f, or t
 OpenReview discussion of the TMLR paper, which sits behind a browser check. As above, this is evidence, not proof,
 that the results are new.
 
+Records: the 20 October check is logged query by query in
+[docs/literature-check-2026-10-20.md](docs/literature-check-2026-10-20.md) (two Semantic Scholar queries were
+refused by its rate limit; one was run on the website instead). The 18–19 October check left no log in this
+repository; only its summary above records it.
+
 ## ملخص بالعربية
 
 **السؤال:** هل يمكن أن يفقد منحنى التحسين k ↦ f(x_k) لطريقة الانحدار التدريجي بخطوة ثابتة h/L تحدّبه في عدة
 خطوات متتالية؟ هذا سؤال مفتوح طرحه Barzilai وShamir وZamani (مجلة TMLR، 2025).
 
 **ما ثبت:**
-- **[دقيق]** الانكساران المتتاليان مستحيلان عند h = 1.8634، وممكنان عند h = 1.8635. أي أن العتبة h₂ تقع في
-  [1.8634، 1.8635]. وبالمثل h₃ في [1.9، 1.9001]، وh₄ وh₅ وh₆ في فترات عرضها 10⁻⁴.
+- **[دقيق]** الانكساران المتتاليان مستحيلان عند h = 1.8634، وممكنان عند h = 1.8635. وبالمثل ثلاثة انكسارات:
+  مستحيلة عند 1.9 وممكنة عند 1.9001، ولأربعة وخمسة وستة نقطتان بينهما 10⁻⁴. فأصغر خطوة تسمح بانكسارين لا تتجاوز
+  1.8635. أما أنها لا تقل عن 1.8634 فيتطلب أن تكون الخطوات السيئة فترة، وهذا غير مبرهن (والقيمة العددية
+  h₂ ≈ 1.86345).
 - **[دقيق]** الاستحالة شهادة كسرية تصح لكل دالة محدبة L-ملساء في أي فضاء ضرب داخلي. والإمكان مثال مضاد ببيانات
   كسرية، يتحول إلى دالة فعلية بمبرهنة الاستيفاء لـ Taylor وHendrickx وGlineur (2017).
 - **[Lean]** ست مبرهنات (عند 9/5 و1.8634 لانكسارين، وعند 19/10 لثلاثة) تحققت منها نواة Lean مع Mathlib، ولا

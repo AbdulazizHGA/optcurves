@@ -87,7 +87,7 @@ def strong(plt):
     ax.set_ylim(1.74, 2.005)
     ax.set_xlabel("condition number κ = L/μ   (dotted lines: μ = 0)", color=INK, fontsize=9)
     ax.set_ylabel("threshold h$_n$ (units of 1/L)", color=INK, fontsize=9)
-    ax.set_title("Step size above which n consecutive violations occur, μ-strongly convex f",
+    ax.set_title("PEP threshold for n consecutive violations (n = 1: exact), μ-strongly convex f",
                  fontsize=10, color=INK)
     ax.legend(frameon=False, fontsize=8, loc="upper right")
     _axes(ax)
