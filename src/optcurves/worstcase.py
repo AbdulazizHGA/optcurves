@@ -8,9 +8,10 @@ Q_pq >= 0, and
     q = 2 mu h^2 - 4 (1 + mu) h + mu + 7 = (1 - mu)(7 - 4 h) + 2 mu (2 - h)^2,     D = 2 + h^2 (1 - mu).
 
 Now 0 <= mu < 1 and f has a minimizer x*; it is the point "s" with g_* = 0, f_* = f(x*). For mu > 0 a minimizer
-exists on R^d or any Hilbert space, but not on every inner-product space: on the finite sequences inside l^2,
-f(x) = ||x - a||^2 / 2, with a in l^2 having infinitely many nonzero terms, is 1-smooth and strongly convex and has
-no minimizer.
+exists on R^d or any Hilbert space, but not on every inner-product space. On the finite sequences inside l^2, with
+S the shift, f(x) = <A x, x> / 2 - x_1 and A = (4 I - S - S^T) / 6 is 1-smooth and 1/3-strongly convex, and its
+gradient A x - e_1 is again a finite sequence, so gradient descent stays in the space. Yet f has no minimizer
+there: the only candidate, the solution x*_k = 6 (2 - sqrt 3)^k of A x = e_1 in l^2, is not a finite sequence.
 By the second form of q, q < 0 forces h > 7/4; for 0 < h < 2, q < 0 means h_1(kappa) < h < 2 (theorem.py), and
 7/4 < h < 2 when mu = 0.
 
