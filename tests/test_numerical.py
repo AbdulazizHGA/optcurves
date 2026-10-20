@@ -97,14 +97,54 @@ def test_strong_results_consistent_with_exact_bracket():
 
 
 def test_strong_pep_h1_matches_theorem():
-    """Every PEP threshold h_1(kappa) in results/strong.json (30 finite kappa and mu = 0) lies within 5e-6 of the exact
-    h_1(kappa) of theorem.py. Since the closed form is proved, this measures the PEP pipeline (violation tolerance
-    1e-7, SCS fallback for kappa <= 3); the largest gap is 4.4e-6, at kappa = 1.15."""
+    """Every PEP bracket of h_1(kappa) in results/strong.json (30 finite kappa and mu = 0) contains the exact h_1(kappa)
+    of theorem.py up to 1e-6 (PEP values <= 1e-7 count as "no violation", which puts the bracket about 1e-7 above), and
+    every bracket that reached full width lies within 5e-6 of it. Since the closed form is proved, this measures the
+    PEP pipeline."""
     rows = json.loads((ROOT / "results" / "strong.json").read_text())["rows"]
     assert len(rows) == 31
     for r in rows:
         exact = 1.75 if r["kappa"] == "inf" else figures.h1_closed_form(r["kappa"])
-        assert max(abs(r["h1"]["lo"] - exact), abs(r["h1"]["hi"] - exact)) < 5e-6, r["kappa"]
+        t = r["h1"]
+        assert t["hi"] is not None and t["lo"] - 1e-6 <= exact <= t["hi"] + 1e-6, r["kappa"]
+        if t["resolved"]:
+            assert max(abs(t["lo"] - exact), abs(t["hi"] - exact)) < 5e-6, r["kappa"]
+
+
+def _threshold_records():
+    cons = json.loads((ROOT / "results" / "consecutive.json").read_text())
+    for cls, thresholds in cons["thresholds"].items():
+        for n, t in thresholds.items():
+            yield f"{cls}, n = {n}", t
+    for r in json.loads((ROOT / "results" / "strong.json").read_text())["rows"]:
+        for n in (1, 2, 3):
+            yield f"kappa = {r['kappa']}, n = {n}", r[f"h{n}"]
+
+
+def test_threshold_brackets_are_consistent():
+    """Both ends of every bracket were decided by solves that reached "optimal": no violation at lo, one at hi. The
+    PEP value is continuous in h, so across a full-width bracket (3e-8) it crosses TOL = 1e-7 but cannot jump; a
+    value at hi far above TOL (3.6e-4 at kappa = 1.05 before unresolved points were set aside) means a wrong end."""
+    for name, t in _threshold_records():
+        if t is None:
+            continue
+        assert t["value_at_lo"] is None or t["value_at_lo"] <= pep.TOL, name
+        assert t["hi"] is None or t["value_at_hi"] > pep.TOL, name
+        if t["resolved"]:
+            assert t["value_at_hi"] < 1e-6 and t["hi"] - t["lo"] < 3e-8, name
+
+
+def test_strong_results_consistent_with_strong_counterexamples():
+    """Every strongly convex counterexample (n violations at step h, modulus mu) lies above the lower end of the PEP
+    bracket of h_n(1/mu), where the search found no violation."""
+    rows = {r["kappa"]: r for r in json.loads((ROOT / "results" / "strong.json").read_text())["rows"]}
+    found = 0
+    for c in _jsons("counterexamples"):
+        if "mu" in c:
+            t = rows[float(1 / Fraction(c["mu"]))][f"h{c['n']}"]
+            assert t is not None and t["lo"] < float(Fraction(c["h"])), c["h"]
+            found += 1
+    assert found >= 5
 
 
 @pytest.mark.parametrize("mu, h", [(2 / 3, 1.9), (0.5, 1.95), (0.1, 1.85), (0.0, 1.8)])

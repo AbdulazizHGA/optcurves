@@ -1,21 +1,38 @@
 {
  "meta": {
+  "python": "3.13",
   "pepit": "0.5.1",
   "cvxpy": "1.9.3",
+  "clarabel": "0.11.1",
+  "scs": "3.3.1",
   "solver": "CLARABEL",
   "fallback": {
    "solver": "SCS",
    "eps": 1e-09,
    "max_iters": 200000
   },
+  "unresolved": "point where neither the solver nor the fallback reaches status optimal; it decides nothing",
   "violation_tol": 1e-07,
   "bisection": {
    "interval": [
     1.5,
     1.9999
    ],
+   "upper_ends_tried": [
+    1.9999,
+    1.9995,
+    1.999,
+    1.998,
+    1.995,
+    1.99
+   ],
    "iterations": 24,
-   "bracket_width": 2.9796361923217774e-08
+   "bracket_width": 2.9796361923217774e-08,
+   "points_tried_per_step": [
+    0.5,
+    0.25,
+    0.75
+   ]
   },
   "L": 1.0
  },
@@ -26,42 +43,66 @@
     "hi": 1.750000087684393,
     "value_at_lo": 7.03779552505955e-08,
     "value_at_hi": 1.0739549502628583e-07,
-    "inaccurate_solves": 0
+    "resolved": true,
+    "solves": 25,
+    "fallbacks": 0,
+    "unresolved": 0,
+    "unresolved_at": []
    },
    "2": {
     "lo": 1.8634462197363382,
     "hi": 1.8634462495327,
     "value_at_lo": 9.975049810107623e-08,
     "value_at_hi": 1.0002891422131636e-07,
-    "inaccurate_solves": 0
+    "resolved": true,
+    "solves": 25,
+    "fallbacks": 0,
+    "unresolved": 0,
+    "unresolved_at": []
    },
    "3": {
     "lo": 1.9000515271008016,
     "hi": 1.9000515568971634,
     "value_at_lo": 9.978023044177394e-08,
     "value_at_hi": 1.0003637755975554e-07,
-    "inaccurate_solves": 0
+    "resolved": true,
+    "solves": 25,
+    "fallbacks": 0,
+    "unresolved": 0,
+    "unresolved_at": []
    },
    "4": {
     "lo": 1.9196024099767208,
     "hi": 1.9196024397730829,
     "value_at_lo": 9.989339797868968e-08,
     "value_at_hi": 1.0009032526850414e-07,
-    "inaccurate_solves": 0
+    "resolved": true,
+    "solves": 25,
+    "fallbacks": 0,
+    "unresolved": 0,
+    "unresolved_at": []
    },
    "5": {
     "lo": 1.9322236423492436,
     "hi": 1.9322236721456054,
     "value_at_lo": 9.990531918639076e-08,
     "value_at_hi": 1.0012474332980596e-07,
-    "inaccurate_solves": 0
+    "resolved": true,
+    "solves": 25,
+    "fallbacks": 0,
+    "unresolved": 0,
+    "unresolved_at": []
    },
    "6": {
     "lo": 1.9411975616514687,
     "hi": 1.9411975914478306,
     "value_at_lo": 9.983271635213868e-08,
     "value_at_hi": 1.0004370815597083e-07,
-    "inaccurate_solves": 0
+    "resolved": true,
+    "solves": 25,
+    "fallbacks": 0,
+    "unresolved": 0,
+    "unresolved_at": []
    }
   },
   "convex_all": {
@@ -70,42 +111,66 @@
     "hi": 1.750000087684393,
     "value_at_lo": 7.121545149816234e-08,
     "value_at_hi": 1.0787231931920417e-07,
-    "inaccurate_solves": 0
+    "resolved": true,
+    "solves": 25,
+    "fallbacks": 0,
+    "unresolved": 0,
+    "unresolved_at": []
    },
    "2": {
     "lo": 1.863428669679165,
     "hi": 1.8634286994755271,
     "value_at_lo": 9.872349350566434e-08,
     "value_at_hi": 1.0048481574964592e-07,
-    "inaccurate_solves": 0
+    "resolved": true,
+    "solves": 25,
+    "fallbacks": 0,
+    "unresolved": 0,
+    "unresolved_at": []
    },
    "3": {
     "lo": 1.9000325766146182,
     "hi": 1.9000326064109803,
     "value_at_lo": 9.937704332182486e-08,
     "value_at_hi": 1.0278081086617214e-07,
-    "inaccurate_solves": 0
+    "resolved": true,
+    "solves": 25,
+    "fallbacks": 0,
+    "unresolved": 0,
+    "unresolved_at": []
    },
    "4": {
     "lo": 1.9195791986107829,
     "hi": 1.919579228407145,
     "value_at_lo": 9.786654284415386e-08,
     "value_at_hi": 1.0102157906644644e-07,
-    "inaccurate_solves": 0
+    "resolved": true,
+    "solves": 25,
+    "fallbacks": 0,
+    "unresolved": 0,
+    "unresolved_at": []
    },
    "5": {
     "lo": 1.9321994477033617,
     "hi": 1.9321994774997235,
     "value_at_lo": 9.986601654736554e-08,
     "value_at_hi": 1.0219460996629129e-07,
-    "inaccurate_solves": 0
+    "resolved": true,
+    "solves": 25,
+    "fallbacks": 1,
+    "unresolved": 0,
+    "unresolved_at": []
    },
    "6": {
     "lo": 1.941172145354748,
     "hi": 1.94117217515111,
     "value_at_lo": 9.890635362649252e-08,
     "value_at_hi": 1.0128852095284112e-07,
-    "inaccurate_solves": 0
+    "resolved": true,
+    "solves": 25,
+    "fallbacks": 0,
+    "unresolved": 0,
+    "unresolved_at": []
    }
   }
  },
@@ -860,5 +925,10 @@
     0.0498261501998844
    ]
   ]
+ },
+ "curves_unresolved": {
+  "1": 0,
+  "2": 0,
+  "3": 0
  }
 }

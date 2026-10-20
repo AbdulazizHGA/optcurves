@@ -160,8 +160,10 @@ TARGETS = [("3727/2000", 2, None), ("19/10", 2, 2), ("19001/10000", 3, None), ("
            ("38393/20000", 4, None), ("38645/20000", 5, None), ("9706/5000", 6, None)]
 # (h, n, mu, rank): one violation for mu = 5/7 (kappa = 7/5), 9/5 + 10^-k above h_1(7/5) = 9/5 (theorem.py).
 # The SDP optimum is numerically of rank 1 (second eigenvalue ~1e-9 against ~2.7), so it is truncated to R^1.
+# Last: three consecutive violations for mu = 20/21 (kappa = 1.05), where the PEP search cannot decide every point
+# near 2 (both solvers inaccurate); the SDP optimum (rank 4) is kept whole.
 STRONG_TARGETS = [("1801/1000", 1, "5/7", 1), ("18001/10000", 1, "5/7", 1), ("180001/100000", 1, "5/7", 1),
-                  ("1800001/1000000", 1, "5/7", 1)]
+                  ("1800001/1000000", 1, "5/7", 1), ("1999/1000", 3, "20/21", None)]
 
 
 def main():
@@ -176,7 +178,7 @@ def main():
         h, n, mu = job["h"], job["n"], job.get("mu", "0")
         ce = find(**job)
         label = (f"dim = {job['dim'] or 'any'}" if mu == "0"
-                 else f"mu = {mu}, SDP truncated to rank {job['rank']}")
+                 else f"mu = {mu}, SDP" + (f" truncated to rank {job['rank']}" if job["rank"] else ""))
         print(f"h = {h} ({float(F(h)):.4f}), n = {n}, {label}: "
               + (f"ok in R^{ce['dim']}, denominators <= {ce['denominator_bound']}, "
                  f"violations {[f'{float(F(v)):.2e}' for v in ce['violations']]}" if ce else "FAILED"),

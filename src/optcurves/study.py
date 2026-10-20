@@ -8,37 +8,69 @@ import argparse
 import importlib.metadata
 import json
 import math
+import platform
 from pathlib import Path
 
 from . import pep
 
 ROOT = Path(__file__).resolve().parents[2]
 RESULTS, FIGURES = ROOT / "results", ROOT / "figures"
-H_MAX = 1.9999  # thresholds are searched in [1.5, H_MAX]; "none" means no violation found below H_MAX
+H_MAX = 1.9999  # thresholds are searched in [1.5, H_MAX]; None means no violation at H_MAX
+# Upper ends tried in turn until one is decided reliably (pep._solve); H_MAX first.
+TOPS = (H_MAX, 1.9995, 1.999, 1.998, 1.995, 1.99)
 ITERS = 24
+WIDTH = (H_MAX - 1.5) / 2 ** ITERS  # bracket width after ITERS halvings of [1.5, H_MAX]
 
 
 def _meta():
+    version = importlib.metadata.version
     return {
-        "pepit": importlib.metadata.version("PEPit"),
-        "cvxpy": importlib.metadata.version("cvxpy"),
+        "python": ".".join(platform.python_version_tuple()[:2]),
+        "pepit": version("PEPit"),
+        "cvxpy": version("cvxpy"),
+        "clarabel": version("clarabel"),
+        "scs": version("scs"),
         "solver": pep.SOLVER,
         "fallback": pep.FALLBACK,
+        "unresolved": "point where neither the solver nor the fallback reaches status optimal; it decides nothing",
         "violation_tol": pep.TOL,
-        "bisection": {"interval": [1.5, H_MAX], "iterations": ITERS,
-                      "bracket_width": (H_MAX - 1.5) / 2 ** ITERS},
+        "bisection": {"interval": [1.5, H_MAX], "upper_ends_tried": list(TOPS), "iterations": ITERS,
+                      "bracket_width": WIDTH, "points_tried_per_step": list(pep.TRIES)},
         "L": 1.0,
     }
 
 
 def _threshold(n, mu=0.0, minimizer=True):
-    value = lambda h: pep.max_min_violation(h, n, mu=mu, minimizer=minimizer)
-    pep.INACCURATE[0] = 0
-    if value(H_MAX) <= pep.TOL:
+    """Bracket of the smallest h in [1.5, H_MAX] with n consecutive violations, assuming (as the whole numerical study
+    does) that these h form an interval. lo has no violation and hi has one, both from solves that reached "optimal";
+    lo = 1.5 needs no solve (v_1 <= 0 for h <= 7/4 by Barzilai, Shamir and Zamani, also for mu > 0).
+    None: no violation at H_MAX. hi = None: no upper end could be decided (then lo is the largest top end without a
+    violation, or 1.5). resolved: the bracket reached the width WIDTH. The counts of pep.STATS and the points left
+    unresolved are stored with it."""
+    pep.reset_stats()
+    values, unresolved_at = {}, []
+
+    def decide(h):
+        value, reliable = pep.evaluate(h, n, mu=mu, minimizer=minimizer)
+        if not reliable:
+            unresolved_at.append(h)
+            return None
+        values[h] = value
+        return value > pep.TOL
+
+    lo, hi, resolved = 1.5, None, False
+    for top in TOPS:
+        answer = decide(top)
+        if answer is not None:
+            break
+    if answer is False and top == H_MAX:
         return None
-    lo, hi = pep.bisect_threshold(value, 1.5, H_MAX, iters=ITERS)
-    return {"lo": lo, "hi": hi, "value_at_lo": value(lo), "value_at_hi": value(hi),
-            "inaccurate_solves": pep.INACCURATE[0]}
+    if answer:
+        lo, hi, resolved = pep.bisect_threshold(decide, 1.5, top, WIDTH)
+    elif answer is False:
+        lo = top
+    return {"lo": lo, "hi": hi, "value_at_lo": values.get(lo), "value_at_hi": values.get(hi),
+            "resolved": resolved, **pep.STATS, "unresolved_at": unresolved_at}
 
 
 def consecutive(n_max=6, grid=None):
@@ -50,8 +82,11 @@ def consecutive(n_max=6, grid=None):
         for n in range(1, n_max + 1):
             out["thresholds"][cls][n] = _threshold(n, minimizer=minimizer)
             print(cls, n, out["thresholds"][cls][n], flush=True)
+    out["curves_unresolved"] = {}
     for n in (1, 2, 3):
+        pep.reset_stats()
         out["curves"][n] = [[h, pep.max_min_violation(h, n)] for h in grid]
+        out["curves_unresolved"][n] = pep.STATS["unresolved"]  # values kept but not reliable
     _write("consecutive.json", out)
 
 

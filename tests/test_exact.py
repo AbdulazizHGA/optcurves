@@ -13,9 +13,11 @@ ROOT = Path(__file__).resolve().parents[1]
 # Skip "._*" AppleDouble files (macOS writes them on exFAT/FAT volumes).
 CERTS = sorted(p for p in (ROOT / "certificates").glob("*.json") if not p.name.startswith("._"))
 CES = sorted(p for p in (ROOT / "counterexamples").glob("*.json") if not p.name.startswith("._"))
-# Strongly convex files carry "mu" (here 5/7, kappa = 7/5, where the threshold h_1 of theorem.py is exactly 9/5).
+# Strongly convex files carry "mu": 5/7 (kappa = 7/5, where the threshold h_1 of theorem.py is exactly 9/5), and one
+# counterexample with 20/21 (kappa = 1.05, three consecutive violations).
 STRONG_CERTS = [p for p in CERTS if "mu" in json.loads(p.read_text())]
 STRONG_CES = [p for p in CES if "mu" in json.loads(p.read_text())]
+KAPPA_7_5_CES = [p for p in STRONG_CES if json.loads(p.read_text())["mu"] == "5/7"]
 CONVEX_CERTS = [p for p in CERTS if p not in STRONG_CERTS]
 TIGHT = ROOT / "certificates" / "n1_h9_5_mu5_7.json"
 
@@ -38,7 +40,7 @@ def _rationals(obj):
 
 def test_files_present():
     assert len(CERTS) >= 15 and len(CES) >= 11
-    assert len(STRONG_CERTS) >= 5 and len(STRONG_CES) >= 4
+    assert len(STRONG_CERTS) >= 5 and len(KAPPA_7_5_CES) >= 4 and len(STRONG_CES) >= 5
 
 
 @pytest.mark.parametrize("path", CERTS, ids=lambda p: p.stem)
@@ -101,7 +103,7 @@ def test_strong_exact_bracket():
     closed_form = (1 + kappa) - sp.sqrt((1 + kappa) ** 2 - (7 * kappa + 1) / 2)
     assert closed_form == sp.Rational(9, 5)
     certs = [json.loads(p.read_text()) for p in STRONG_CERTS]
-    ces = [json.loads(p.read_text()) for p in STRONG_CES]
+    ces = [json.loads(p.read_text()) for p in KAPPA_7_5_CES]
     assert all(c["mu"] == "5/7" and c["n"] == 1 for c in certs + ces)
     a, b = max(Fraction(c["h"]) for c in certs), min(Fraction(c["h"]) for c in ces)
     assert a == Fraction(9, 5) and a < b <= a + Fraction(1, 10**6)
@@ -199,7 +201,7 @@ def test_strong_identity_on_random_data(path):
     assert sp.Matrix(samples).rank() == len(samples[0])  # (N + 2)(N + 3)/2 Gram entries + N + 1 values
 
 
-@pytest.mark.parametrize("path", STRONG_CES, ids=lambda p: p.stem)
+@pytest.mark.parametrize("path", KAPPA_7_5_CES, ids=lambda p: p.stem)
 def test_strong_counterexample_one_dimensional(path):
     """The kappa = 7/5 examples are functions of one variable; being 5/7-strongly convex data, they also pass the
     convex (mu = 0) check."""

@@ -67,9 +67,12 @@ Throughout, L = 1 (rescaling f covers every L), steps are h/L, and "convex" mean
   **h₃ ∈ [1.9, 1.9001]**, in the sense that violations are impossible at the left end and possible at the right
   end. We did *not* prove that the set of bad step sizes is an interval (monotonicity in h); the PEP curves
   in the figure below suggest it.
-* `[numerical]` PEP thresholds: PEPit 0.5.1, Clarabel 0.11.1 (SCS 3.3.1 at eps = 1e-9 when Clarabel reports
-  "inaccurate"), "no violation" = worst case ≤ 10⁻⁷, bisection on [1.5, 1.9999]. The window x₀, …, x_{n+1} starts
-  at a free point. Two normalizations, ‖x₀ − x*‖ ≤ 1 (functions with a minimizer) and ‖∇f(x₀)‖ ≤ 1 (all
+* `[numerical]` PEP thresholds: PEPit 0.5.1, Clarabel 0.11.1, "no violation" = worst case ≤ 10⁻⁷, bisection on
+  [1.5, 1.9999]. A point that Clarabel leaves "inaccurate" is solved again with SCS 3.3.1 (eps = 1e-9). If SCS does
+  not reach "optimal" either, the point is *unresolved*: it decides nothing, the bisection tries another point of the
+  bracket, and if no point can be decided the bracket stays wider. Every threshold in [results/](results/) stores
+  its number of solves, of SCS fallbacks and of unresolved points, and where these were. The window x₀, …, x_{n+1}
+  starts at a free point. Two normalizations, ‖x₀ − x*‖ ≤ 1 (functions with a minimizer) and ‖∇f(x₀)‖ ≤ 1 (all
   functions), give thresholds within 3 × 10⁻⁵ of each other; the table shows the first. Both lie inside every
   exact bracket (checked in the tests).
 * Answer to the open question: yes, the curve can be concave at several consecutive steps. In our data each extra
@@ -135,13 +138,23 @@ For L-smooth μ-strongly convex f (κ = L/μ), the threshold for n consecutive v
 | 100 | 1.7503 | 1.8662 | 1.9027 | 1.7503 |
 | ∞ (μ = 0) | 1.7500 | 1.8634 | 1.9001 | 1.75 |
 
-Every h_n(κ) we computed is larger than its convex counterpart and decreases in κ (for n = 1 this is part 4 of the
-theorem). For 17 of the 92 thresholds, all with κ ≤ 3, at most 8 of the 29 solves fell back to SCS; the count is
-stored next to every threshold in [results/strong.json](results/strong.json). At all 30 values of κ (1.05 to 10⁴)
-the PEP value of h₁(κ) is within 4.4 × 10⁻⁶ of the theorem. Since the closed form is proved, this measures the PEP
-pipeline: where every solve used Clarabel, the PEP value lies 5 × 10⁻⁸ to 1.3 × 10⁻⁷ above h₁(κ) (violations
-≤ 10⁻⁷ count as none); the larger gaps, up to 4.3 × 10⁻⁶ above and once 1.3 × 10⁻⁶ below (κ = 1.05), occur only
-where some solves fell back to SCS.
+Every bracket we computed lies above its convex counterpart and decreases in κ (for n = 1 this is part 4 of the
+theorem). Of the 2337 solves behind [results/strong.json](results/strong.json), 179 fell back to SCS (in 36 of the
+93 thresholds, all with κ ≤ 6), and 52 points, in 18 thresholds with κ ≤ 3, stayed unresolved; each threshold stores
+these counts and the unresolved points. Five brackets are left open: h₁ at κ = 1.5 and 2 and h₃ at κ = 3 (widths
+9.5 × 10⁻⁷, 6.7 × 10⁻⁸ and 4.5 × 10⁻⁸), and h₂ and h₃ at κ = 1.05 (below). Since h₁(κ) is proved, it measures the
+pipeline: the 29 full-width brackets of h₁(κ) lie 5.4 × 10⁻⁸ to 2.5 × 10⁻⁷ above the exact value (PEP values
+≤ 10⁻⁷ count as no violation), and the two open ones are within 7.3 × 10⁻⁷ of it. (An earlier version used the
+inaccurate SCS values. It was then up to 4.3 × 10⁻⁶ off in h₁, reported h₂(1.05) = 1.99209 and found no three
+consecutive violations at κ = 1.05.)
+
+At κ = 1.05 both solvers fail at some points near h = 2. For n = 3 the bracket stays [1.99218, 1.99510]
+`[numerical]` (the points tried between 1.9929 and 1.9944, and 1.9995 and 1.9999, are unresolved), and an exact
+counterexample at h = 1999/1000 has three consecutive violations `[exact]` (rational data in a plane, stored in ℚ⁴:
+[counterexamples/n3_h1999_1000_mu20_21_d4.json](counterexamples/n3_h1999_1000_mu20_21_d4.json)).
+For n = 2 there is no violation at 1.99 and no point above it could be decided; since three consecutive violations
+contain two, h₂(1.05) ≤ 1.99510 `[numerical]`, and the same exact data have two consecutive violations at h = 1.999
+`[exact]`.
 
 **Theorem `[exact]` (one violation, every κ).** Let L = 1, 0 < μ < 1, κ = 1/μ, 0 < h < 2, and
 
@@ -274,7 +287,7 @@ definite Gram part. Above 9/5 the max-slack SDP optimum has numerical rank 1, wi
 (16, −11, 7)/16, hence the one-dimensional counterexamples. Files: the entries with `"mu": "5/7"` in
 [certificates/](certificates/) and [counterexamples/](counterexamples/), written by
 `python -m optcurves.certificate` and `python -m optcurves.counterexample`. (The PEP bisection at κ = 1.4 gives
-[1.80000008, 1.80000011]; the offset of about 10⁻⁷ above 9/5 is its tolerance, since values ≤ 10⁻⁷ count as
+[1.80000008, 1.80000010]; the offset of about 10⁻⁷ above 9/5 is its tolerance, since values ≤ 10⁻⁷ count as
 "no violation".)
 
 ![Thresholds against the condition number](figures/strong_threshold.png)
@@ -315,13 +328,15 @@ The PEP layer is cross-checked against the two hand-built SDPs in the tests.
   Hendrickx and Glineur (2017).
 * For strongly convex f only one violation is settled exactly (section 4: its threshold and its worst-case
   value); the thresholds for two or more consecutive violations are numerical, with no closed form proposed.
+* The numerical thresholds rest on Clarabel and SCS. Near κ = 1 both stop "inaccurate" at some points; those points
+  decide nothing, which leaves five brackets open (section 4).
 * The theorems of section 4 are checked by SymPy (exact symbolic identities), not by Lean.
 * Only gradient descent with constant steps. Heavy ball, Nesterov and proximal methods are not studied.
 
 ## Reproduce
 
 Python ≥ 3.11 (CVXPY 1.8 and later need it; tested with Python 3.13). Every number above comes from these commands
-(about 7 minutes in total on an M1 laptop, mostly `study strong`). On our machine a full rerun reproduced every JSON
+(about 6 minutes in total on an M1 laptop, mostly `study strong`). On our machine a full rerun reproduced every JSON
 file, the Lean file and the figures byte for byte:
 
 ```bash
@@ -333,9 +348,11 @@ Single steps: `python -m optcurves.study consecutive|strong`, `python -m optcurv
 `python -m optcurves.counterexample`, `python -m optcurves.theorem`, `python -m optcurves.worstcase`,
 `python -m optcurves.lean_gen`, `python -m optcurves.figures`, `pytest`. The tests check every certificate and
 counterexample in exact arithmetic, that tampering breaks them, that the exact brackets have width ≤ 10⁻⁴ (≤ 10⁻⁶
-at κ = 7/5) and contain the numerical thresholds, every step of the two proofs in section 4 with exact instances on
-both sides of h₁(κ), and that the Lean file matches the generator. If any certificate or counterexample cannot be
-regenerated, its generator exits with an error, so `reproduce.sh` stops instead of testing the old file.
+at κ = 7/5) and contain the numerical thresholds, that both ends of every PEP bracket were decided by solves that
+reached "optimal" (with no jump across a full-width bracket), every step of the two proofs in section 4 with exact
+instances on both sides of h₁(κ), and that the Lean file matches the generator. If any certificate or
+counterexample cannot be regenerated, its generator exits with an error, so `reproduce.sh` stops instead of testing
+the old file.
 
 Lean (needs elan; downloads the Mathlib cache):
 
@@ -399,7 +416,10 @@ that the results are new.
   كسرية، يتحول إلى دالة فعلية بمبرهنة الاستيفاء لـ Taylor وHendrickx وGlineur (2017).
 - **[Lean]** ست مبرهنات (عند 9/5 و1.8634 لانكسارين، وعند 19/10 لثلاثة) تحققت منها نواة Lean مع Mathlib، ولا
   تعتمد إلا على المسلّمات الثلاث القياسية. فرضياتها متباينات الاستيفاء، ولمّة الجسر إلى الدوال غير مبرهنة.
-- **[عددي]** للدوال قوية التحدب: العتبات ترتفع كلما صغر κ = L/μ.
+- **[عددي]** للدوال قوية التحدب: العتبات ترتفع كلما صغر κ = L/μ. النقاط التي لا يبلغ فيها أيٌّ من المحلّلين
+  (Clarabel ثم SCS) حلًّا دقيقًا لا تُستعمل في الحكم، فتبقى خمس فترات مفتوحة.
+- **[دقيق]** عند κ = 1.05 ثلاثة انكسارات متتالية ممكنة عند h = 1.999 (مثال مضاد ببيانات كسرية في مستوى). كانت النسخة السابقة
+  تقبل قيمة SCS غير الدقيقة فتقول إنه لا انكسار.
 - **[دقيق، مبرهنة]** لانكسار واحد في الدوال قوية التحدب، ولكل κ > 1، العتبة هي بالضبط
   h₁(κ) = (1 + κ) − √((1 + κ)² − (7κ + 1)/2). إذا كان h ≤ h₁(κ) فالانكسار مستحيل لكل دالة في أي فضاء ضرب داخلي
   (شهادة من ثلاث متباينات استيفاء بمعاملات صريحة في h وμ)، وإذا كان h₁(κ) < h < 2 فهو ممكن بدالة في متغير واحد،

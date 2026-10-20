@@ -64,10 +64,24 @@ def strong(plt):
     ax.plot(ks, [h1_closed_form(k) for k in ks], color=INK, linewidth=1, linestyle="--",
             label="h$_1$(κ), exact (theorem)")
     for n in (1, 2, 3):
-        pts = [(r["kappa"], r[f"h{n}"]["lo"]) for r in finite if r[f"h{n}"]]
+        recs = [(r["kappa"], r[f"h{n}"]) for r in finite if r[f"h{n}"] and r[f"h{n}"]["hi"] is not None]
+        # a bracket that points no solver could decide left wider than 1e-5 is drawn whole; narrower ones are points
+        wide = lambda t: t["hi"] - t["lo"] > 1e-5
+        pts = [(k, t["lo"]) for k, t in recs if not wide(t)]
         ax.plot([p[0] for p in pts], [p[1] for p in pts], color=COLORS[n], linewidth=0, marker=MARKERS[n],
                 markersize=5, label=f"h$_{n}$(κ), PEP")
+        for i, (k, t) in enumerate((k, t) for k, t in recs if wide(t)):
+            ax.plot([k, k], [t["lo"], t["hi"]], color=COLORS[n], linewidth=2, solid_capstyle="butt")
+            ax.plot([k], [t["lo"]], color=COLORS[n], linewidth=0, marker=MARKERS[n], markersize=5,
+                    markerfacecolor="white", label=None if i else f"h$_{n}$(κ), PEP bracket left open")
         ax.axhline(inf_row[f"h{n}"]["lo"], color=COLORS[n], linewidth=1, linestyle=":")
+    exact = [json.loads(p.read_text()) for p in sorted((ROOT / "counterexamples").glob("*.json"))
+             if not p.name.startswith("._")]
+    exact = [c for c in exact if "mu" in c and c["n"] > 1]
+    if exact:
+        ns = ", ".join(str(n) for n in sorted({c["n"] for c in exact}))
+        ax.plot([float(1 / F(c["mu"])) for c in exact], [float(F(c["h"])) for c in exact], color=INK,
+                linewidth=0, marker="*", markersize=9, label=f"{ns} violations, exact counterexample")
     ax.set_xscale("log")
     ax.set_ylim(1.74, 2.005)
     ax.set_xlabel("condition number κ = L/μ   (dotted lines: μ = 0)", color=INK, fontsize=9)
