@@ -1,4 +1,5 @@
-"""Generate Lean 4 / Mathlib theorems from the exact certificates in certificates/*.json.
+"""Generate Lean 4 / Mathlib theorems from three of the exact certificates in certificates/ (LEAN_TARGETS: h = 9/5
+and 9317/5000 for n = 2, h = 19/10 for n = 3); the other certificates are checked in exact arithmetic only.
 
     python -m optcurves.lean_gen      # writes lean/Optcurves/Certificates.lean
 

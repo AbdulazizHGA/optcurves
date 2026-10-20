@@ -12,7 +12,8 @@ possible.
 Function classes (L = 1 without loss of generality: the problem is invariant under rescaling f):
   * mu = 0, minimizer=True:  L-smooth convex f with a minimizer x*, normalised by ||x_0 - x*||^2 <= 1.
   * mu = 0, minimizer=False: all L-smooth convex f, normalised by ||grad f(x_0)||^2 <= 1.
-  * mu > 0:                  L-smooth mu-strongly convex f (always has a minimizer), ||x_0 - x*||^2 <= 1.
+  * mu > 0:                  L-smooth mu-strongly convex f, ||x_0 - x*||^2 <= 1 (a minimizer exists here because
+                             PEPit works in R^d; on an incomplete inner-product space it need not).
 Both normalisations only fix the scale (v_k is 2-homogeneous), so the sign of the value is unaffected.
 """
 import warnings

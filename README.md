@@ -312,8 +312,9 @@ definite Gram part. Above 9/5 the max-slack SDP optimum has numerical rank 1, wi
    interpolation inequalities and violations (an SDP over the Gram matrix, or a small nonlinear program in ℝ²),
    factor, round to rationals and check exactly. At κ = 7/5 the SDP optimum has numerical rank 1 and is truncated
    to ℝ¹ before rounding.
-4. **Lean** ([src/optcurves/lean_gen.py](src/optcurves/lean_gen.py)). Each certificate becomes a theorem whose proof
-   feeds the interpolation inequalities and the squares to `linarith`.
+4. **Lean** ([src/optcurves/lean_gen.py](src/optcurves/lean_gen.py)). Three certificates (h = 9/5 and 9317/5000 for
+   n = 2, h = 19/10 for n = 3; `LEAN_TARGETS`) become theorems whose proofs feed the interpolation inequalities and
+   the squares to `linarith`. The other certificates are checked in exact arithmetic only.
 5. **Symbolic proof** ([src/optcurves/theorem.py](src/optcurves/theorem.py)). The theorem of section 4: multipliers,
    Gram matrix and extremal data in closed form in (h, μ), every identity checked by SymPy polynomial arithmetic.
 

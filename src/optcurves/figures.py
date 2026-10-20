@@ -98,7 +98,8 @@ def strong(plt):
 def interpolant(ce):
     """Largest 1-smooth convex interpolant of the counterexample data, evaluated by its dual formula
     f(x) = min over lam in the simplex of 1/2 ||sum lam_i (x - x_i + g_i)||^2 + sum lam_i (f_i - 1/2 ||g_i||^2)
-    (the conjugate of the largest 1-strongly convex function through the dual data). Returns a vectorized f."""
+    (the conjugate of the smallest 1-strongly convex function through the dual data, the maximum of the quadratic
+    lower bounds; conjugation reverses the order). Returns a vectorized f."""
     h = F(ce["h"])
     g = [np.array([float(F(a)) for a in gk]) for gk in ce["g"]]
     x = [np.array([float(a) for a in xk]) for xk in _positions(ce)]

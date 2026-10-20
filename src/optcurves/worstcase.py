@@ -7,12 +7,15 @@ Q_pq >= 0, and
 
     q = 2 mu h^2 - 4 (1 + mu) h + mu + 7 = (1 - mu)(7 - 4 h) + 2 mu (2 - h)^2,     D = 2 + h^2 (1 - mu).
 
-Now 0 <= mu < 1 and f has a minimizer x* (automatic for mu > 0); it is the point "s" with g_* = 0, f_* = f(x*).
+Now 0 <= mu < 1 and f has a minimizer x*; it is the point "s" with g_* = 0, f_* = f(x*). For mu > 0 a minimizer
+exists on R^d or any Hilbert space, but not on every inner-product space: on the finite sequences inside l^2,
+f(x) = ||x - a||^2 / 2, with a in l^2 having infinitely many nonzero terms, is 1-smooth and strongly convex and has
+no minimizer.
 By the second form of q, q < 0 forces h > 7/4; for 0 < h < 2, q < 0 means h_1(kappa) < h < 2 (theorem.py), and
 7/4 < h < 2 when mu = 0.
 
-Theorem. Let 0 <= mu < 1 and 0 < h < 2 with q < 0. Then for every 1-smooth mu-strongly convex f (for mu = 0:
-convex with a minimizer) on any real inner-product space and every x_0,
+Theorem. Let 0 <= mu < 1 and 0 < h < 2 with q < 0. Then for every 1-smooth mu-strongly convex f (convex for
+mu = 0) with a minimizer x*, on any real inner-product space, and every x_0,
 
     v_1 <= c ||x_0 - x*||^2,     c = h^2 (-q) / (2 D) > 0,
 
@@ -22,7 +25,10 @@ with equality for the one-dimensional data of theorem.py (b), which have ||x_0 -
 
     max of v_1 over f and x_0 with ||x_0 - x*|| <= 1  =  max(0, -h^2 q / (2 D))
 
-(for a general L, multiply by L). The maximum is taken at radius 1 since f -> r^2 f(. / r) scales v_1 by r^2.
+(for a general L, multiply by L). For h > h_1(kappa) the maximum is taken at radius 1, since f -> r^2 f(. / r)
+scales v_1 by r^2. For h <= h_1(kappa) it is 0, taken at x_0 = x*; for mu > 0 and h < h_1(kappa) only there: the
+Gram part of the certificate of theorem.py (a) is then positive definite, so v_1 < 0 unless g_0 = g_1 = g_2 = 0,
+that is, unless x_0 = x*.
 
 Proof. With y = x_0 - x* and u = (y, g_0, g_1, g_2), the identity (x_1 = x_0 - h g_0, x_2 = x_1 - h g_1)
 
