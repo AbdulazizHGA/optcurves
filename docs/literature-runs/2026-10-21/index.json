@@ -1,0 +1,212 @@
+[
+ {
+  "source": "semantic_scholar",
+  "query": "paper",
+  "http_status": 429,
+  "retrieved_utc": "2026-10-21T18:31:56+00:00"
+ },
+ {
+  "source": "semantic_scholar",
+  "query": "citations",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:32:03+00:00"
+ },
+ {
+  "source": "semantic_scholar",
+  "query": "optimization curve convex gradient descent",
+  "http_status": 429,
+  "retrieved_utc": "2026-10-21T18:33:44+00:00"
+ },
+ {
+  "source": "semantic_scholar",
+  "query": "optimization curve concave consecutive steps gradient descent",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:35:47+00:00"
+ },
+ {
+  "source": "semantic_scholar",
+  "query": "worst-case convexity violation gradient descent function values",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:35:51+00:00"
+ },
+ {
+  "source": "semantic_scholar",
+  "query": "convexity optimization curve strongly convex",
+  "http_status": 429,
+  "retrieved_utc": "2026-10-21T18:37:31+00:00"
+ },
+ {
+  "source": "semantic_scholar",
+  "query": "convex optimization curves step size 1.75",
+  "http_status": 429,
+  "retrieved_utc": "2026-10-21T18:39:11+00:00"
+ },
+ {
+  "source": "openalex",
+  "query": "work",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:39:15+00:00"
+ },
+ {
+  "source": "openalex",
+  "query": "cites:W6966804991",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:39:16+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "all:\"optimization curve\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:39:17+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "all:\"optimization curves\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:39:21+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"optimization curve\" AND abs:\"strongly convex\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:39:25+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"optimization curve\" AND abs:\"worst-case\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:39:28+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"optimization curve\" AND abs:\"gradient descent\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:39:32+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "all:\"convex optimization curves\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:39:35+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"convexity\" AND abs:\"gradient descent\" AND abs:\"1.75\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:39:39+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "all:\"1.75/L\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:39:43+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"curve\" AND abs:\"convex\" AND abs:\"gradient descent\" AND abs:\"step size\" AND abs:\"concave\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:39:46+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"second difference\" AND abs:\"gradient descent\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:39:50+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"discrete convexity\" AND abs:\"gradient\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:39:53+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"function values\" AND abs:\"convex sequence\" AND abs:\"gradient\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:39:57+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"performance estimation\" AND abs:\"strongly convex\" AND abs:\"gradient descent\" AND abs:\"step size\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:40:00+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"worst-case\" AND abs:\"strongly convex\" AND abs:\"gradient descent\" AND abs:\"convexity\" AND abs:\"curve\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:40:04+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"Barzilai\" AND abs:\"Shamir\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:40:07+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"decrease\" AND abs:\"monotone\" AND abs:\"gradient descent\" AND abs:\"function value\" AND abs:\"differences\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:40:11+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "ti:\"optimization curve\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:40:14+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"loss curve\" AND abs:\"convex\" AND abs:\"gradient descent\" AND abs:\"step size\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:40:18+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"convexity of the loss curve\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:40:26+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"performance estimation\" AND abs:\"function values\" AND abs:\"convexity\" AND abs:\"gradient descent\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:40:30+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"sequence of function values\" AND abs:\"convex\" AND abs:\"gradient descent\" AND abs:\"smooth\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:40:34+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"objective values\" AND abs:\"convex sequence\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:40:37+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"consecutive\" AND abs:\"decrease\" AND abs:\"gradient descent\" AND abs:\"smooth convex\" AND abs:\"step size\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:40:41+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"optimization curves\" AND abs:\"heavy ball\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:40:44+00:00"
+ },
+ {
+  "source": "arxiv",
+  "query": "abs:\"optimization curve\" AND abs:\"proximal\"",
+  "http_status": 200,
+  "retrieved_utc": "2026-10-21T18:40:48+00:00"
+ },
+ {
+  "source": "openreview",
+  "query": "forum TZtpxselK2",
+  "http_status": 403,
+  "retrieved_utc": "2026-10-21T18:40:51+00:00"
+ }
+]

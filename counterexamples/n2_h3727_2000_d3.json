@@ -41,5 +41,7 @@
  "violations": [
   "3662/7196285881",
   "243019/579659821710"
- ]
+ ],
+ "sdp_solver": "CLARABEL",
+ "sdp_status": "optimal"
 }

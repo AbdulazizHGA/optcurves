@@ -25,11 +25,17 @@ WIDTH = (H_MAX - 1.5) / 2 ** ITERS  # bracket width after ITERS halvings of [1.5
 def _meta():
     version = importlib.metadata.version
     return {
-        "python": ".".join(platform.python_version_tuple()[:2]),
+        "python": platform.python_version(),
+        "python_implementation": platform.python_implementation(),
+        "platform": platform.platform(),
+        "machine": platform.machine(),
         "pepit": version("PEPit"),
         "cvxpy": version("cvxpy"),
         "clarabel": version("clarabel"),
         "scs": version("scs"),
+        "numpy": version("numpy"),
+        "scipy": version("scipy"),
+        "sympy": version("sympy"),
         "solver": pep.SOLVER,
         "fallback": pep.FALLBACK,
         "unresolved": "point where neither the solver nor the fallback reaches status optimal; it decides nothing",
@@ -83,11 +89,13 @@ def consecutive(n_max=6, grid=None):
         for n in range(1, n_max + 1):
             out["thresholds"][cls][n] = _threshold(n, minimizer=minimizer)
             print(cls, n, out["thresholds"][cls][n], flush=True)
+    # Each curve point is [h, PEP value, reliable]; reliable = False when neither solver reached "optimal"
+    # (pep.evaluate). Such a value is kept for the record but drawn as a gap (figures.curve_xy).
     out["curves_unresolved"] = {}
     for n in (1, 2, 3):
         pep.reset_stats()
-        out["curves"][n] = [[h, pep.max_min_violation(h, n)] for h in grid]
-        out["curves_unresolved"][n] = pep.STATS["unresolved"]  # values kept but not reliable
+        out["curves"][n] = [[h, *pep.evaluate(h, n)] for h in grid]
+        out["curves_unresolved"][n] = pep.STATS["unresolved"]
     _write("consecutive.json", out)
 
 

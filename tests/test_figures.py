@@ -1,5 +1,7 @@
-"""The contour values of figures/counterexample_2d.png: exact evaluation of the largest smooth interpolant."""
+"""Figure data: the contour values of figures/counterexample_2d.png (the largest smooth interpolant, evaluated
+numerically by face enumeration with a KKT check) and the reliability of the curve points of figures/consecutive.png."""
 import json
+import math
 from fractions import Fraction
 
 import cvxpy as cp
@@ -42,3 +44,17 @@ def test_contour_values_against_an_independent_qp_solver():
         prob = cp.Problem(cp.Minimize(cp.sum_squares(A.T @ lam) / 2 + c @ lam), [cp.sum(lam) == 1])
         prob.solve(solver="CLARABEL")
         assert abs(prob.value - Z[i]) < 1e-7
+
+
+def test_curve_points_are_reliable():
+    """Every published curve point [h, PEP value, reliable] of results/consecutive.json was solved to status
+    "optimal", so the figure has no gaps."""
+    cons = json.loads((figures.RESULTS / "consecutive.json").read_text())
+    for n, pts in cons["curves"].items():
+        assert len(pts) == 62 and all(len(p) == 3 and p[2] is True for p in pts), n
+        assert cons["curves_unresolved"][n] == 0, n
+
+
+def test_unreliable_curve_point_is_a_gap():
+    xs, ys = figures.curve_xy([[1.8, 0.06, True], [1.85, 0.12, False], [1.9, -1e-9, True]])
+    assert xs == [1.8, 1.85, 1.9] and ys[0] == 0.06 and math.isnan(ys[1]) and ys[2] == 0.0

@@ -1,0 +1,484 @@
+[
+ {
+  "query": "paper",
+  "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2503.10138?fields=title,year,citationCount,externalIds",
+  "retrieved_utc": "2026-10-21T18:31:56+00:00",
+  "http_status": 429,
+  "result": null
+ },
+ {
+  "query": "citations",
+  "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2503.10138/citations?fields=title,year,externalIds,authors&limit=100",
+  "retrieved_utc": "2026-10-21T18:32:03+00:00",
+  "http_status": 200,
+  "result": [
+   {
+    "title": "Convexity of Optimization Curves: Local Sharp Thresholds, Robustness Impossibility, and New Counterexamples",
+    "year": 2025,
+    "externalIds": {
+     "ArXiv": "2509.08954",
+     "DBLP": "journals/corr/abs-2509-08954",
+     "DOI": "10.48550/arXiv.2509.08954",
+     "CorpusId": 281252510
+    },
+    "authors": [
+     "Le Duc Hieu"
+    ]
+   }
+  ]
+ },
+ {
+  "query": "optimization curve convex gradient descent",
+  "url": "https://api.semanticscholar.org/graph/v1/paper/search?query=optimization+curve+convex+gradient+descent&limit=20&fields=title%2Cyear%2CexternalIds",
+  "retrieved_utc": "2026-10-21T18:33:44+00:00",
+  "http_status": 429,
+  "result": null
+ },
+ {
+  "query": "optimization curve concave consecutive steps gradient descent",
+  "url": "https://api.semanticscholar.org/graph/v1/paper/search?query=optimization+curve+concave+consecutive+steps+gradient+descent&limit=20&fields=title%2Cyear%2CexternalIds",
+  "retrieved_utc": "2026-10-21T18:35:47+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 93,
+   "records": [
+    {
+     "paperId": "8341de9031ee78ef534b4f7f901dc60036979bab",
+     "externalIds": {
+      "ArXiv": "2505.02140",
+      "CorpusId": 278327138
+     },
+     "title": "Proximal Gradient Descent Ascent Methods for Nonsmooth Nonconvex-Concave Minimax Problems on Riemannian Manifolds",
+     "year": 2025
+    },
+    {
+     "paperId": "54616bb6879c32640cad4831634933f512b0a672",
+     "externalIds": {
+      "DBLP": "journals/jamc/ZhaoLL25",
+      "DOI": "10.1007/s12190-025-02563-4",
+      "CorpusId": 279519413
+     },
+     "title": "Accelerated stochastic alternating mirror descent ascent algorithm for nonconvex-strongly concave minimax problems",
+     "year": 2025
+    },
+    {
+     "paperId": "f64b6a52ac60f246ccc3b9186cd9944e8085ad0f",
+     "externalIds": {
+      "ArXiv": "2505.01423",
+      "DBLP": "journals/corr/abs-2505-01423",
+      "DOI": "10.48550/arXiv.2505.01423",
+      "CorpusId": 278310857
+     },
+     "title": "Negative Stepsizes Make Gradient-Descent-Ascent Converge",
+     "year": 2025
+    },
+    {
+     "paperId": "a8e9aafb6f890ff2bdc9348c2e6744acf9f67df5",
+     "externalIds": {
+      "DBLP": "journals/corr/abs-2304-02441",
+      "ArXiv": "2304.02441",
+      "DOI": "10.48550/arXiv.2304.02441",
+      "CorpusId": 257952396
+     },
+     "title": "Decentralized gradient descent maximization method for composite nonconvex strongly-concave minimax problems",
+     "year": 2023
+    },
+    {
+     "paperId": "21b25b025898bd1cabe60234434b49cf14016981",
+     "externalIds": {
+      "MAG": "2964126461",
+      "DBLP": "conf/nips/NagarajanK17",
+      "ArXiv": "1706.04156",
+      "CorpusId": 8424807
+     },
+     "title": "Gradient descent GAN optimization is locally stable",
+     "year": 2017
+    },
+    {
+     "paperId": "d19e41d2e9a19b02a860108b581358cc202ee17b",
+     "externalIds": {
+      "DOI": "10.69646/aob241121",
+      "CorpusId": 274781276
+     },
+     "title": "Fitting of the current signal of the Pulsed Towsend experiment with the gradient descent algorithm",
+     "year": 2024
+    },
+    {
+     "paperId": "0599b76c3fd95a2e8e3e1482d2527893346c1b6c",
+     "externalIds": {
+      "DBLP": "conf/camsap/QureshiK23",
+      "DOI": "10.1109/CAMSAP58249.2023.10403485",
+      "CorpusId": 267341229
+     },
+     "title": "A Distributed First-Order Optimization Method for Strongly Concave-Convex Saddle-Point Problems",
+     "year": 2023
+    },
+    {
+     "paperId": "dcabd4cce126e272caab0e4fdae810f01698a019",
+     "externalIds": {
+      "DBLP": "conf/icml/YoonR21",
+      "ArXiv": "2102.07922",
+      "CorpusId": 235826268
+     },
+     "title": "Accelerated Algorithms for Smooth Convex-Concave Minimax Problems with O(1/k^2) Rate on Squared Gradient Norm",
+     "year": 2021
+    },
+    {
+     "paperId": "bc13f63160676a419b34ed980b3cb830639188de",
+     "externalIds": {
+      "DBLP": "journals/jota/DonniniLM26",
+      "ArXiv": "2505.19705",
+      "DOI": "10.1007/s10957-026-03035-w",
+      "CorpusId": 278904746
+     },
+     "title": "Efficient Globalization of Heavy-Ball Type Methods for Unconstrained Optimization Based on Curve Searches",
+     "year": 2025
+    },
+    {
+     "paperId": "ee8aa880a803547ec8ff1e3f86e75905cc9e5e53",
+     "externalIds": {
+      "ArXiv": "2407.02689",
+      "DBLP": "journals/corr/abs-2407-02689",
+      "DOI": "10.48550/arXiv.2407.02689",
+      "CorpusId": 270924081
+     },
+     "title": "Accelerating Distributed Optimization: A Primal-Dual Perspective on Local Steps",
+     "year": 2024
+    },
+    {
+     "paperId": "b1cdacac3e20aad96c032591fab7463fd75358a9",
+     "externalIds": {
+      "ArXiv": "2609.13765",
+      "CorpusId": 292012157
+     },
+     "title": "Last-Iterate Performance of Gradient Descent and Relaxed Proximal Point via $s$-Composability",
+     "year": 2026
+    },
+    {
+     "paperId": "65075b6c9ee595c6af2b63a1df5aa7b103b7fe4d",
+     "externalIds": {
+      "DBLP": "conf/icml/LiFDJ22",
+      "ArXiv": "2207.00957",
+      "DOI": "10.48550/arXiv.2207.00957",
+      "CorpusId": 250264258
+     },
+     "title": "On Convergence of Gradient Descent Ascent: A Tight Local Analysis",
+     "year": 2022
+    },
+    {
+     "paperId": "58e659ead5960f164ca39bbba255bf9530c970cd",
+     "externalIds": {
+      "MAG": "3013634249",
+      "DBLP": "conf/acssc/LuSCCH19",
+      "DOI": "10.1109/IEEECONF44664.2019.9048943",
+      "CorpusId": 214761336
+     },
+     "title": "Alternating Gradient Descent Ascent for Nonconvex Min-Max Problems in Robust Learning and GANs",
+     "year": 2019
+    },
+    {
+     "paperId": "35aef4664f246c38ca92a6625ee395785383df32",
+     "externalIds": {
+      "DBLP": "journals/corr/abs-2402-10475",
+      "ArXiv": "2402.10475",
+      "DOI": "10.48550/arXiv.2402.10475",
+      "CorpusId": 267740256
+     },
+     "title": "Fundamental Benefit of Alternating Updates in Minimax Optimization",
+     "year": 2024
+    },
+    {
+     "paperId": "1a08a6e0e5b0ac90fbd8623fee90251ae25a2591",
+     "externalIds": {
+      "DBLP": "journals/na/FerrandiH25",
+      "ArXiv": "2308.15145",
+      "DOI": "10.1007/s11075-024-01895-9",
+      "CorpusId": 261277172
+     },
+     "title": "Limited memory gradient methods for unconstrained optimization",
+     "year": 2023
+    },
+    {
+     "paperId": "f34943957f488b11a5ee16e3439c4966ba707da3",
+     "externalIds": {
+      "DBLP": "journals/corr/abs-2202-10923",
+      "ArXiv": "2202.10923",
+      "CorpusId": 247025755
+     },
+     "title": "MSTGD: A Memory Stochastic sTratified Gradient Descent Method with an Exponential Convergence Rate",
+     "year": 2022
+    },
+    {
+     "paperId": "746f65bd2a08c1de9ff8f6845ada018ebe8ff75d",
+     "externalIds": {
+      "DBLP": "conf/aistats/SebbouhCP22",
+      "ArXiv": "2111.13162",
+      "CorpusId": 244709040
+     },
+     "title": "Randomized Stochastic Gradient Descent Ascent",
+     "year": 2021
+    },
+    {
+     "paperId": "e232639454dd3ef0e48aa5fd76d251a4eccbde36",
+     "externalIds": {
+      "ArXiv": "2408.12505",
+      "DBLP": "journals/corr/abs-2408-12505",
+      "DOI": "10.48550/arXiv.2408.12505",
+      "CorpusId": 271924227
+     },
+     "title": "Stochastic Compositional Minimax Optimization with Provable Convergence Guarantees",
+     "year": 2024
+    },
+    {
+     "paperId": "f5a54e41a73618cd93f46f31c527645289468909",
+     "externalIds": {
+      "ArXiv": "2506.07595",
+      "DBLP": "conf/icml/QiuEZ25",
+      "DOI": "10.48550/arXiv.2506.07595",
+      "CorpusId": 279251363
+     },
+     "title": "Exploiting Curvature in Online Convex Optimization with Delayed Feedback",
+     "year": 2025
+    },
+    {
+     "paperId": "62ffbcd23dc8589b33435f210d70f1719b671797",
+     "externalIds": {
+      "ArXiv": "2607.11056",
+      "CorpusId": 290143157
+     },
+     "title": "Last-Iterate Convergence of Single-Loop Stochastic Methods for Constrained Convex-Concave Minimax Problems",
+     "year": 2026
+    }
+   ]
+  }
+ },
+ {
+  "query": "worst-case convexity violation gradient descent function values",
+  "url": "https://api.semanticscholar.org/graph/v1/paper/search?query=worst-case+convexity+violation+gradient+descent+function+values&limit=20&fields=title%2Cyear%2CexternalIds",
+  "retrieved_utc": "2026-10-21T18:35:51+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 99,
+   "records": [
+    {
+     "paperId": "45bbeeb6d702ca9eb2267fa7acaa10d582903cb8",
+     "externalIds": {
+      "DBLP": "journals/ijon/VernimmenG26",
+      "ArXiv": "2506.17145",
+      "DOI": "10.1016/j.neucom.2025.131883",
+      "CorpusId": 279464151
+     },
+     "title": "Worst-case convergence analysis of relatively inexact gradient descent on smooth convex functions",
+     "year": 2025
+    },
+    {
+     "paperId": "773370559783a67e623aab4030e942e62681f6e2",
+     "externalIds": {
+      "DBLP": "journals/algorithms/TheodorakatosBL25",
+      "DOI": "10.3390/a19010011",
+      "CorpusId": 284137809
+     },
+     "title": "Avoiding the Maratos Effect in Non-Convex Optimization Through Piecewise Convexity: A Case Study in Optimal PMU Placement Problem",
+     "year": 2025
+    },
+    {
+     "paperId": "78e1701cf8dcd651288f75259b58555a9471c152",
+     "externalIds": {
+      "DBLP": "journals/corr/abs-2510-01874",
+      "ArXiv": "2510.01874",
+      "DOI": "10.48550/arXiv.2510.01874",
+      "CorpusId": 281724189
+     },
+     "title": "Deep Hedging Under Non-Convexity: Limitations and a Case for AlphaZero",
+     "year": 2025
+    },
+    {
+     "paperId": "cfbabb50ead3e5353d32339fa6db5ea59b3cbad6",
+     "externalIds": {
+      "ArXiv": "2412.04427",
+      "CorpusId": 274514559
+     },
+     "title": "A Proof of the Exact Convergence Rate of Gradient Descent",
+     "year": 2024
+    },
+    {
+     "paperId": "ad758bdfa720d9a6c9aa8f80dda546f4725a9db8",
+     "externalIds": {
+      "ArXiv": "2610.00156",
+      "CorpusId": 292521082
+     },
+     "title": "A Two-Dimensional Extremizer for Relatively Inexact Gradient Descent",
+     "year": 2026
+    },
+    {
+     "paperId": "2aecbd8803f5d812e31de30bc2e25fe0f0f545d4",
+     "externalIds": {
+      "DBLP": "journals/tit/JiSSH23",
+      "DOI": "10.1109/TIT.2023.3267742",
+      "CorpusId": 258210742
+     },
+     "title": "Distributed (ATC) Gradient Descent for High Dimension Sparse Regression",
+     "year": 2023
+    },
+    {
+     "paperId": "006ce7b628481b9bcb3563e8e4c440c37fff3678",
+     "externalIds": {
+      "DBLP": "journals/jota/TaylorHG18",
+      "MAG": "2952192756",
+      "ArXiv": "1705.04398",
+      "DOI": "10.1007/s10957-018-1298-1",
+      "CorpusId": 51610733
+     },
+     "title": "Exact Worst-Case Convergence Rates of the Proximal Gradient Method for Composite Convex Minimization",
+     "year": 2017
+    },
+    {
+     "paperId": "1f6a63e2c002dafb325f0fd20c24d53a7baff62b",
+     "externalIds": {
+      "ArXiv": "2610.15125",
+      "CorpusId": 292895940
+     },
+     "title": "The exact worst-case asymptotic rate of Nesterov acceleration for strongly convex optimization",
+     "year": 2026
+    },
+    {
+     "paperId": "8220dc12bf60e1e3c31d9caeb8311b30fbd52b6c",
+     "externalIds": {
+      "DBLP": "conf/nips/Guille-EscuretI22",
+      "ArXiv": "2203.00342",
+      "DOI": "10.52202/068431-1805",
+      "CorpusId": 247188030
+     },
+     "title": "Gradient Descent Is Optimal Under Lower Restricted Secant Inequality And Upper Error Bound",
+     "year": 2022
+    },
+    {
+     "paperId": "b956ebf3d3c0b5f70cabbbb66e4452989a9c2dc6",
+     "externalIds": {
+      "DBLP": "journals/mp/DodangehV16",
+      "MAG": "1996491707",
+      "DOI": "10.1007/s10107-014-0847-0",
+      "CorpusId": 9189791
+     },
+     "title": "Worst case complexity of direct search under convexity",
+     "year": 2014
+    },
+    {
+     "paperId": "1cdfa9372b6cdc9f9fef4c427d66f05a4ff89412",
+     "externalIds": {
+      "MAG": "2787405421",
+      "DBLP": "journals/corr/abs-1802-04623",
+      "CorpusId": 3300235
+     },
+     "title": "Fast Rates for Online Gradient Descent Without Strong Convexity via Hoffman's Bound",
+     "year": 2018
+    },
+    {
+     "paperId": "8325ea0dce7471335d32e4278560c8170e6c78f5",
+     "externalIds": {
+      "DBLP": "journals/corr/abs-1803-02865",
+      "ArXiv": "1803.02865",
+      "MAG": "2789621689",
+      "CorpusId": 3731990
+     },
+     "title": "WNGrad: Learn the Learning Rate in Gradient Descent",
+     "year": 2018
+    },
+    {
+     "paperId": "d88af05b479c6b7929414fc06cb78e34960f9422",
+     "externalIds": {
+      "ArXiv": "2509.08954",
+      "DBLP": "journals/corr/abs-2509-08954",
+      "DOI": "10.48550/arXiv.2509.08954",
+      "CorpusId": 281252510
+     },
+     "title": "Convexity of Optimization Curves: Local Sharp Thresholds, Robustness Impossibility, and New Counterexamples",
+     "year": 2025
+    },
+    {
+     "paperId": "5b4e6a5997db639b7c851c2ad087146111671895",
+     "externalIds": {
+      "DBLP": "conf/colins/BoykoKOTBH22",
+      "CorpusId": 250625561
+     },
+     "title": "Analysis of the Application of Stochastic Gradient Descent to Detect Network Violations",
+     "year": 2022
+    },
+    {
+     "paperId": "bf0e55de598d8578279aead7f10ea942e7c73f26",
+     "externalIds": {
+      "ArXiv": "2602.10022",
+      "CorpusId": 285462883
+     },
+     "title": "Acceleration for Polyak-{\\L}ojasiewicz Functions with a Gradient Aiming Condition",
+     "year": 2026
+    },
+    {
+     "paperId": "150e0e1c5274ccac84638fe46ac549c9519aabce",
+     "externalIds": {
+      "DBLP": "journals/ol/LiangXZM24",
+      "DOI": "10.1007/s11590-023-01972-3",
+      "CorpusId": 256052018
+     },
+     "title": "Almost sure convergence of stochastic composite objective mirror descent for non-convex non-smooth optimization",
+     "year": 2023
+    },
+    {
+     "paperId": "9059beff87ef7514768fe19d85cab2bc5ce2e5a7",
+     "externalIds": {
+      "DBLP": "conf/nips/DingYL024",
+      "ArXiv": "2407.14839",
+      "DOI": "10.52202/079017-0154",
+      "CorpusId": 271329016
+     },
+     "title": "Optimizing over Multiple Distributions under Generalized Quasar-Convexity Condition",
+     "year": 2024
+    },
+    {
+     "paperId": "687957bbb63de98886185c5701b03df09fe8e7bd",
+     "externalIds": {
+      "DOI": "10.1088/1402-4896/ae2070",
+      "CorpusId": 283133307
+     },
+     "title": "Dp,q-convexity with an application to the fundamental mode of an instrumental string",
+     "year": 2025
+    },
+    {
+     "paperId": "841a219eab19018eac6da8805823ad6e172a5733",
+     "externalIds": {
+      "MAG": "3023838275",
+      "DBLP": "journals/ejco/Vicente13",
+      "DOI": "10.1007/s13675-012-0003-7",
+      "CorpusId": 6301070
+     },
+     "title": "Worst case complexity of direct search",
+     "year": 2013
+    },
+    {
+     "paperId": "b6a6f3f67d52dc6bb67722335424153bc18d7ffa",
+     "externalIds": {
+      "DBLP": "conf/wcnc/LiangZGWZ26",
+      "DOI": "10.1109/WCNC65185.2026.11555520",
+      "CorpusId": 289331506
+     },
+     "title": "Gradient-Based Fractional Doppler Estimation for OTFS Systems via Convex Correlation and Residual Functions",
+     "year": 2026
+    }
+   ]
+  }
+ },
+ {
+  "query": "convexity optimization curve strongly convex",
+  "url": "https://api.semanticscholar.org/graph/v1/paper/search?query=convexity+optimization+curve+strongly+convex&limit=20&fields=title%2Cyear%2CexternalIds",
+  "retrieved_utc": "2026-10-21T18:37:31+00:00",
+  "http_status": 429,
+  "result": null
+ },
+ {
+  "query": "convex optimization curves step size 1.75",
+  "url": "https://api.semanticscholar.org/graph/v1/paper/search?query=convex+optimization+curves+step+size+1.75&limit=20&fields=title%2Cyear%2CexternalIds",
+  "retrieved_utc": "2026-10-21T18:39:11+00:00",
+  "http_status": 429,
+  "result": null
+ }
+]

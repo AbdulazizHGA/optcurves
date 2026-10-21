@@ -22,8 +22,6 @@ from cvxpy.error import SolverError
 from PEPit import PEP
 from PEPit.functions import SmoothConvexFunction, SmoothStronglyConvexFunction
 
-warnings.filterwarnings("ignore")
-
 SOLVER = "CLARABEL"
 # Clarabel occasionally stops with "optimal_inaccurate" (mostly for mu > 0 near kappa = 1). Such a point is re-solved
 # with SCS at eps = 1e-9. If SCS does not reach "optimal" either, the point is UNRESOLVED: its value is kept for the
@@ -43,18 +41,26 @@ def reset_stats():
         STATS[key] = 0
 
 
+def _quiet_solve(pep, **options):
+    """pep.solve with the solvers' warnings (e.g. CVXPY's "solution may be inaccurate") silenced for this call only;
+    the status is checked by the caller instead."""
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        return pep.solve(verbose=0, wrapper="cvxpy", **options)
+
+
 def _solve(pep):
     """(value, reliable); reliable is False when neither Clarabel nor the SCS fallback reaches status "optimal"."""
     STATS["solves"] += 1
     try:
-        value = pep.solve(verbose=0, wrapper="cvxpy", solver=SOLVER)
+        value = _quiet_solve(pep, solver=SOLVER)
         if pep.wrapper.prob.status == "optimal":
             return value, True
     except SolverError:
         pass
     STATS["fallbacks"] += 1
     try:
-        value = pep.solve(verbose=0, wrapper="cvxpy", **FALLBACK)
+        value = _quiet_solve(pep, **FALLBACK)
         status = pep.wrapper.prob.status
     except SolverError:
         value, status = None, "solver error"

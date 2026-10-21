@@ -41,5 +41,7 @@
   }
  ],
  "margin_numeric": 5.703554522797265e-07,
- "denominator_bound": 100
+ "denominator_bound": 100,
+ "sdp_solver": "CLARABEL",
+ "sdp_status": "optimal"
 }

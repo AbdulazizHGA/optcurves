@@ -1,8 +1,9 @@
 """Failure handling of the pipeline: a target that cannot be regenerated must stop reproduce.sh, not leave the old
 file looking regenerated; a PEP point that no solver can decide must not decide a threshold."""
+import cvxpy as cp
 import pytest
 
-from optcurves import certificate, counterexample, pep, study
+from optcurves import certificate, counterexample, pep, sdp, study
 
 
 def test_certificate_generator_fails_loudly(monkeypatch, tmp_path):
@@ -78,3 +79,25 @@ def test_threshold_is_none_only_when_h_max_is_decided(monkeypatch):
     monkeypatch.setattr(pep, "evaluate", _fake_evaluate(5.0, lambda h: True))
     t = study._threshold(3)
     assert t["hi"] is None and t["lo"] == 1.5 and not t["resolved"] and t["unresolved_at"] == list(study.TOPS)
+
+
+def test_sdp_falls_back_to_scs_when_clarabel_gives_no_candidate(monkeypatch):
+    real = sdp.solve
+    monkeypatch.setattr(sdp, "solve", lambda problem, which, label:
+                        ("CLARABEL", "solver error") if which == 0 else real(problem, which, label))
+    cert = certificate.find_certificate("9/5", 2)
+    assert cert and (cert["sdp_solver"], cert["sdp_status"]) == ("SCS", "optimal")
+    ce = counterexample.find(h="3727/2000", n=2)
+    assert ce and (ce["sdp_solver"], ce["sdp_status"]) == ("SCS", "optimal")
+
+
+def test_sdp_without_a_usable_status_gives_no_record(monkeypatch):
+    monkeypatch.setattr(sdp, "solve", lambda problem, which, label: (sdp.SOLVERS[which][0], "infeasible"))
+    assert certificate.find_certificate("9/5", 2) is None
+    assert counterexample.find(h="3727/2000", n=2) is None
+
+
+def test_sdp_status_of_an_infeasible_problem():
+    x = cp.Variable()
+    name, status = sdp.solve(cp.Problem(cp.Minimize(x), [x >= 1, x <= 0]), 0, "test")
+    assert name == "CLARABEL" and status not in sdp.USABLE

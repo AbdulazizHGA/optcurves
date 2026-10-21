@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 import sympy as sp
 
-from optcurves import certificate, counterexample, lean_gen
+from optcurves import certificate, counterexample, lean_gen, sdp
 
 ROOT = Path(__file__).resolve().parents[1]
 # Skip "._*" AppleDouble files (macOS writes them on exFAT/FAT volumes).
@@ -277,3 +277,16 @@ def test_convex_counterexamples_survive_every_larger_step():
             ok, _, viol = counterexample.check_exact(scaled)
             assert ok and viol == [s * Fraction(v) for v in ce["violations"]], (path.name, hp)
     # The certificates are the other half: no violation at the left end of a bracket, hence at every smaller step.
+
+
+def test_sdp_status_recorded():
+    """Every record that comes from a hand-built SDP (all but the closed-form certificate at h = 9/5 and the two
+    plotted counterexamples in R^2) stores its solver and status. All are "optimal" except the three violations at
+    kappa = 1.05 (sdp.py: Clarabel stops "optimal_inaccurate" there, and the exact check accepts its candidate)."""
+    recs = [json.loads(p.read_text()) for p in CERTS + CES]
+    from_sdp = [r for r in recs if "sdp_status" in r]
+    assert len(from_sdp) == 24
+    assert all(r["sdp_status"] in sdp.USABLE and r["sdp_solver"] in [name for name, _ in sdp.SOLVERS]
+               for r in from_sdp)
+    inaccurate = [(r["h"], r["n"], r.get("mu")) for r in from_sdp if r["sdp_status"] != "optimal"]
+    assert inaccurate == [("1999/1000", 3, "20/21")]

@@ -2,24 +2,45 @@
 # Regenerate every result, certificate, counterexample, Lean file and figure, then run the tests.
 set -euo pipefail
 cd "$(dirname "$0")"
-# Interpreter: $PYTHON if set, else python3, else python (on old systems `python` can be Python 2).
+# Interpreter: $PYTHON if set; else the first of these with Python >= 3.11 (pyproject.toml). `python` comes last
+# because it can be Python 2 on old systems; the version check itself also runs under Python 2.
+CANDIDATES="python3 python3.14 python3.13 python3.12 python3.11 python"
+version_ok() { "$1" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)' >/dev/null 2>&1; }
+deps_ok() { "$1" -c 'import PEPit, cvxpy, clarabel, scs, sympy, numpy, scipy, matplotlib, pytest' >/dev/null 2>&1; }
 if [ -n "${PYTHON:-}" ]; then
+    if ! command -v "$PYTHON" >/dev/null 2>&1; then
+        echo "reproduce.sh: interpreter not found: $PYTHON" >&2
+        exit 1
+    fi
+    if ! version_ok "$PYTHON"; then
+        echo "reproduce.sh: $PYTHON is $("$PYTHON" -V 2>&1); Python >= 3.11 is needed" >&2
+        exit 1
+    fi
     PY="$PYTHON"
-elif command -v python3 >/dev/null 2>&1; then
-    PY=python3
-elif command -v python >/dev/null 2>&1; then
-    PY=python
 else
-    echo "reproduce.sh: neither python3 nor python is on PATH; set PYTHON=/path/to/python" >&2
-    exit 1
+    # Prefer the first candidate that also has the packages; else the first with a right version (for the message).
+    PY="" FIRST_OK=""
+    for candidate in $CANDIDATES; do
+        if command -v "$candidate" >/dev/null 2>&1 && version_ok "$candidate"; then
+            [ -z "$FIRST_OK" ] && FIRST_OK="$candidate"
+            if deps_ok "$candidate"; then
+                PY="$candidate"
+                break
+            fi
+        fi
+    done
+    PY="${PY:-$FIRST_OK}"
+    if [ -z "$PY" ]; then
+        echo "reproduce.sh: no Python >= 3.11 found (tried $CANDIDATES); set PYTHON=/path/to/python" >&2
+        exit 1
+    fi
 fi
-# Python >= 3.11 (pyproject.toml); the check itself also runs under Python 2.
-if ! command -v "$PY" >/dev/null 2>&1; then
-    echo "reproduce.sh: interpreter not found: $PY" >&2
-    exit 1
-fi
-if ! "$PY" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)'; then
-    echo "reproduce.sh: $PY is $("$PY" -V 2>&1); Python >= 3.11 is needed (set PYTHON=/path/to/python)" >&2
+echo "reproduce.sh: using $PY ($("$PY" -V 2>&1))"
+# A right version can still lack the packages: say so before the first step fails on an import.
+if ! deps_ok "$PY"; then
+    echo "reproduce.sh: $PY lacks the dependencies; install them with" >&2
+    echo "  $PY -m pip install -r requirements-lock.txt && $PY -m pip install -e . --no-deps" >&2
+    echo "or set PYTHON to an interpreter that has them" >&2
     exit 1
 fi
 export PYTHONPATH=src

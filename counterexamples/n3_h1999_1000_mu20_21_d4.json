@@ -55,5 +55,7 @@
   "620/36179301",
   "1/134746",
   "2/353519"
- ]
+ ],
+ "sdp_solver": "CLARABEL",
+ "sdp_status": "optimal_inaccurate"
 }

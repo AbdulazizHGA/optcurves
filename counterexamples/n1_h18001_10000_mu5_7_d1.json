@@ -27,5 +27,7 @@
  "min_interpolation_slack": "156841432088338514292431623/32385437425100661156377460000000",
  "violations": [
   "75945029/12577305593996"
- ]
+ ],
+ "sdp_solver": "CLARABEL",
+ "sdp_status": "optimal"
 }

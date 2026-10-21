@@ -35,12 +35,14 @@ equalities are then repaired exactly; every check below is in exact rational ari
 """
 import itertools
 import json
+import sys
 from fractions import Fraction as F
 from pathlib import Path
 
 import numpy as np
 import sympy as sp
 
+from . import sdp
 from .counterexample import check_exact
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -117,8 +119,10 @@ def _system(h, n, mu=0):
     return N, pairs, Q, sp.Matrix(rows), sp.Matrix(rhs)
 
 
-def _numeric(N, Q, A, b, n_lam, n_w, cap=50.0, reduced=True):
-    """Maximize the smallest eigenvalue of S[:N, :N] (reduced, mu = 0) or of S (mu > 0)."""
+def _numeric(N, Q, A, b, n_lam, n_w, cap=50.0, reduced=True, which=0, label="certificate"):
+    """Maximize the smallest eigenvalue of S[:N, :N] (reduced, mu = 0) or of S (mu > 0), with sdp.SOLVERS[which].
+    Returns (z, margin), or (None, None) when the solver gives no usable candidate (see sdp.py);
+    _numeric.last is the (solver, status) of the call."""
     import cvxpy as cp
     z = cp.Variable(n_lam + n_w, nonneg=True)
     t = cp.Variable()
@@ -127,8 +131,10 @@ def _numeric(N, Q, A, b, n_lam, n_w, cap=50.0, reduced=True):
     M = S[:N, :N] if reduced else S
     cons = [M - t * np.eye(M.shape[0]) >> 0, cp.sum(z) <= cap,
             np.array(A.tolist(), dtype=float) @ z == np.array(b.tolist(), dtype=float).ravel()]
-    cp.Problem(cp.Maximize(t), cons).solve(solver="CLARABEL")
-    return (None, None) if t.value is None else (z.value, float(t.value))
+    _numeric.last = sdp.solve(cp.Problem(cp.Maximize(t), cons), which, label)
+    if _numeric.last[1] not in sdp.USABLE or t.value is None or z.value is None:
+        return None, None
+    return z.value, float(t.value)
 
 
 def _cert(h, n, mu, w, lam):
@@ -150,9 +156,28 @@ def find_certificate(h, n, mu=0, denominators=(100, 1000, 10**4, 10**5, 10**6, 1
     rounding fails (or the numerical margin is not positive, as at a threshold)."""
     mu = sp.Rational(mu)
     N, pairs, Q, A, b = _system(h, n, mu)
-    zf, margin = _numeric(N, Q, A, b, len(pairs), n, reduced=mu == 0)
-    if zf is None or margin < 1e-10:
-        return None
+    label = f"certificate h = {h}, n = {n}" + (f", mu = {mu}" if mu else "")
+    for which in range(len(sdp.SOLVERS)):  # Clarabel; SCS only if Clarabel gives no exact certificate
+        zf, margin = _numeric(N, Q, A, b, len(pairs), n, reduced=mu == 0, which=which, label=label)
+        if zf is None:
+            continue  # sdp.solve has reported the status
+        if margin < 1e-10:
+            reason = f"numerical margin {margin:.1e} is not positive"
+        else:
+            cert = _round_certificate(h, n, mu, pairs, A, b, zf, margin, denominators)
+            if cert:
+                cert["sdp_solver"], cert["sdp_status"] = _numeric.last
+                return cert
+            reason = "its candidate fails the exact check"
+        if which + 1 < len(sdp.SOLVERS):
+            print(f"  SDP {label}: {_numeric.last[0]} {reason}; trying {sdp.SOLVERS[which + 1][0]}",
+                  file=sys.stderr, flush=True)
+    return None
+
+
+def _round_certificate(h, n, mu, pairs, A, b, zf, margin, denominators):
+    """Round the numerical multipliers zf to rationals, repair the linear equalities exactly, and check the result
+    exactly (verify_certificate). The first denominator bound that gives a valid certificate wins; else None."""
     nvar = len(zf)
     for D in denominators:
         zr = [sp.Rational(F(float(x)).limit_denominator(D)) if x > 1e-9 else sp.Integer(0) for x in zf]

@@ -39,12 +39,25 @@ def _axes(ax):
     ax.tick_params(colors=INK, labelsize=8)
 
 
+def _footnote(fig, text):
+    """A caveat printed inside the figure, so that it stays with the image when shared on its own."""
+    fig.text(0.01, 0.012, text, fontsize=7, color=MUTED, ha="left", va="bottom", wrap=True)
+
+
+def curve_xy(pts):
+    """Curve points [h, PEP value, reliable] -> (h, y) for drawing: y = max(value, 0), and NaN (a gap in the line)
+    where the value is not reliable, i.e. no solver reached status "optimal" (pep.evaluate)."""
+    xs = [p[0] for p in pts]
+    ys = [max(p[1], 0.0) if p[2] else math.nan for p in pts]
+    return xs, ys
+
+
 def consecutive(plt):
     cons = json.loads((RESULTS / "consecutive.json").read_text())
-    fig, ax = plt.subplots(figsize=(7, 4.2), dpi=150)
+    fig, ax = plt.subplots(figsize=(7, 4.4), dpi=150)
     for n in (1, 2, 3):
         pts = cons["curves"][str(n)]
-        ax.plot([p[0] for p in pts], [max(p[1], 0.0) for p in pts], color=COLORS[n], linewidth=2,
+        ax.plot(*curve_xy(pts), color=COLORS[n], linewidth=1.6, marker="o", markersize=2.2,
                 label="1 violation" if n == 1 else f"{n} consecutive violations")
         t = cons["thresholds"]["convex_with_minimizer"][str(n)]["lo"]
         ax.axvline(t, color=COLORS[n], linewidth=1, linestyle=":")
@@ -56,7 +69,10 @@ def consecutive(plt):
                  fontsize=10, color=INK)
     ax.legend(frameon=False, fontsize=8, loc="center left")
     _axes(ax)
-    fig.tight_layout()
+    samples = len(cons["curves"]["1"])
+    _footnote(fig, f"Numerical (PEP): dots are the {samples} computed step sizes per curve, lines only join them; "
+                   "an unresolved sample would be a gap.")
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
     fig.savefig(FIGURES / "consecutive.png")
     plt.close(fig)
 
@@ -104,7 +120,9 @@ def strong(plt):
                  fontsize=10, color=INK)
     ax.legend(frameon=False, fontsize=8, loc="upper right")
     _axes(ax)
-    fig.tight_layout()
+    _footnote(fig, "n = 1: exact (proved closed form). n ≥ 2: numerical PEP brackets of the smallest step with n "
+                   "violations, assuming such steps form an interval (proved for μ = 0, not for μ > 0).")
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
     fig.savefig(FIGURES / "strong_threshold.png")
     plt.close(fig)
 
@@ -209,7 +227,9 @@ def counterexample_2d(plt, name="n2_h19_10_d2.json"):
     viol = ", ".join(f"v$_{k + 1}$ = {float(F(v)):.4f}" for k, v in enumerate(ce["violations"]))
     a2.set_title(f"decrease per step grows twice in a row ({viol})", fontsize=9, color=INK)
     _axes(a2)
-    fig.tight_layout()
+    _footnote(fig, f"Exact: the data, the iterates and v₁, v₂ (rationals in counterexamples/{name}). Numerical: the "
+                   "contours, a floating-point reconstruction of the largest 1-smooth convex interpolant.")
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
     fig.savefig(FIGURES / "counterexample_2d.png")
     plt.close(fig)
 

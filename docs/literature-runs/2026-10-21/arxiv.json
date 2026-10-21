@@ -1,0 +1,1763 @@
+[
+ {
+  "query": "all:\"optimization curve\"",
+  "url": "https://export.arxiv.org/api/query?search_query=all%3A%22optimization+curve%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:39:17+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 77,
+   "records": [
+    {
+     "id": "2609.28400v1",
+     "title": "Empirical Analysis of Near-Field Beam Shaping for Blockage Events",
+     "published": "2026-09-23T17:05:08Z",
+     "authors": [
+      "Jy-Chin Liao",
+      "Volodymyr Vizitiv",
+      "Edward W. Knightly"
+     ]
+    },
+    {
+     "id": "2609.17748v1",
+     "title": "SAM-on-the-Curve: Sharpness-Aware Mode Connectivity for Robust Weight-Space Interpolation",
+     "published": "2026-09-15T19:00:19Z",
+     "authors": [
+      "Alejandro Calatrava",
+      "Xu Zhang",
+      "Ren Wang"
+     ]
+    },
+    {
+     "id": "2608.06534v1",
+     "title": "A note on the self-intersection of rational unicuspidal curve with one Puiseux pair",
+     "published": "2026-08-06T19:39:37Z",
+     "authors": [
+      "Weimin Chen",
+      "Yusupjan Ouyang",
+      "Sam Silver"
+     ]
+    },
+    {
+     "id": "2606.10164v1",
+     "title": "Curved Beam Enabled Wireless Communications: Modeling, Analysis and Optimization",
+     "published": "2026-06-08T20:48:32Z",
+     "authors": [
+      "Jiawei Yao",
+      "Xiaoren Xu",
+      "Walid Saad",
+      "Mingzhe Chen"
+     ]
+    },
+    {
+     "id": "2606.00139v1",
+     "title": "Geodesics with Unified Tangent-constrained Priors and Curvature Regularization",
+     "published": "2026-05-28T23:27:05Z",
+     "authors": [
+      "Chong Di",
+      "Li Liu",
+      "Jinglin Zhang",
+      "Zhenjiang Li",
+      "Da Chen",
+      "Laurent D. Cohen"
+     ]
+    },
+    {
+     "id": "2605.09362v2",
+     "title": "FrameTwin: Curve-Anchored Gaussian Alignment from Sparse Views for Adaptive Wireframe 3D Printing",
+     "published": "2026-05-10T06:21:35Z",
+     "authors": [
+      "Wenting Wang",
+      "Zhuo Huang",
+      "Kun Qian",
+      "Neelotpal Dutta",
+      "Yuhu Guo",
+      "Yingjun Tian",
+      "Yeung Yam",
+      "Charlie C. L. Wang"
+     ]
+    },
+    {
+     "id": "2603.07262v2",
+     "title": "Existence of the longest arcs for left-invariant three-dimensional contact sub-Lorentzian structures",
+     "published": "2026-03-07T15:39:36Z",
+     "authors": [
+      "A. V. Podobryaev"
+     ]
+    },
+    {
+     "id": "2601.13080v1",
+     "title": "Wasserstein geometry of nonnegative measures on finite Markov chains II: Geodesic and duality formulae",
+     "published": "2026-01-19T14:16:04Z",
+     "authors": [
+      "Qifan Mao",
+      "Xinyu Wang",
+      "Xiaoping Xue"
+     ]
+    },
+    {
+     "id": "2601.10684v1",
+     "title": "On the origin of neural scaling laws: from random graphs to natural language",
+     "published": "2026-01-15T18:46:09Z",
+     "authors": [
+      "Maissam Barkeshli",
+      "Alberto Alfarano",
+      "Andrey Gromov"
+     ]
+    },
+    {
+     "id": "2509.08954v1",
+     "title": "Convexity of Optimization Curves: Local Sharp Thresholds, Robustness Impossibility, and New Counterexamples",
+     "published": "2025-09-10T19:28:47Z",
+     "authors": [
+      "Le Duc Hieu"
+     ]
+    },
+    {
+     "id": "2509.07903v1",
+     "title": "Optimal Surfaces for Turbulent Circulation Statistics",
+     "published": "2025-09-09T16:40:27Z",
+     "authors": [
+      "L. Moriconi"
+     ]
+    },
+    {
+     "id": "2509.00040v1",
+     "title": "Curve-based slicer for multi-axis DLP 3D printing",
+     "published": "2025-08-23T13:06:29Z",
+     "authors": [
+      "Chengkai Dai",
+      "Tao Liu",
+      "Dezhao Guo",
+      "Binzhi Sun",
+      "Guoxin Fang",
+      "Yeung Yam",
+      "Charlie C. L. Wang"
+     ]
+    },
+    {
+     "id": "2508.05893v1",
+     "title": "Absolute Parameters of Young Stars: NO Puppis",
+     "published": "2025-08-07T22:52:31Z",
+     "authors": [
+      "Ahmet Erdem",
+      "Volkan Bakış",
+      "John Southworth",
+      "Michael D. Rhodes",
+      "Filiz Kahraman Aliçavuş",
+      "Edwin Budding",
+      "Mark Blackford",
+      "Timothy Banks",
+      "Murray Alexander"
+     ]
+    },
+    {
+     "id": "2506.18930v2",
+     "title": "Dynamic Exploration on Segment-Proposal Graphs for Tubular Centerline Tracking",
+     "published": "2025-06-21T11:00:17Z",
+     "authors": [
+      "Chong Di",
+      "Jinglin Zhang",
+      "Zhenjiang Li",
+      "Jean-Marie Mirebeau",
+      "Da Chen",
+      "Laurent D. Cohen"
+     ]
+    },
+    {
+     "id": "2503.10138v3",
+     "title": "Are Convex Optimization Curves Convex?",
+     "published": "2025-03-13T07:56:18Z",
+     "authors": [
+      "Guy Barzilai",
+      "Ohad Shamir",
+      "Moslem Zamani"
+     ]
+    },
+    {
+     "id": "2503.01015v1",
+     "title": "Optimizing Curve-Based Selection with On-Body Surfaces in Virtual Environments",
+     "published": "2025-03-02T20:46:13Z",
+     "authors": [
+      "Xiang Li",
+      "Per Ola Kristensson"
+     ]
+    },
+    {
+     "id": "2501.18622v1",
+     "title": "Sliding with Friction and The Brachistochrone Problem",
+     "published": "2025-01-26T20:24:02Z",
+     "authors": [
+      "Alexander Kurilin"
+     ]
+    },
+    {
+     "id": "2409.08644v2",
+     "title": "Curves of Minimax Spirality",
+     "published": "2024-09-13T09:03:59Z",
+     "authors": [
+      "C. Yalçın Kaya",
+      "Lyle Noakes",
+      "Philip Schrader"
+     ]
+    },
+    {
+     "id": "2409.04018v1",
+     "title": "Towards Energy-Efficiency by Navigating the Trilemma of Energy, Latency, and Accuracy",
+     "published": "2024-09-06T04:10:33Z",
+     "authors": [
+      "Boyuan Tian",
+      "Yihan Pang",
+      "Muhammad Huzaifa",
+      "Shenlong Wang",
+      "Sarita Adve"
+     ]
+    },
+    {
+     "id": "2407.04032v2",
+     "title": "Optimal planar immersions of prescribed winding number and Arnold invariants",
+     "published": "2024-07-04T16:16:29Z",
+     "authors": [
+      "Anna Lagemann",
+      "Heiko von der Mosel"
+     ]
+    },
+    {
+     "id": "2405.09730v1",
+     "title": "Optimizing Curved EM Skins for Opportunistic Relaying in Vehicular Networks",
+     "published": "2024-05-15T23:39:02Z",
+     "authors": [
+      "Reza Aghazadeh Ayoubi",
+      "Silvia Mura",
+      "Dario Tagliaferri",
+      "Marouan Mizmizi",
+      "Umberto Spagnolini"
+     ]
+    },
+    {
+     "id": "2403.13654v1",
+     "title": "A globalized and preconditioned Newton-CG solver for metric-aware curved high-order mesh optimization",
+     "published": "2024-03-20T14:59:10Z",
+     "authors": [
+      "Guillermo Aparicio-Estrems",
+      "Abel Gargallo-Peiró",
+      "Xevi Roca"
+     ]
+    },
+    {
+     "id": "2403.13528v1",
+     "title": "Defining metric-aware size-shape measures to validate and optimize curved high-order meshes",
+     "published": "2024-03-20T12:01:02Z",
+     "authors": [
+      "Guillermo Aparicio-Estrems",
+      "Abel Gargallo-Peiró",
+      "Xevi Roca"
+     ]
+    },
+    {
+     "id": "2402.14305v1",
+     "title": "Towards Efficient Pareto-optimal Utility-Fairness between Groups in Repeated Rankings",
+     "published": "2024-02-22T05:48:54Z",
+     "authors": [
+      "Phuong Dinh Mai",
+      "Duc-Trong Le",
+      "Tuan-Anh Hoang",
+      "Dung D. Le"
+     ]
+    },
+    {
+     "id": "2402.12075v2",
+     "title": "Order Estimation of Linear-Phase FIR Filters for DAC Equalization in Multiple Nyquist Bands",
+     "published": "2024-02-19T11:53:42Z",
+     "authors": [
+      "Deijany Rodriguez Linares",
+      "Håkan Johansson",
+      "Yinan Wang"
+     ]
+    },
+    {
+     "id": "2401.01953v1",
+     "title": "Entropy-minimizing dynamical transport on Riemannian manifolds",
+     "published": "2024-01-03T19:36:10Z",
+     "authors": [
+      "Gabriele Bocchi",
+      "Alessio Porretta"
+     ]
+    },
+    {
+     "id": "2308.15729v1",
+     "title": "Computing Geodesic Paths Encoding a Curvature Prior",
+     "published": "2023-08-30T03:11:43Z",
+     "authors": [
+      "Da Chen",
+      "Jean-Marie Mirebeau",
+      "Minglei Shu",
+      "Laurent D. Cohen"
+     ]
+    },
+    {
+     "id": "2308.12280v1",
+     "title": "Extended Linear Regression: A Kalman Filter Approach for Minimizing Loss via Area Under the Curve",
+     "published": "2023-08-23T17:50:57Z",
+     "authors": [
+      "Gokulprasath R"
+     ]
+    },
+    {
+     "id": "2306.09790v2",
+     "title": "The Information Bottleneck's Ordinary Differential Equation: First-Order Root-Tracking for the IB",
+     "published": "2023-06-16T12:02:19Z",
+     "authors": [
+      "Shlomi Agmon"
+     ]
+    },
+    {
+     "id": "2306.06981v1",
+     "title": "Time-to-Collision-Aware Lane-Change Strategy Based on Potential Field and Cubic Polynomial for Autonomous Vehicles",
+     "published": "2023-06-12T09:25:58Z",
+     "authors": [
+      "Pengfei Lin",
+      "Ehsan Javanmardi",
+      "Ye Tao",
+      "Vishal Chauhan",
+      "Jin Nakazato",
+      "Manabu Tsukada"
+     ]
+    },
+    {
+     "id": "2303.05358v1",
+     "title": "Bayesian optimization of Bose-Einstein condensation via evaporative cooling model",
+     "published": "2023-03-09T16:05:45Z",
+     "authors": [
+      "Jihao Ma",
+      "Ruihuan Fang",
+      "Chengyin Han",
+      "Xunda Jiang",
+      "Yuxiang Qiu",
+      "Zhu Ma",
+      "Jiatao Wu",
+      "Chang Zhan",
+      "Maojie Li",
+      "Bo Lu",
+      "Chaohong Lee"
+     ]
+    },
+    {
+     "id": "2212.13307v2",
+     "title": "Fabrication Sequence Optimization for Minimizing Distortion in Multi-Axis Additive Manufacturing",
+     "published": "2022-12-26T21:59:40Z",
+     "authors": [
+      "Weiming Wang",
+      "Fred van Keulen",
+      "Jun Wu"
+     ]
+    },
+    {
+     "id": "2208.11004v4",
+     "title": "Geodesic Tracking via New Data-driven Connections of Cartan Type for Vascular Tree Tracking",
+     "published": "2022-08-23T14:35:17Z",
+     "authors": [
+      "Nicky van den Berg",
+      "Bart Smets",
+      "Gautam Pai",
+      "Jean-Marie Mirebeau",
+      "Remco Duits"
+     ]
+    },
+    {
+     "id": "2207.13515v2",
+     "title": "Snell's law revisited and generalized via Finsler Geometry",
+     "published": "2022-07-27T13:40:13Z",
+     "authors": [
+      "Steen Markvorsen",
+      "Enrique Pendás-Recondo"
+     ]
+    },
+    {
+     "id": "2203.09453v1",
+     "title": "Computing confined elasticae",
+     "published": "2022-03-17T17:13:13Z",
+     "authors": [
+      "Sören Bartels",
+      "Pascal Weyer"
+     ]
+    },
+    {
+     "id": "2203.04856v2",
+     "title": "Regularizing effects of the entropy functional in optimal transport and planning problems",
+     "published": "2022-03-09T16:31:04Z",
+     "authors": [
+      "Alessio Porretta"
+     ]
+    },
+    {
+     "id": "2102.08771v1",
+     "title": "Comparing and Combining Approximate Computing Frameworks",
+     "published": "2021-02-16T04:52:43Z",
+     "authors": [
+      "Saeid Barati",
+      "Gordon Kindlmann",
+      "Hank Hoffmann"
+     ]
+    },
+    {
+     "id": "2010.07992v2",
+     "title": "Ternary and Quaternary Curves of Small Fixed Genus and Gonality with Many Rational Points",
+     "published": "2020-10-15T19:27:26Z",
+     "authors": [
+      "Xander Faber",
+      "Jon Grantham"
+     ]
+    },
+    {
+     "id": "2006.15816v5",
+     "title": "On maximizing VAM for a given power: Slope, cadence, force and gear-ratio considerations",
+     "published": "2020-06-29T05:34:11Z",
+     "authors": [
+      "Len Bos",
+      "Michael A. Slawinski",
+      "Theodore Stanoev"
+     ]
+    },
+    {
+     "id": "2005.01326v2",
+     "title": "Geodesic regression",
+     "published": "2020-05-04T08:52:53Z",
+     "authors": [
+      "Frank Hansen"
+     ]
+    },
+    {
+     "id": "1908.09400v2",
+     "title": "Optimal Curve Straightening is $\\exists\\mathbb{R}$-Complete",
+     "published": "2019-08-25T22:06:22Z",
+     "authors": [
+      "Jeff Erickson"
+     ]
+    },
+    {
+     "id": "1904.11481v1",
+     "title": "Age of Information in Multicast Networks with Multiple Update Streams",
+     "published": "2019-04-25T17:50:12Z",
+     "authors": [
+      "Baturalp Buyukates",
+      "Alkan Soysal",
+      "Sennur Ulukus"
+     ]
+    },
+    {
+     "id": "1904.11332v2",
+     "title": "Random Fixed Boundary Flows",
+     "published": "2019-04-24T13:55:47Z",
+     "authors": [
+      "Zhigang Yao",
+      "Yuqing Xia",
+      "Zengyan Fan"
+     ]
+    },
+    {
+     "id": "1811.12065v2",
+     "title": "TEA-DNN: the Quest for Time-Energy-Accuracy Co-optimized Deep Neural Networks",
+     "published": "2018-11-29T11:05:28Z",
+     "authors": [
+      "Lile Cai",
+      "Anne-Maelle Barneche",
+      "Arthur Herbout",
+      "Chuan Sheng Foo",
+      "Jie Lin",
+      "Vijay Ramaseshan Chandrasekhar",
+      "Mohamed M. Sabry"
+     ]
+    },
+    {
+     "id": "1808.10536v2",
+     "title": "Orthogonal and Smooth Orthogonal Layouts of 1-Planar Graphs with Low Edge Complexity",
+     "published": "2018-08-30T22:07:42Z",
+     "authors": [
+      "Evmorfia Argyriou",
+      "Sabine Cornelsen",
+      "Henry Förster",
+      "Michael Kaufmann",
+      "Martin Nöllenburg",
+      "Yoshio Okamoto",
+      "Chrysanthi Raftopoulou",
+      "Alexander Wolff"
+     ]
+    },
+    {
+     "id": "1808.02023v1",
+     "title": "Multi-Message Private Information Retrieval using Product-Matrix MSR and MBR Codes",
+     "published": "2018-08-06T13:37:29Z",
+     "authors": [
+      "Chatdanai Dorkson",
+      "Siaw-Lynn Ng"
+     ]
+    },
+    {
+     "id": "1807.03992v1",
+     "title": "Real algebraic curves with large finite number of real points",
+     "published": "2018-07-11T08:24:54Z",
+     "authors": [
+      "Erwan Brugallé",
+      "Alex Degtyarev",
+      "Ilia Itenberg",
+      "Frédéric Mangolte"
+     ]
+    },
+    {
+     "id": "1805.07190v1",
+     "title": "Private Information Retrieval using Product-Matrix Minimum Storage Regenerating Codes",
+     "published": "2018-05-18T13:14:48Z",
+     "authors": [
+      "Chatdanai Dorkson",
+      "Siaw-Lynn Ng"
+     ]
+    },
+    {
+     "id": "1805.02221v3",
+     "title": "Non-planar elasticae as optimal curves for the magnetic axis of stellarators",
+     "published": "2018-05-06T14:30:14Z",
+     "authors": [
+      "David Pfefferlé",
+      "Lee Gunderson",
+      "Stuart R. Hudson",
+      "Lyle Noakes"
+     ]
+    },
+    {
+     "id": "1711.06705v2",
+     "title": "Principal Boundary on Riemannian Manifolds",
+     "published": "2017-10-21T14:35:45Z",
+     "authors": [
+      "Zhigang Yao",
+      "Zhenyue Zhang"
+     ]
+    },
+    {
+     "id": "1709.02117v1",
+     "title": "Metric methods for heteroclinic connections in infinite dimensional spaces",
+     "published": "2017-09-07T07:38:19Z",
+     "authors": [
+      "Antonin Monteil",
+      "Filippo Santambrogio"
+     ]
+    },
+    {
+     "id": "1707.08590v1",
+     "title": "Shifted lattices and asymptotically optimal ellipses",
+     "published": "2017-07-26T18:03:03Z",
+     "authors": [
+      "R. S. Laugesen",
+      "S. Liu"
+     ]
+    },
+    {
+     "id": "1702.05358v2",
+     "title": "Computational topology of graphs on surfaces",
+     "published": "2017-02-17T14:34:08Z",
+     "authors": [
+      "Éric Colin de Verdière"
+     ]
+    },
+    {
+     "id": "1610.02769v1",
+     "title": "Inverse Diffusion Curves using Shape Optimization",
+     "published": "2016-10-10T03:57:40Z",
+     "authors": [
+      "Shuang Zhao",
+      "Fredo Durand",
+      "Changxi Zheng"
+     ]
+    },
+    {
+     "id": "1608.06026v1",
+     "title": "Energy Efficient Cooperative Network Coding with Joint Relay Scheduling and Power Allocation",
+     "published": "2016-08-22T01:31:32Z",
+     "authors": [
+      "Nan Qi",
+      "Ming Xiao",
+      "Theodoros A. Tsiftsis",
+      "Mikael Skoglund",
+      "Phuong L. Cao",
+      "Lixin Li"
+     ]
+    },
+    {
+     "id": "1608.04952v1",
+     "title": "Superiorization of Incremental Optimization Algorithms for Statistical Tomographic Image Reconstruction",
+     "published": "2016-08-17T13:03:10Z",
+     "authors": [
+      "Elias S. Helou",
+      "Marcelo V. W. Zibetti",
+      "Eduardo X. Miqueles"
+     ]
+    },
+    {
+     "id": "1603.08753v1",
+     "title": "Curve Networks for Surface Reconstruction",
+     "published": "2016-03-29T13:02:50Z",
+     "authors": [
+      "Yuanhao Cao",
+      "Liangliang Nan",
+      "Peter Wonka"
+     ]
+    },
+    {
+     "id": "1506.00928v1",
+     "title": "A Curved Brunn-Minkowski Inequality for the Symmetric Group",
+     "published": "2015-06-02T15:38:13Z",
+     "authors": [
+      "Weerachai Neeranartvong",
+      "Jonathan Novak",
+      "Nat Sothanaphan"
+     ]
+    },
+    {
+     "id": "1401.7390v1",
+     "title": "Optimal Control and Numerical Optimization Applied to Epidemiological Models",
+     "published": "2014-01-29T02:16:29Z",
+     "authors": [
+      "Helena Sofia Rodrigues"
+     ]
+    },
+    {
+     "id": "1312.6974v2",
+     "title": "Piecewise regression mixture for simultaneous functional data clustering and optimal segmentation",
+     "published": "2013-12-25T13:54:05Z",
+     "authors": [
+      "Faicel Chamroukhi"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "query": "all:\"optimization curves\"",
+  "url": "https://export.arxiv.org/api/query?search_query=all%3A%22optimization+curves%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:39:21+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 77,
+   "records": [
+    {
+     "id": "2609.28400v1",
+     "title": "Empirical Analysis of Near-Field Beam Shaping for Blockage Events",
+     "published": "2026-09-23T17:05:08Z",
+     "authors": [
+      "Jy-Chin Liao",
+      "Volodymyr Vizitiv",
+      "Edward W. Knightly"
+     ]
+    },
+    {
+     "id": "2609.17748v1",
+     "title": "SAM-on-the-Curve: Sharpness-Aware Mode Connectivity for Robust Weight-Space Interpolation",
+     "published": "2026-09-15T19:00:19Z",
+     "authors": [
+      "Alejandro Calatrava",
+      "Xu Zhang",
+      "Ren Wang"
+     ]
+    },
+    {
+     "id": "2608.06534v1",
+     "title": "A note on the self-intersection of rational unicuspidal curve with one Puiseux pair",
+     "published": "2026-08-06T19:39:37Z",
+     "authors": [
+      "Weimin Chen",
+      "Yusupjan Ouyang",
+      "Sam Silver"
+     ]
+    },
+    {
+     "id": "2606.10164v1",
+     "title": "Curved Beam Enabled Wireless Communications: Modeling, Analysis and Optimization",
+     "published": "2026-06-08T20:48:32Z",
+     "authors": [
+      "Jiawei Yao",
+      "Xiaoren Xu",
+      "Walid Saad",
+      "Mingzhe Chen"
+     ]
+    },
+    {
+     "id": "2606.00139v1",
+     "title": "Geodesics with Unified Tangent-constrained Priors and Curvature Regularization",
+     "published": "2026-05-28T23:27:05Z",
+     "authors": [
+      "Chong Di",
+      "Li Liu",
+      "Jinglin Zhang",
+      "Zhenjiang Li",
+      "Da Chen",
+      "Laurent D. Cohen"
+     ]
+    },
+    {
+     "id": "2605.09362v2",
+     "title": "FrameTwin: Curve-Anchored Gaussian Alignment from Sparse Views for Adaptive Wireframe 3D Printing",
+     "published": "2026-05-10T06:21:35Z",
+     "authors": [
+      "Wenting Wang",
+      "Zhuo Huang",
+      "Kun Qian",
+      "Neelotpal Dutta",
+      "Yuhu Guo",
+      "Yingjun Tian",
+      "Yeung Yam",
+      "Charlie C. L. Wang"
+     ]
+    },
+    {
+     "id": "2603.07262v2",
+     "title": "Existence of the longest arcs for left-invariant three-dimensional contact sub-Lorentzian structures",
+     "published": "2026-03-07T15:39:36Z",
+     "authors": [
+      "A. V. Podobryaev"
+     ]
+    },
+    {
+     "id": "2601.13080v1",
+     "title": "Wasserstein geometry of nonnegative measures on finite Markov chains II: Geodesic and duality formulae",
+     "published": "2026-01-19T14:16:04Z",
+     "authors": [
+      "Qifan Mao",
+      "Xinyu Wang",
+      "Xiaoping Xue"
+     ]
+    },
+    {
+     "id": "2601.10684v1",
+     "title": "On the origin of neural scaling laws: from random graphs to natural language",
+     "published": "2026-01-15T18:46:09Z",
+     "authors": [
+      "Maissam Barkeshli",
+      "Alberto Alfarano",
+      "Andrey Gromov"
+     ]
+    },
+    {
+     "id": "2509.08954v1",
+     "title": "Convexity of Optimization Curves: Local Sharp Thresholds, Robustness Impossibility, and New Counterexamples",
+     "published": "2025-09-10T19:28:47Z",
+     "authors": [
+      "Le Duc Hieu"
+     ]
+    },
+    {
+     "id": "2509.07903v1",
+     "title": "Optimal Surfaces for Turbulent Circulation Statistics",
+     "published": "2025-09-09T16:40:27Z",
+     "authors": [
+      "L. Moriconi"
+     ]
+    },
+    {
+     "id": "2509.00040v1",
+     "title": "Curve-based slicer for multi-axis DLP 3D printing",
+     "published": "2025-08-23T13:06:29Z",
+     "authors": [
+      "Chengkai Dai",
+      "Tao Liu",
+      "Dezhao Guo",
+      "Binzhi Sun",
+      "Guoxin Fang",
+      "Yeung Yam",
+      "Charlie C. L. Wang"
+     ]
+    },
+    {
+     "id": "2508.05893v1",
+     "title": "Absolute Parameters of Young Stars: NO Puppis",
+     "published": "2025-08-07T22:52:31Z",
+     "authors": [
+      "Ahmet Erdem",
+      "Volkan Bakış",
+      "John Southworth",
+      "Michael D. Rhodes",
+      "Filiz Kahraman Aliçavuş",
+      "Edwin Budding",
+      "Mark Blackford",
+      "Timothy Banks",
+      "Murray Alexander"
+     ]
+    },
+    {
+     "id": "2506.18930v2",
+     "title": "Dynamic Exploration on Segment-Proposal Graphs for Tubular Centerline Tracking",
+     "published": "2025-06-21T11:00:17Z",
+     "authors": [
+      "Chong Di",
+      "Jinglin Zhang",
+      "Zhenjiang Li",
+      "Jean-Marie Mirebeau",
+      "Da Chen",
+      "Laurent D. Cohen"
+     ]
+    },
+    {
+     "id": "2503.10138v3",
+     "title": "Are Convex Optimization Curves Convex?",
+     "published": "2025-03-13T07:56:18Z",
+     "authors": [
+      "Guy Barzilai",
+      "Ohad Shamir",
+      "Moslem Zamani"
+     ]
+    },
+    {
+     "id": "2503.01015v1",
+     "title": "Optimizing Curve-Based Selection with On-Body Surfaces in Virtual Environments",
+     "published": "2025-03-02T20:46:13Z",
+     "authors": [
+      "Xiang Li",
+      "Per Ola Kristensson"
+     ]
+    },
+    {
+     "id": "2501.18622v1",
+     "title": "Sliding with Friction and The Brachistochrone Problem",
+     "published": "2025-01-26T20:24:02Z",
+     "authors": [
+      "Alexander Kurilin"
+     ]
+    },
+    {
+     "id": "2409.08644v2",
+     "title": "Curves of Minimax Spirality",
+     "published": "2024-09-13T09:03:59Z",
+     "authors": [
+      "C. Yalçın Kaya",
+      "Lyle Noakes",
+      "Philip Schrader"
+     ]
+    },
+    {
+     "id": "2409.04018v1",
+     "title": "Towards Energy-Efficiency by Navigating the Trilemma of Energy, Latency, and Accuracy",
+     "published": "2024-09-06T04:10:33Z",
+     "authors": [
+      "Boyuan Tian",
+      "Yihan Pang",
+      "Muhammad Huzaifa",
+      "Shenlong Wang",
+      "Sarita Adve"
+     ]
+    },
+    {
+     "id": "2407.04032v2",
+     "title": "Optimal planar immersions of prescribed winding number and Arnold invariants",
+     "published": "2024-07-04T16:16:29Z",
+     "authors": [
+      "Anna Lagemann",
+      "Heiko von der Mosel"
+     ]
+    },
+    {
+     "id": "2405.09730v1",
+     "title": "Optimizing Curved EM Skins for Opportunistic Relaying in Vehicular Networks",
+     "published": "2024-05-15T23:39:02Z",
+     "authors": [
+      "Reza Aghazadeh Ayoubi",
+      "Silvia Mura",
+      "Dario Tagliaferri",
+      "Marouan Mizmizi",
+      "Umberto Spagnolini"
+     ]
+    },
+    {
+     "id": "2403.13654v1",
+     "title": "A globalized and preconditioned Newton-CG solver for metric-aware curved high-order mesh optimization",
+     "published": "2024-03-20T14:59:10Z",
+     "authors": [
+      "Guillermo Aparicio-Estrems",
+      "Abel Gargallo-Peiró",
+      "Xevi Roca"
+     ]
+    },
+    {
+     "id": "2403.13528v1",
+     "title": "Defining metric-aware size-shape measures to validate and optimize curved high-order meshes",
+     "published": "2024-03-20T12:01:02Z",
+     "authors": [
+      "Guillermo Aparicio-Estrems",
+      "Abel Gargallo-Peiró",
+      "Xevi Roca"
+     ]
+    },
+    {
+     "id": "2402.14305v1",
+     "title": "Towards Efficient Pareto-optimal Utility-Fairness between Groups in Repeated Rankings",
+     "published": "2024-02-22T05:48:54Z",
+     "authors": [
+      "Phuong Dinh Mai",
+      "Duc-Trong Le",
+      "Tuan-Anh Hoang",
+      "Dung D. Le"
+     ]
+    },
+    {
+     "id": "2402.12075v2",
+     "title": "Order Estimation of Linear-Phase FIR Filters for DAC Equalization in Multiple Nyquist Bands",
+     "published": "2024-02-19T11:53:42Z",
+     "authors": [
+      "Deijany Rodriguez Linares",
+      "Håkan Johansson",
+      "Yinan Wang"
+     ]
+    },
+    {
+     "id": "2401.01953v1",
+     "title": "Entropy-minimizing dynamical transport on Riemannian manifolds",
+     "published": "2024-01-03T19:36:10Z",
+     "authors": [
+      "Gabriele Bocchi",
+      "Alessio Porretta"
+     ]
+    },
+    {
+     "id": "2308.15729v1",
+     "title": "Computing Geodesic Paths Encoding a Curvature Prior",
+     "published": "2023-08-30T03:11:43Z",
+     "authors": [
+      "Da Chen",
+      "Jean-Marie Mirebeau",
+      "Minglei Shu",
+      "Laurent D. Cohen"
+     ]
+    },
+    {
+     "id": "2308.12280v1",
+     "title": "Extended Linear Regression: A Kalman Filter Approach for Minimizing Loss via Area Under the Curve",
+     "published": "2023-08-23T17:50:57Z",
+     "authors": [
+      "Gokulprasath R"
+     ]
+    },
+    {
+     "id": "2306.09790v2",
+     "title": "The Information Bottleneck's Ordinary Differential Equation: First-Order Root-Tracking for the IB",
+     "published": "2023-06-16T12:02:19Z",
+     "authors": [
+      "Shlomi Agmon"
+     ]
+    },
+    {
+     "id": "2306.06981v1",
+     "title": "Time-to-Collision-Aware Lane-Change Strategy Based on Potential Field and Cubic Polynomial for Autonomous Vehicles",
+     "published": "2023-06-12T09:25:58Z",
+     "authors": [
+      "Pengfei Lin",
+      "Ehsan Javanmardi",
+      "Ye Tao",
+      "Vishal Chauhan",
+      "Jin Nakazato",
+      "Manabu Tsukada"
+     ]
+    },
+    {
+     "id": "2303.05358v1",
+     "title": "Bayesian optimization of Bose-Einstein condensation via evaporative cooling model",
+     "published": "2023-03-09T16:05:45Z",
+     "authors": [
+      "Jihao Ma",
+      "Ruihuan Fang",
+      "Chengyin Han",
+      "Xunda Jiang",
+      "Yuxiang Qiu",
+      "Zhu Ma",
+      "Jiatao Wu",
+      "Chang Zhan",
+      "Maojie Li",
+      "Bo Lu",
+      "Chaohong Lee"
+     ]
+    },
+    {
+     "id": "2212.13307v2",
+     "title": "Fabrication Sequence Optimization for Minimizing Distortion in Multi-Axis Additive Manufacturing",
+     "published": "2022-12-26T21:59:40Z",
+     "authors": [
+      "Weiming Wang",
+      "Fred van Keulen",
+      "Jun Wu"
+     ]
+    },
+    {
+     "id": "2208.11004v4",
+     "title": "Geodesic Tracking via New Data-driven Connections of Cartan Type for Vascular Tree Tracking",
+     "published": "2022-08-23T14:35:17Z",
+     "authors": [
+      "Nicky van den Berg",
+      "Bart Smets",
+      "Gautam Pai",
+      "Jean-Marie Mirebeau",
+      "Remco Duits"
+     ]
+    },
+    {
+     "id": "2207.13515v2",
+     "title": "Snell's law revisited and generalized via Finsler Geometry",
+     "published": "2022-07-27T13:40:13Z",
+     "authors": [
+      "Steen Markvorsen",
+      "Enrique Pendás-Recondo"
+     ]
+    },
+    {
+     "id": "2203.09453v1",
+     "title": "Computing confined elasticae",
+     "published": "2022-03-17T17:13:13Z",
+     "authors": [
+      "Sören Bartels",
+      "Pascal Weyer"
+     ]
+    },
+    {
+     "id": "2203.04856v2",
+     "title": "Regularizing effects of the entropy functional in optimal transport and planning problems",
+     "published": "2022-03-09T16:31:04Z",
+     "authors": [
+      "Alessio Porretta"
+     ]
+    },
+    {
+     "id": "2102.08771v1",
+     "title": "Comparing and Combining Approximate Computing Frameworks",
+     "published": "2021-02-16T04:52:43Z",
+     "authors": [
+      "Saeid Barati",
+      "Gordon Kindlmann",
+      "Hank Hoffmann"
+     ]
+    },
+    {
+     "id": "2010.07992v2",
+     "title": "Ternary and Quaternary Curves of Small Fixed Genus and Gonality with Many Rational Points",
+     "published": "2020-10-15T19:27:26Z",
+     "authors": [
+      "Xander Faber",
+      "Jon Grantham"
+     ]
+    },
+    {
+     "id": "2006.15816v5",
+     "title": "On maximizing VAM for a given power: Slope, cadence, force and gear-ratio considerations",
+     "published": "2020-06-29T05:34:11Z",
+     "authors": [
+      "Len Bos",
+      "Michael A. Slawinski",
+      "Theodore Stanoev"
+     ]
+    },
+    {
+     "id": "2005.01326v2",
+     "title": "Geodesic regression",
+     "published": "2020-05-04T08:52:53Z",
+     "authors": [
+      "Frank Hansen"
+     ]
+    },
+    {
+     "id": "1908.09400v2",
+     "title": "Optimal Curve Straightening is $\\exists\\mathbb{R}$-Complete",
+     "published": "2019-08-25T22:06:22Z",
+     "authors": [
+      "Jeff Erickson"
+     ]
+    },
+    {
+     "id": "1904.11481v1",
+     "title": "Age of Information in Multicast Networks with Multiple Update Streams",
+     "published": "2019-04-25T17:50:12Z",
+     "authors": [
+      "Baturalp Buyukates",
+      "Alkan Soysal",
+      "Sennur Ulukus"
+     ]
+    },
+    {
+     "id": "1904.11332v2",
+     "title": "Random Fixed Boundary Flows",
+     "published": "2019-04-24T13:55:47Z",
+     "authors": [
+      "Zhigang Yao",
+      "Yuqing Xia",
+      "Zengyan Fan"
+     ]
+    },
+    {
+     "id": "1811.12065v2",
+     "title": "TEA-DNN: the Quest for Time-Energy-Accuracy Co-optimized Deep Neural Networks",
+     "published": "2018-11-29T11:05:28Z",
+     "authors": [
+      "Lile Cai",
+      "Anne-Maelle Barneche",
+      "Arthur Herbout",
+      "Chuan Sheng Foo",
+      "Jie Lin",
+      "Vijay Ramaseshan Chandrasekhar",
+      "Mohamed M. Sabry"
+     ]
+    },
+    {
+     "id": "1808.10536v2",
+     "title": "Orthogonal and Smooth Orthogonal Layouts of 1-Planar Graphs with Low Edge Complexity",
+     "published": "2018-08-30T22:07:42Z",
+     "authors": [
+      "Evmorfia Argyriou",
+      "Sabine Cornelsen",
+      "Henry Förster",
+      "Michael Kaufmann",
+      "Martin Nöllenburg",
+      "Yoshio Okamoto",
+      "Chrysanthi Raftopoulou",
+      "Alexander Wolff"
+     ]
+    },
+    {
+     "id": "1808.02023v1",
+     "title": "Multi-Message Private Information Retrieval using Product-Matrix MSR and MBR Codes",
+     "published": "2018-08-06T13:37:29Z",
+     "authors": [
+      "Chatdanai Dorkson",
+      "Siaw-Lynn Ng"
+     ]
+    },
+    {
+     "id": "1807.03992v1",
+     "title": "Real algebraic curves with large finite number of real points",
+     "published": "2018-07-11T08:24:54Z",
+     "authors": [
+      "Erwan Brugallé",
+      "Alex Degtyarev",
+      "Ilia Itenberg",
+      "Frédéric Mangolte"
+     ]
+    },
+    {
+     "id": "1805.07190v1",
+     "title": "Private Information Retrieval using Product-Matrix Minimum Storage Regenerating Codes",
+     "published": "2018-05-18T13:14:48Z",
+     "authors": [
+      "Chatdanai Dorkson",
+      "Siaw-Lynn Ng"
+     ]
+    },
+    {
+     "id": "1805.02221v3",
+     "title": "Non-planar elasticae as optimal curves for the magnetic axis of stellarators",
+     "published": "2018-05-06T14:30:14Z",
+     "authors": [
+      "David Pfefferlé",
+      "Lee Gunderson",
+      "Stuart R. Hudson",
+      "Lyle Noakes"
+     ]
+    },
+    {
+     "id": "1711.06705v2",
+     "title": "Principal Boundary on Riemannian Manifolds",
+     "published": "2017-10-21T14:35:45Z",
+     "authors": [
+      "Zhigang Yao",
+      "Zhenyue Zhang"
+     ]
+    },
+    {
+     "id": "1709.02117v1",
+     "title": "Metric methods for heteroclinic connections in infinite dimensional spaces",
+     "published": "2017-09-07T07:38:19Z",
+     "authors": [
+      "Antonin Monteil",
+      "Filippo Santambrogio"
+     ]
+    },
+    {
+     "id": "1707.08590v1",
+     "title": "Shifted lattices and asymptotically optimal ellipses",
+     "published": "2017-07-26T18:03:03Z",
+     "authors": [
+      "R. S. Laugesen",
+      "S. Liu"
+     ]
+    },
+    {
+     "id": "1702.05358v2",
+     "title": "Computational topology of graphs on surfaces",
+     "published": "2017-02-17T14:34:08Z",
+     "authors": [
+      "Éric Colin de Verdière"
+     ]
+    },
+    {
+     "id": "1610.02769v1",
+     "title": "Inverse Diffusion Curves using Shape Optimization",
+     "published": "2016-10-10T03:57:40Z",
+     "authors": [
+      "Shuang Zhao",
+      "Fredo Durand",
+      "Changxi Zheng"
+     ]
+    },
+    {
+     "id": "1608.06026v1",
+     "title": "Energy Efficient Cooperative Network Coding with Joint Relay Scheduling and Power Allocation",
+     "published": "2016-08-22T01:31:32Z",
+     "authors": [
+      "Nan Qi",
+      "Ming Xiao",
+      "Theodoros A. Tsiftsis",
+      "Mikael Skoglund",
+      "Phuong L. Cao",
+      "Lixin Li"
+     ]
+    },
+    {
+     "id": "1608.04952v1",
+     "title": "Superiorization of Incremental Optimization Algorithms for Statistical Tomographic Image Reconstruction",
+     "published": "2016-08-17T13:03:10Z",
+     "authors": [
+      "Elias S. Helou",
+      "Marcelo V. W. Zibetti",
+      "Eduardo X. Miqueles"
+     ]
+    },
+    {
+     "id": "1603.08753v1",
+     "title": "Curve Networks for Surface Reconstruction",
+     "published": "2016-03-29T13:02:50Z",
+     "authors": [
+      "Yuanhao Cao",
+      "Liangliang Nan",
+      "Peter Wonka"
+     ]
+    },
+    {
+     "id": "1506.00928v1",
+     "title": "A Curved Brunn-Minkowski Inequality for the Symmetric Group",
+     "published": "2015-06-02T15:38:13Z",
+     "authors": [
+      "Weerachai Neeranartvong",
+      "Jonathan Novak",
+      "Nat Sothanaphan"
+     ]
+    },
+    {
+     "id": "1401.7390v1",
+     "title": "Optimal Control and Numerical Optimization Applied to Epidemiological Models",
+     "published": "2014-01-29T02:16:29Z",
+     "authors": [
+      "Helena Sofia Rodrigues"
+     ]
+    },
+    {
+     "id": "1312.6974v2",
+     "title": "Piecewise regression mixture for simultaneous functional data clustering and optimal segmentation",
+     "published": "2013-12-25T13:54:05Z",
+     "authors": [
+      "Faicel Chamroukhi"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "query": "abs:\"optimization curve\" AND abs:\"strongly convex\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22optimization+curve%22+AND+abs%3A%22strongly+convex%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:39:25+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 0,
+   "records": []
+  }
+ },
+ {
+  "query": "abs:\"optimization curve\" AND abs:\"worst-case\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22optimization+curve%22+AND+abs%3A%22worst-case%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:39:28+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 1,
+   "records": [
+    {
+     "id": "2509.08954v1",
+     "title": "Convexity of Optimization Curves: Local Sharp Thresholds, Robustness Impossibility, and New Counterexamples",
+     "published": "2025-09-10T19:28:47Z",
+     "authors": [
+      "Le Duc Hieu"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "query": "abs:\"optimization curve\" AND abs:\"gradient descent\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22optimization+curve%22+AND+abs%3A%22gradient+descent%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:39:32+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 3,
+   "records": [
+    {
+     "id": "2509.08954v1",
+     "title": "Convexity of Optimization Curves: Local Sharp Thresholds, Robustness Impossibility, and New Counterexamples",
+     "published": "2025-09-10T19:28:47Z",
+     "authors": [
+      "Le Duc Hieu"
+     ]
+    },
+    {
+     "id": "2503.10138v3",
+     "title": "Are Convex Optimization Curves Convex?",
+     "published": "2025-03-13T07:56:18Z",
+     "authors": [
+      "Guy Barzilai",
+      "Ohad Shamir",
+      "Moslem Zamani"
+     ]
+    },
+    {
+     "id": "2308.12280v1",
+     "title": "Extended Linear Regression: A Kalman Filter Approach for Minimizing Loss via Area Under the Curve",
+     "published": "2023-08-23T17:50:57Z",
+     "authors": [
+      "Gokulprasath R"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "query": "all:\"convex optimization curves\"",
+  "url": "https://export.arxiv.org/api/query?search_query=all%3A%22convex+optimization+curves%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:39:35+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 1,
+   "records": [
+    {
+     "id": "2503.10138v3",
+     "title": "Are Convex Optimization Curves Convex?",
+     "published": "2025-03-13T07:56:18Z",
+     "authors": [
+      "Guy Barzilai",
+      "Ohad Shamir",
+      "Moslem Zamani"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "query": "abs:\"convexity\" AND abs:\"gradient descent\" AND abs:\"1.75\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22convexity%22+AND+abs%3A%22gradient+descent%22+AND+abs%3A%221.75%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:39:39+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 2,
+   "records": [
+    {
+     "id": "2509.08954v1",
+     "title": "Convexity of Optimization Curves: Local Sharp Thresholds, Robustness Impossibility, and New Counterexamples",
+     "published": "2025-09-10T19:28:47Z",
+     "authors": [
+      "Le Duc Hieu"
+     ]
+    },
+    {
+     "id": "1712.01033v2",
+     "title": "NEON+: Accelerated Gradient Methods for Extracting Negative Curvature for Non-Convex Optimization",
+     "published": "2017-12-04T12:17:19Z",
+     "authors": [
+      "Yi Xu",
+      "Rong Jin",
+      "Tianbao Yang"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "query": "all:\"1.75/L\"",
+  "url": "https://export.arxiv.org/api/query?search_query=all%3A%221.75%2FL%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:39:43+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 1,
+   "records": [
+    {
+     "id": "2509.08954v1",
+     "title": "Convexity of Optimization Curves: Local Sharp Thresholds, Robustness Impossibility, and New Counterexamples",
+     "published": "2025-09-10T19:28:47Z",
+     "authors": [
+      "Le Duc Hieu"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "query": "abs:\"curve\" AND abs:\"convex\" AND abs:\"gradient descent\" AND abs:\"step size\" AND abs:\"concave\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22curve%22+AND+abs%3A%22convex%22+AND+abs%3A%22gradient+descent%22+AND+abs%3A%22step+size%22+AND+abs%3A%22concave%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:39:46+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 0,
+   "records": []
+  }
+ },
+ {
+  "query": "abs:\"second difference\" AND abs:\"gradient descent\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22second+difference%22+AND+abs%3A%22gradient+descent%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:39:50+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 0,
+   "records": []
+  }
+ },
+ {
+  "query": "abs:\"discrete convexity\" AND abs:\"gradient\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22discrete+convexity%22+AND+abs%3A%22gradient%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:39:53+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 2,
+   "records": [
+    {
+     "id": "2010.16250v3",
+     "title": "Gradient-based Algorithms for Convex Discrete Optimization via Simulation",
+     "published": "2020-10-30T16:34:05Z",
+     "authors": [
+      "Haixiang Zhang",
+      "Zeyu Zheng",
+      "Javad Lavaei"
+     ]
+    },
+    {
+     "id": "2005.02741v1",
+     "title": "Orthogonality relations of Crouzeix-Raviart and Raviart-Thomas finite element spaces",
+     "published": "2020-05-06T11:26:19Z",
+     "authors": [
+      "Sören Bartels",
+      "Zhangxian Wang"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "query": "abs:\"function values\" AND abs:\"convex sequence\" AND abs:\"gradient\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22function+values%22+AND+abs%3A%22convex+sequence%22+AND+abs%3A%22gradient%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:39:57+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 0,
+   "records": []
+  }
+ },
+ {
+  "query": "abs:\"performance estimation\" AND abs:\"strongly convex\" AND abs:\"gradient descent\" AND abs:\"step size\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22performance+estimation%22+AND+abs%3A%22strongly+convex%22+AND+abs%3A%22gradient+descent%22+AND+abs%3A%22step+size%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:40:00+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 1,
+   "records": [
+    {
+     "id": "1705.04398v4",
+     "title": "Exact worst-case convergence rates of the proximal gradient method for composite convex minimization",
+     "published": "2017-05-11T23:27:28Z",
+     "authors": [
+      "Adrien B. Taylor",
+      "Julien M. Hendrickx",
+      "François Glineur"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "query": "abs:\"worst-case\" AND abs:\"strongly convex\" AND abs:\"gradient descent\" AND abs:\"convexity\" AND abs:\"curve\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22worst-case%22+AND+abs%3A%22strongly+convex%22+AND+abs%3A%22gradient+descent%22+AND+abs%3A%22convexity%22+AND+abs%3A%22curve%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:40:04+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 0,
+   "records": []
+  }
+ },
+ {
+  "query": "abs:\"Barzilai\" AND abs:\"Shamir\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Barzilai%22+AND+abs%3A%22Shamir%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:40:07+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 1,
+   "records": [
+    {
+     "id": "2508.13895v1",
+     "title": "Generalisation and benign over-fitting for linear regression onto random functional covariates",
+     "published": "2025-08-19T15:01:20Z",
+     "authors": [
+      "Andrew Jones",
+      "Nick Whiteley"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "query": "abs:\"decrease\" AND abs:\"monotone\" AND abs:\"gradient descent\" AND abs:\"function value\" AND abs:\"differences\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22decrease%22+AND+abs%3A%22monotone%22+AND+abs%3A%22gradient+descent%22+AND+abs%3A%22function+value%22+AND+abs%3A%22differences%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:40:11+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 1,
+   "records": [
+    {
+     "id": "2102.04653v2",
+     "title": "Proximal Gradient Descent-Ascent: Variable Convergence under KŁ Geometry",
+     "published": "2021-02-09T05:35:53Z",
+     "authors": [
+      "Ziyi Chen",
+      "Yi Zhou",
+      "Tengyu Xu",
+      "Yingbin Liang"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "query": "ti:\"optimization curve\"",
+  "url": "https://export.arxiv.org/api/query?search_query=ti%3A%22optimization+curve%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:40:14+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 14,
+   "records": [
+    {
+     "id": "2509.08954v1",
+     "title": "Convexity of Optimization Curves: Local Sharp Thresholds, Robustness Impossibility, and New Counterexamples",
+     "published": "2025-09-10T19:28:47Z",
+     "authors": [
+      "Le Duc Hieu"
+     ]
+    },
+    {
+     "id": "2503.10138v3",
+     "title": "Are Convex Optimization Curves Convex?",
+     "published": "2025-03-13T07:56:18Z",
+     "authors": [
+      "Guy Barzilai",
+      "Ohad Shamir",
+      "Moslem Zamani"
+     ]
+    },
+    {
+     "id": "2503.01015v1",
+     "title": "Optimizing Curve-Based Selection with On-Body Surfaces in Virtual Environments",
+     "published": "2025-03-02T20:46:13Z",
+     "authors": [
+      "Xiang Li",
+      "Per Ola Kristensson"
+     ]
+    },
+    {
+     "id": "2405.09730v1",
+     "title": "Optimizing Curved EM Skins for Opportunistic Relaying in Vehicular Networks",
+     "published": "2024-05-15T23:39:02Z",
+     "authors": [
+      "Reza Aghazadeh Ayoubi",
+      "Silvia Mura",
+      "Dario Tagliaferri",
+      "Marouan Mizmizi",
+      "Umberto Spagnolini"
+     ]
+    },
+    {
+     "id": "2403.13528v1",
+     "title": "Defining metric-aware size-shape measures to validate and optimize curved high-order meshes",
+     "published": "2024-03-20T12:01:02Z",
+     "authors": [
+      "Guillermo Aparicio-Estrems",
+      "Abel Gargallo-Peiró",
+      "Xevi Roca"
+     ]
+    },
+    {
+     "id": "1908.09400v2",
+     "title": "Optimal Curve Straightening is $\\exists\\mathbb{R}$-Complete",
+     "published": "2019-08-25T22:06:22Z",
+     "authors": [
+      "Jeff Erickson"
+     ]
+    },
+    {
+     "id": "1805.02221v3",
+     "title": "Non-planar elasticae as optimal curves for the magnetic axis of stellarators",
+     "published": "2018-05-06T14:30:14Z",
+     "authors": [
+      "David Pfefferlé",
+      "Lee Gunderson",
+      "Stuart R. Hudson",
+      "Lyle Noakes"
+     ]
+    },
+    {
+     "id": "1101.5871v1",
+     "title": "Optimal curves of genus 1,2 and 3",
+     "published": "2011-01-31T08:05:19Z",
+     "authors": [
+      "Christophe Ritzenthaler"
+     ]
+    },
+    {
+     "id": "1005.4591v1",
+     "title": "Uniqueness of low genus optimal curves over F_2",
+     "published": "2010-05-25T14:41:06Z",
+     "authors": [
+      "Alessandra Rigato"
+     ]
+    },
+    {
+     "id": "0902.1901v2",
+     "title": "Optimal Curves of Genus 3 over Finite Fields with Discriminant -19",
+     "published": "2009-02-11T14:42:52Z",
+     "authors": [
+      "E. Alekseenko",
+      "S. Aleshnikov",
+      "N. Markin",
+      "A. Zaytsev"
+     ]
+    },
+    {
+     "id": "0901.2920v2",
+     "title": "Explicit computations of Serre's obstruction for genus 3 curves and application to optimal curves",
+     "published": "2009-01-19T19:13:09Z",
+     "authors": [
+      "Christophe Ritzenthaler"
+     ]
+    },
+    {
+     "id": "0706.4203v3",
+     "title": "Optimal curves of low genus over finite fields",
+     "published": "2007-06-28T11:26:36Z",
+     "authors": [
+      "Alexey Zaytsev"
+     ]
+    },
+    {
+     "id": "math/0011091v1",
+     "title": "The approach of St\"ohr-Voloch to the Hasse-Weil bound with applications to optimal curves and plane arcs",
+     "published": "2000-11-14T21:00:05Z",
+     "authors": [
+      "Fernando Torres"
+     ]
+    },
+    {
+     "id": "alg-geom/9709013v1",
+     "title": "On Weierstrass points and optimal curves",
+     "published": "1997-09-10T19:18:20Z",
+     "authors": [
+      "Rainer Fuhrmann",
+      "Fernando Torres"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "query": "abs:\"loss curve\" AND abs:\"convex\" AND abs:\"gradient descent\" AND abs:\"step size\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22loss+curve%22+AND+abs%3A%22convex%22+AND+abs%3A%22gradient+descent%22+AND+abs%3A%22step+size%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:40:18+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 0,
+   "records": []
+  }
+ },
+ {
+  "query": "abs:\"convexity of the loss curve\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22convexity+of+the+loss+curve%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:40:26+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 0,
+   "records": []
+  }
+ },
+ {
+  "query": "abs:\"performance estimation\" AND abs:\"function values\" AND abs:\"convexity\" AND abs:\"gradient descent\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22performance+estimation%22+AND+abs%3A%22function+values%22+AND+abs%3A%22convexity%22+AND+abs%3A%22gradient+descent%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:40:30+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 0,
+   "records": []
+  }
+ },
+ {
+  "query": "abs:\"sequence of function values\" AND abs:\"convex\" AND abs:\"gradient descent\" AND abs:\"smooth\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22sequence+of+function+values%22+AND+abs%3A%22convex%22+AND+abs%3A%22gradient+descent%22+AND+abs%3A%22smooth%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:40:34+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 0,
+   "records": []
+  }
+ },
+ {
+  "query": "abs:\"objective values\" AND abs:\"convex sequence\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22objective+values%22+AND+abs%3A%22convex+sequence%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:40:37+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 0,
+   "records": []
+  }
+ },
+ {
+  "query": "abs:\"consecutive\" AND abs:\"decrease\" AND abs:\"gradient descent\" AND abs:\"smooth convex\" AND abs:\"step size\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22consecutive%22+AND+abs%3A%22decrease%22+AND+abs%3A%22gradient+descent%22+AND+abs%3A%22smooth+convex%22+AND+abs%3A%22step+size%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:40:41+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 0,
+   "records": []
+  }
+ },
+ {
+  "query": "abs:\"optimization curves\" AND abs:\"heavy ball\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22optimization+curves%22+AND+abs%3A%22heavy+ball%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:40:44+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 0,
+   "records": []
+  }
+ },
+ {
+  "query": "abs:\"optimization curve\" AND abs:\"proximal\"",
+  "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22optimization+curve%22+AND+abs%3A%22proximal%22&start=0&max_results=60&sortBy=submittedDate&sortOrder=descending",
+  "retrieved_utc": "2026-10-21T18:40:48+00:00",
+  "http_status": 200,
+  "result": {
+   "total": 1,
+   "records": [
+    {
+     "id": "2606.10164v1",
+     "title": "Curved Beam Enabled Wireless Communications: Modeling, Analysis and Optimization",
+     "published": "2026-06-08T20:48:32Z",
+     "authors": [
+      "Jiawei Yao",
+      "Xiaoren Xu",
+      "Walid Saad",
+      "Mingzhe Chen"
+     ]
+    }
+   ]
+  }
+ }
+]

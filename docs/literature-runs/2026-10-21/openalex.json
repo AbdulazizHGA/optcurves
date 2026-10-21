@@ -1,0 +1,25 @@
+[
+ {
+  "query": "work",
+  "url": "https://api.openalex.org/works/doi:10.48550/arXiv.2503.10138",
+  "retrieved_utc": "2026-10-21T18:39:15+00:00",
+  "http_status": 200,
+  "result": {
+   "id": "https://openalex.org/W6966804991",
+   "doi": "https://doi.org/10.48550/arxiv.2503.10138",
+   "display_name": "Are Convex Optimization Curves Convex?",
+   "publication_year": 2025,
+   "cited_by_count": 0
+  }
+ },
+ {
+  "query": "cites:W6966804991",
+  "url": "https://api.openalex.org/works?filter=cites:W6966804991&per-page=100&select=id,doi,display_name,publication_year",
+  "retrieved_utc": "2026-10-21T18:39:16+00:00",
+  "http_status": 200,
+  "result": {
+   "count": 0,
+   "records": []
+  }
+ }
+]

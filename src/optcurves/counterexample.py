@@ -17,10 +17,13 @@ the Gram matrix, or a small nonlinear program in fixed dimension d), then are ro
 """
 import itertools
 import json
+import sys
 from fractions import Fraction as F
 from pathlib import Path
 
 import numpy as np
+
+from . import sdp
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -65,9 +68,11 @@ def check_exact(ce):
     return slack >= 0 and all(v > 0 for v in viol), slack, viol
 
 
-def _sdp(h, n, mu=0.0, rank=None):
-    """Max-slack data via the Gram matrix of (x_0, g_0..g_N); returns (X, f, t), X with rows = coordinates.
-    rank=r keeps only the r largest eigenvalues of the Gram matrix (for an optimum of numerical rank r)."""
+def _sdp(h, n, mu=0.0, rank=None, which=0, label="counterexample"):
+    """Max-slack data via the Gram matrix of (x_0, g_0..g_N), solved with sdp.SOLVERS[which]; returns (X, f, t),
+    X with rows = coordinates, or None when the solver gives no usable candidate (see sdp.py). rank=r keeps only the
+    r largest eigenvalues of the Gram matrix (for an optimum of numerical rank r). _sdp.last is the (solver, status)
+    of the call."""
     import cvxpy as cp
     N = n + 1
     P = N + 2
@@ -92,7 +97,9 @@ def _sdp(h, n, mu=0.0, rank=None):
             curv = (ip(dg, dg) + mu * ip(dx, dx) - 2 * mu * ip(dg, dx)) / (2 * (1 - mu))
         cons.append(fval(p) - fval(q) - ip(grad[q], pos[p] - pos[q]) - curv >= t)
     cons += [2 * fv[k] - fv[k - 1] - fv[k + 1] >= t for k in range(1, n + 1)]
-    cp.Problem(cp.Maximize(t), cons).solve(solver="CLARABEL")
+    _sdp.last = sdp.solve(cp.Problem(cp.Maximize(t), cons), which, label)
+    if _sdp.last[1] not in sdp.USABLE or G.value is None or fv.value is None or t.value is None:
+        return None
     lam, V = np.linalg.eigh(G.value)
     keep = lam > 1e-9 * lam.max() if rank is None else np.arange(P) >= P - rank
     X = (V[:, keep] * np.sqrt(lam[keep])).T
@@ -140,7 +147,27 @@ def find(h, n, dim=None, mu="0", rank=None,
     mu-strongly convex f, or None. dim=None: SDP (any dimension; rank=r truncates its optimum to R^r);
     dim=d: search in R^d."""
     hq, muq = F(h), F(mu)
-    found = _sdp(float(hq), n, float(muq), rank) if dim is None else _nlp(float(hq), n, dim, mu=float(muq))
+    if dim is not None:
+        return _round_counterexample(hq, muq, n, _nlp(float(hq), n, dim, mu=float(muq)), denominators)
+    label = f"counterexample h = {h}, n = {n}" + (f", mu = {mu}" if muq else "")
+    for which in range(len(sdp.SOLVERS)):  # Clarabel; SCS only if Clarabel gives no exact counterexample
+        found = _sdp(float(hq), n, float(muq), rank, which=which, label=label)
+        if found is None:
+            continue  # sdp.solve has reported the status
+        ce = _round_counterexample(hq, muq, n, found, denominators)
+        if ce:
+            ce["sdp_solver"], ce["sdp_status"] = _sdp.last
+            return ce
+        if which + 1 < len(sdp.SOLVERS):
+            reason = ("its slack is not positive" if found[2] <= 0 else "its candidate fails the exact check")
+            print(f"  SDP {label}: {_sdp.last[0]} {reason}; trying {sdp.SOLVERS[which + 1][0]}",
+                  file=sys.stderr, flush=True)
+    return None
+
+
+def _round_counterexample(hq, muq, n, found, denominators):
+    """Round the numerical data found = (X, f, t) to rationals and check them exactly (check_exact). The first
+    denominator bound that gives a valid counterexample wins; None if none does (or found is None, or t <= 0)."""
     if found is None:
         return None
     X, fv, t = found

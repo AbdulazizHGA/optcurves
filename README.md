@@ -331,7 +331,13 @@ definite Gram part. Above 9/5 the max-slack SDP optimum has numerical rank 1, wi
    the worst case above it: multipliers, Gram matrices and extremal data in closed form in (h, μ), every identity
    checked by SymPy polynomial arithmetic.
 
-The PEP layer is cross-checked against the two hand-built SDPs in the tests.
+The PEP layer is cross-checked against the two hand-built SDPs in the tests. Every PEP value records whether a
+solver reached status "optimal"; an unresolved point decides no threshold and would be drawn as a gap in the first
+figure (none is). The solutions of the hand-built SDPs (items 2 and 3) are only candidates for the exact check
+([src/optcurves/sdp.py](src/optcurves/sdp.py)): Clarabel first, SCS if Clarabel gives no candidate or its candidate
+fails the exact check, and a clear failure if neither gives one. Each record stores the solver and its status. All
+are "optimal" except the three violations at κ = 1.05, where Clarabel stops "optimal_inaccurate" and its rounded data
+pass the exact check (the SCS candidate there, also inaccurate, fails it).
 
 ## Limitations
 
@@ -352,19 +358,25 @@ The PEP layer is cross-checked against the two hand-built SDPs in the tests.
 ## Reproduce
 
 Python ≥ 3.11 (CVXPY 1.8 and later need it; the tests pass with Python 3.11 and 3.13). Every number above comes from
-these commands (about 7 minutes in total on an M1 laptop, mostly `study strong` and `side`). On our machine a full
-rerun with Python 3.13 reproduced every JSON file, the Lean file and the figures byte for byte:
+these commands (about 7 minutes in total on an M1 laptop, mostly `study strong` and `side`).
+
+**Exact reproduction**, with the package versions of our run pinned in [requirements-lock.txt](requirements-lock.txt)
+(Python 3.13, macOS arm64):
 
 ```bash
-pip install -e ".[test]"
+pip install -r requirements-lock.txt && pip install -e . --no-deps
 ./reproduce.sh          # study, certificates, counterexamples, Lean file, figures, tests
 ```
 
-`reproduce.sh` runs `$PYTHON` if it is set (e.g. `PYTHON=.venv/bin/python ./reproduce.sh`), otherwise `python3`,
-otherwise `python`, and stops with a message if that interpreter is older than Python 3.11.
+On our machine a full rerun this way reproduced every JSON file, the Lean file and the figures byte for byte. The
+`meta` block of every results/*.json records the interpreter (full Python version, implementation, platform and
+architecture) and the package versions, so on another machine expect that block to differ. To use the newest
+package versions instead, install with `pip install -e ".[test]"`.
 
-[requirements-lock.txt](requirements-lock.txt) pins the exact package versions of that run (Python 3.13, macOS
-arm64): `pip install -r requirements-lock.txt && pip install -e . --no-deps` installs them instead of the newest.
+`reproduce.sh` runs `$PYTHON` if it is set (e.g. `PYTHON=.venv/bin/python ./reproduce.sh`). Otherwise it takes the
+first of `python3`, `python3.14`, `python3.13`, `python3.12`, `python3.11` and `python` that is Python ≥ 3.11 and has
+the packages (if none has them, the first that is ≥ 3.11), says which one it uses, and stops with a message when no
+interpreter is new enough or the packages are missing.
 
 Single steps: `python -m optcurves.study consecutive|strong`, `python -m optcurves.certificate`,
 `python -m optcurves.counterexample`, `python -m optcurves.side` (the 20-point check and the search in ℝ¹),
@@ -374,8 +386,9 @@ that tampering breaks them, that the exact brackets have width ≤ 10⁻⁴ (≤
 thresholds, that both ends of every PEP bracket were decided by solves that reached "optimal" (with no jump across a
 full-width bracket), every step of the two proofs in section 4 with exact instances on both sides of h₁(κ), the
 rescaling of every convex counterexample to larger steps, the optimality conditions of the contour values on the
-plotting grid, the side experiments, that malformed certificate and counterexample records are rejected, and that the
-Lean file matches the generator. If any certificate or counterexample cannot be regenerated, its generator exits with
+plotting grid, the side experiments, that malformed certificate and counterexample records are rejected, that every
+curve point of the first figure was solved to "optimal", that every SDP record stores its solver status (and that
+Clarabel failing falls back to SCS, and both failing gives no record), and that the Lean file matches the generator. If any certificate or counterexample cannot be regenerated, its generator exits with
 an error, so `reproduce.sh` stops instead of testing the old file.
 
 Lean (needs elan; downloads the Mathlib cache):
@@ -386,9 +399,11 @@ cd lean && lake exe cache get && lake build
 
 ## Related work and literature check
 
-* G. Barzilai, O. Shamir, M. Zamani. *Are Convex Optimization Curves Convex?* TMLR 2025,
-  [arXiv:2503.10138](https://arxiv.org/abs/2503.10138). Threshold 1.75 for one violation; poses the
-  consecutive-steps question; does not treat strongly convex functions.
+* G. Barzilai, O. Shamir, M. Zamani. *Are Convex Optimization Curves Convex?* Transactions on Machine Learning
+  Research, 2025 ([OpenReview TZtpxselK2](https://openreview.net/forum?id=TZtpxselK2)),
+  [arXiv:2503.10138](https://arxiv.org/abs/2503.10138),
+  [doi:10.48550/arXiv.2503.10138](https://doi.org/10.48550/arXiv.2503.10138). Threshold 1.75 for one violation;
+  poses the consecutive-steps question; does not treat strongly convex functions.
 * Le Duc Hieu. *Convexity of Optimization Curves: Local Sharp Thresholds, Robustness Impossibility, and New
   Counterexamples*, [arXiv:2509.08954](https://arxiv.org/abs/2509.08954), 2025. Convex case only; its
   counterexamples break convexity at a single step.
@@ -397,9 +412,21 @@ cd lean && lake exe cache get && lake build
   consecutive violations.
 * OpenAI, GPT-5 science report, [arXiv:2511.16072](https://arxiv.org/abs/2511.16072): GPT-5 Pro improved the bound
   in the paper's first version from 1/L to 1.5/L.
-* Performance estimation: Drori and Teboulle (Math. Program. 2014); Taylor, Hendrickx and Glineur, *Smooth strongly
-  convex interpolation and exact worst-case performance of first-order methods* (Math. Program. 2017); PEPit,
-  Goujaud et al. (Math. Program. Comput. 2024).
+* Y. Nesterov. *Introductory Lectures on Convex Optimization: A Basic Course*. Springer, 2004,
+  [doi:10.1007/978-1-4419-8853-9](https://doi.org/10.1007/978-1-4419-8853-9). Theorem 2.1.5: the interpolation
+  inequality of L-smooth convex functions (the "bridge lemma" of section 2). It is also Theorem 2.1.5 of
+  Y. Nesterov, *Lectures on Convex Optimization*, Springer, 2018,
+  [doi:10.1007/978-3-319-91578-4](https://doi.org/10.1007/978-3-319-91578-4), which Barzilai et al. cite.
+* Y. Drori, M. Teboulle. *Performance of first-order methods for smooth convex minimization: a novel approach*.
+  Mathematical Programming 145(1–2):451–482, 2014,
+  [doi:10.1007/s10107-013-0653-0](https://doi.org/10.1007/s10107-013-0653-0). Performance estimation.
+* A. B. Taylor, J. M. Hendrickx, F. Glineur. *Smooth strongly convex interpolation and exact worst-case performance of
+  first-order methods*. Mathematical Programming 161(1–2):307–345, 2017,
+  [doi:10.1007/s10107-016-1009-3](https://doi.org/10.1007/s10107-016-1009-3). Theorem 4, the interpolation theorem,
+  turns every exact counterexample into a function.
+* B. Goujaud, C. Moucer, F. Glineur, J. M. Hendrickx, A. B. Taylor, A. Dieuleveut. *PEPit: computer-assisted
+  worst-case analyses of first-order optimization methods in Python*. Mathematical Programming Computation
+  16:337–367, 2024, [doi:10.1007/s12532-024-00259-7](https://doi.org/10.1007/s12532-024-00259-7).
 
 Literature check on 18–19 October 2026: Semantic Scholar citations of arXiv:2503.10138 (only Hieu); OpenAlex
 (0 citing works indexed); Google Scholar (shows "cited by 3", but the citing list came back empty; keyword searches
@@ -431,7 +458,13 @@ that the results are new.
 Records: the 20 October check is logged query by query in
 [docs/literature-check-2026-10-20.md](docs/literature-check-2026-10-20.md) (two Semantic Scholar queries were
 refused by its rate limit; one was run on the website instead). The 18–19 October check left no log in this
-repository; only its summary above records it.
+repository; only its summary above records it. Neither stored the API responses. On 21 October the API queries were
+run again by [scripts/literature_check.py](scripts/literature_check.py), which stores each response, dated, without
+abstracts, in [docs/literature-runs/2026-10-21/](docs/literature-runs/2026-10-21/); rerunning it writes a new dated
+folder to compare. Summary in [docs/literature-check-2026-10-21.md](docs/literature-check-2026-10-21.md): nothing new
+on arXiv (25 queries), in Semantic Scholar (3 of 7 calls answered, the rest refused by its rate limit) or in
+OpenAlex. The OpenReview discussion is still not read: its API answered 403 and the forum page asked for a browser
+verification, which was not bypassed.
 
 ## ملخص بالعربية
 
