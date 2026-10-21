@@ -2,7 +2,17 @@
 # Regenerate every result, certificate, counterexample, Lean file and figure, then run the tests.
 set -euo pipefail
 cd "$(dirname "$0")"
-PY="${PYTHON:-python}"
+# Interpreter: $PYTHON if set, else python3, else python (on old systems `python` can be Python 2).
+if [ -n "${PYTHON:-}" ]; then
+    PY="$PYTHON"
+elif command -v python3 >/dev/null 2>&1; then
+    PY=python3
+elif command -v python >/dev/null 2>&1; then
+    PY=python
+else
+    echo "reproduce.sh: neither python3 nor python is on PATH; set PYTHON=/path/to/python" >&2
+    exit 1
+fi
 export PYTHONPATH=src
 "$PY" -m optcurves.study consecutive     # results/consecutive.json
 "$PY" -m optcurves.study strong          # results/strong.json

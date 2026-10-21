@@ -360,6 +360,9 @@ pip install -e ".[test]"
 ./reproduce.sh          # study, certificates, counterexamples, Lean file, figures, tests
 ```
 
+`reproduce.sh` runs `$PYTHON` if it is set (e.g. `PYTHON=.venv/bin/python ./reproduce.sh`), otherwise `python3`,
+otherwise `python`.
+
 [requirements-lock.txt](requirements-lock.txt) pins the exact package versions of that run (Python 3.13, macOS
 arm64): `pip install -r requirements-lock.txt && pip install -e . --no-deps` installs them instead of the newest.
 
