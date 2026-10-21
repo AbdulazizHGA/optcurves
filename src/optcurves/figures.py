@@ -22,11 +22,11 @@ INK, MUTED, GRID = "#3d3c37", "#8a887f", "#e4e2dc"
 def h1_closed_form(kappa):
     """Exact threshold for one violation, mu-strongly convex, kappa = L/mu (proved in theorem.py), in floating point.
     The smaller root (1 + kappa) - sqrt((1 + kappa)^2 - (7 kappa + 1)/2) subtracts two nearly equal numbers (it
-    gives 0.0 at kappa = 1e17), so it is computed as ((7 kappa + 1)/2) / (1 + kappa + sqrt((kappa - 1)(kappa - 1/2))),
-    the square root taken factor by factor so that it does not overflow. kappa = inf (mu = 0) gives 7/4."""
-    if math.isinf(kappa):
-        return 1.75
-    return (3.5 * kappa + 0.5) / (1 + kappa + math.sqrt(kappa - 1) * math.sqrt(kappa - 0.5))
+    gives 0.0 at kappa = 1e17), so it is computed as ((7 kappa + 1)/2) / (1 + kappa + sqrt((kappa - 1)(kappa - 1/2)))
+    with numerator and denominator divided by kappa, so that nothing overflows (7 kappa did at kappa = 1e308).
+    kappa = inf (mu = 0) gives 7/4."""
+    r = 1 / kappa
+    return (3.5 + 0.5 * r) / (r + 1 + math.sqrt(1 - r) * math.sqrt(1 - 0.5 * r))
 
 
 def _axes(ax):
@@ -80,6 +80,14 @@ def strong(plt):
             ax.plot([k, k], [t["lo"], t["hi"]], color=COLORS[n], linewidth=2, solid_capstyle="butt")
             ax.plot([k], [t["lo"]], color=COLORS[n], linewidth=0, marker=MARKERS[n], markersize=5,
                     markerfacecolor="white", label=None if i else f"h$_{n}$(κ), PEP bracket left open")
+        # no upper end could be decided (only "no violation at lo"): a hollow marker at lo and an arrow upwards
+        lower_only = [(r["kappa"], r[f"h{n}"]) for r in finite
+                      if r[f"h{n}"] and r[f"h{n}"]["hi"] is None and r[f"h{n}"]["lo"] > 1.5]
+        for i, (k, t) in enumerate(lower_only):
+            ax.annotate("", xy=(k, min(t["lo"] + 0.012, 2.003)), xytext=(k, t["lo"]),
+                        arrowprops=dict(arrowstyle="->", color=COLORS[n], lw=1.2))
+            ax.plot([k], [t["lo"]], color=COLORS[n], linewidth=0, marker=MARKERS[n], markersize=5,
+                    markerfacecolor="white", label=None if i else f"h$_{n}$(κ), PEP: lower end only")
         ax.axhline(inf_row[f"h{n}"]["lo"], color=COLORS[n], linewidth=1, linestyle=":")
     exact = [json.loads(p.read_text()) for p in sorted((ROOT / "counterexamples").glob("*.json"))
              if not p.name.startswith("._")]

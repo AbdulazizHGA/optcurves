@@ -232,6 +232,23 @@ def test_malformed_certificates_are_rejected():
     assert not certificate.verify_certificate({**convex, "N": -1})
 
 
+def test_duplicate_multiplier_keys_cannot_verify_a_false_claim():
+    """At kappa = 7/5 and h = 181/100 > h_1 = 9/5 one violation is possible (the theorem's data give v_1 > 0), so no
+    certificate of v_1 <= 0 exists. The multipliers below cancel the function values but leave S indefinite. A second
+    key "00,1" used to be dropped by the check of the function values and added into S, which made S positive
+    semidefinite: the record verified. Keys must now be written exactly "p,q"."""
+    from optcurves import theorem
+    assert counterexample.check_exact(theorem.data_at("181/100", "5/7"))[2][0] > 0
+    honest = {"h": "181/100", "n": 1, "N": 2, "mu": "5/7", "w": ["1"],
+              "lam": {"0,1": "8/5", "2,0": "3/5", "2,1": "2/5"}}
+    assert not certificate.verify_certificate(json.loads(json.dumps(honest)))
+    for key in ["00,1", " 0,1", "0, 1", "+0,1", "0,01", "0,1,2"]:
+        forged = {**honest, "lam": {key: "1/20", **honest["lam"]}}
+        assert not certificate.verify_certificate(forged), key
+        with pytest.raises(ValueError):
+            certificate.multipliers(forged)
+
+
 def test_malformed_counterexamples_are_rejected():
     ce = json.loads((ROOT / "counterexamples" / "n2_h19_10_d2.json").read_text())
     for change in [lambda d: d["g"][1].append("5"), lambda d: d["g"].pop(), lambda d: d["f"].pop(),

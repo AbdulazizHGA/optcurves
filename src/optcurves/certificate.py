@@ -180,26 +180,39 @@ def find_certificate(h, n, mu=0, denominators=(100, 1000, 10**4, 10**5, 10**6, 1
     return None
 
 
+def multipliers(cert):
+    """cert["lam"] as {(p, q): Rational}. Every key must be written exactly "p,q" (no leading zeros, signs or
+    spaces), so that two keys cannot name the same pair. Otherwise "0,1" and "00,1" were one pair for the check of
+    the function values but two terms of S: a record with both verified a false claim (v_1 <= 0 at kappa = 7/5,
+    h = 181/100, where v_1 > 0 is possible). Raises ValueError on such a key."""
+    lam = {}
+    for key, val in cert["lam"].items():
+        p, q = map(int, key.split(","))
+        if key != f"{p},{q}":
+            raise ValueError(f"multiplier key {key!r} is not written as 'p,q'")
+        lam[(p, q)] = sp.Rational(val)
+    return lam
+
+
 def gram_S(cert):
     """S = -sum lam_pq Q_pq, exactly."""
     N, pos, grad, _ = setup(cert["h"], cert["n"])
     S = sp.zeros(N + 1, N + 1)
-    for key, val in cert["lam"].items():
-        p, q = map(int, key.split(","))
-        S -= sp.Rational(val) * interp_quadratic(pos, grad, p, q, cert.get("mu", 0))
+    for (p, q), val in multipliers(cert).items():
+        S -= val * interp_quadratic(pos, grad, p, q, cert.get("mu", 0))
     return S
 
 
 def _well_formed(cert):
     """The record's sizes agree with each other: n >= 1 violations, N = n + 1, one weight per violation,
-    multiplier keys "p,q" with p != q in 0..N, a kernel (if any) with N + 1 entries, and h > 0. Without this, a
-    record could skip checks: with N = -1 the cancellation of the function values was never tested."""
+    multiplier keys written exactly "p,q" with p != q in 0..N (see multipliers), a kernel (if any) with N + 1
+    entries, and h > 0. Without this, a record could skip checks: with N = -1 the cancellation of the function
+    values was never tested."""
     try:
         n, N = cert["n"], cert["N"]
         if not (isinstance(n, int) and n >= 1 and N == n + 1 and len(cert["w"]) == n and sp.Rational(cert["h"]) > 0):
             return False
-        for key in cert["lam"]:
-            p, q = map(int, key.split(","))
+        for p, q in multipliers(cert):
             if p == q or not (0 <= p <= N and 0 <= q <= N):
                 return False
         return "kernel" not in cert or len(cert["kernel"]) == N + 1
@@ -214,7 +227,7 @@ def verify_certificate(cert):
         return False
     n, N = cert["n"], cert["N"]
     mu = sp.Rational(cert.get("mu", 0))
-    lam = {tuple(map(int, k.split(","))): sp.Rational(v) for k, v in cert["lam"].items()}
+    lam = multipliers(cert)
     w = [sp.Rational(v) for v in cert["w"]]
     if not 0 <= mu < 1 or any(v < 0 for v in [*lam.values(), *w]) or sum(w) != 1:
         return False

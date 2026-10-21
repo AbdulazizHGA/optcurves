@@ -1,6 +1,7 @@
 """Fast numerical checks: PEPit against known values, and against the independently built SDPs."""
 import json
 import math
+import sys
 from fractions import Fraction
 from pathlib import Path
 
@@ -184,6 +185,6 @@ def test_h1_closed_form_is_stable():
     for kappa in [1, 1.0001, 1.05, 7 / 5, 2, 10, 100, 1e4]:
         exact = float(sp.N(theorem.h1(sp.nsimplify(kappa)), 30))
         assert abs(figures.h1_closed_form(kappa) - exact) < 1e-14 * exact, kappa
-    for kappa in [1e8, 1e17, 1e200]:
+    for kappa in [1e8, 1e17, 1e200, 1e300, 1e308, sys.float_info.max]:  # 7 kappa overflowed to NaN at 1e308
         assert 1.75 <= figures.h1_closed_form(kappa) < 1.75 + 1e-6  # h_1 - 7/4 ~ 1 / (32 kappa)
     assert figures.h1_closed_form(math.inf) == 1.75
