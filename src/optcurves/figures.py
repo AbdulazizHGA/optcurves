@@ -115,11 +115,12 @@ def interpolant(ce):
     (the conjugate of the smallest 1-strongly convex function through the dual data, the maximum of the quadratic
     lower bounds; conjugation reverses the order). Returns a vectorized f.
 
-    The minimum is a convex quadratic program over the simplex, solved exactly (up to rounding) face by face: on a
-    face the KKT conditions are a linear system, and a face whose solution satisfies all of them (lam >= 0 and no
-    gradient entry outside the face below the multiplier) gives the minimum. Each point is solved on its own, so its
-    value does not depend on the other points of the call. f.kkt_residual is the largest KKT residual of the last
-    call."""
+    The minimum is a convex quadratic program over the simplex, solved numerically in floating point by enumerating
+    the faces of the simplex: on a face the KKT conditions are a linear system (solved with numpy.linalg.pinv), and the
+    lowest value among the faces whose solution satisfies all of them to 1e-9 (lam >= 0 and no gradient entry outside
+    the face below the multiplier) is the minimum. Only these contour values are floating point; the data stay exact
+    rationals. Each point is solved on its own, so its value does not depend on the other points of the call.
+    f.kkt_residual is the largest KKT residual of the last call."""
     g = [np.array([float(F(a)) for a in gk]) for gk in ce["g"]]
     x = [np.array([float(a) for a in xk]) for xk in _positions(ce)]
     fv = [float(F(a)) for a in ce["f"]]

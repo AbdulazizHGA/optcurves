@@ -13,6 +13,15 @@ else
     echo "reproduce.sh: neither python3 nor python is on PATH; set PYTHON=/path/to/python" >&2
     exit 1
 fi
+# Python >= 3.11 (pyproject.toml); the check itself also runs under Python 2.
+if ! command -v "$PY" >/dev/null 2>&1; then
+    echo "reproduce.sh: interpreter not found: $PY" >&2
+    exit 1
+fi
+if ! "$PY" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)'; then
+    echo "reproduce.sh: $PY is $("$PY" -V 2>&1); Python >= 3.11 is needed (set PYTHON=/path/to/python)" >&2
+    exit 1
+fi
 export PYTHONPATH=src
 "$PY" -m optcurves.study consecutive     # results/consecutive.json
 "$PY" -m optcurves.study strong          # results/strong.json
