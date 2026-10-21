@@ -175,3 +175,15 @@ def test_side_experiments():
     assert [(r["h"], r["n"]) for r in searches] == [("1.9", 2), ("1.99", 3)]
     for r in searches:
         assert (r["best_margin_R1"] is None or r["best_margin_R1"] < 1e-9) and r["margin_R2"] > 1e-3
+
+
+def test_h1_closed_form_is_stable():
+    """The floating-point h_1(kappa) agrees with the exact theorem.h1 to rounding (relative 1e-14; near kappa = 1 the
+    root is ill-conditioned, dh_1/dkappa ~ -34 at 1.0001), and stays near 7/4 for huge kappa (the textbook root
+    formula was off by 4e-13 at kappa = 1e4, gave 0.0 at 1e17 and overflowed at 1e200)."""
+    for kappa in [1, 1.0001, 1.05, 7 / 5, 2, 10, 100, 1e4]:
+        exact = float(sp.N(theorem.h1(sp.nsimplify(kappa)), 30))
+        assert abs(figures.h1_closed_form(kappa) - exact) < 1e-14 * exact, kappa
+    for kappa in [1e8, 1e17, 1e200]:
+        assert 1.75 <= figures.h1_closed_form(kappa) < 1.75 + 1e-6  # h_1 - 7/4 ~ 1 / (32 kappa)
+    assert figures.h1_closed_form(math.inf) == 1.75

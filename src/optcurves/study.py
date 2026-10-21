@@ -41,8 +41,9 @@ def _meta():
 
 
 def _threshold(n, mu=0.0, minimizer=True):
-    """Bracket of the smallest h in [1.5, H_MAX] with n consecutive violations, assuming (as the whole numerical study
-    does) that these h form an interval. lo has no violation and hi has one, both from solves that reached "optimal";
+    """Bracket of the infimum of the h in [1.5, H_MAX] with n consecutive violations, assuming that these h form an
+    interval: proved for convex f (rescaling, README section 1), assumed for mu > 0. lo has no violation and hi has
+    one, both from solves that reached "optimal";
     lo = 1.5 needs no solve (v_1 <= 0 for h <= 7/4 by Barzilai, Shamir and Zamani, also for mu > 0).
     None: no violation at H_MAX. hi = None: no upper end could be decided (then lo is the largest top end without a
     violation, or 1.5). resolved: the bracket reached the width WIDTH. The counts of pep.STATS and the points left

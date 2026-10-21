@@ -190,9 +190,28 @@ def gram_S(cert):
     return S
 
 
+def _well_formed(cert):
+    """The record's sizes agree with each other: n >= 1 violations, N = n + 1, one weight per violation,
+    multiplier keys "p,q" with p != q in 0..N, a kernel (if any) with N + 1 entries, and h > 0. Without this, a
+    record could skip checks: with N = -1 the cancellation of the function values was never tested."""
+    try:
+        n, N = cert["n"], cert["N"]
+        if not (isinstance(n, int) and n >= 1 and N == n + 1 and len(cert["w"]) == n and sp.Rational(cert["h"]) > 0):
+            return False
+        for key in cert["lam"]:
+            p, q = map(int, key.split(","))
+            if p == q or not (0 <= p <= N and 0 <= q <= N):
+                return False
+        return "kernel" not in cert or len(cert["kernel"]) == N + 1
+    except (KeyError, TypeError, ValueError):
+        return False
+
+
 def verify_certificate(cert):
     """Exact check; also stores the LDL^T sum of squares in cert["sos"]. Returns bool.
     An optional cert["kernel"] must be a nonzero vector u with S u = 0 (a tight certificate)."""
+    if not _well_formed(cert):
+        return False
     n, N = cert["n"], cert["N"]
     mu = sp.Rational(cert.get("mu", 0))
     lam = {tuple(map(int, k.split(","))): sp.Rational(v) for k, v in cert["lam"].items()}
@@ -244,6 +263,8 @@ def verify_attained(cert):
     _, slack, viol = check_exact(data)
     g = [[F(c) for c in gk] for gk in data["g"]]
     u = [F(c) for c in cert["kernel"]]
+    if len(u) != len(g) or not any(u):
+        return False
     j = next(a for a, c in enumerate(u) if c != 0)
     e = [c / u[j] for c in g[j]]
     return (slack >= 0 and len(viol) == cert["n"] and sum(F(wk) * vk for wk, vk in zip(cert["w"], viol)) == 0

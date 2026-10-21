@@ -20,8 +20,13 @@ INK, MUTED, GRID = "#3d3c37", "#8a887f", "#e4e2dc"
 
 
 def h1_closed_form(kappa):
-    """Exact threshold for one violation, mu-strongly convex, kappa = L/mu (proved in theorem.py)."""
-    return (1 + kappa) - math.sqrt((1 + kappa) ** 2 - (7 * kappa + 1) / 2)
+    """Exact threshold for one violation, mu-strongly convex, kappa = L/mu (proved in theorem.py), in floating point.
+    The smaller root (1 + kappa) - sqrt((1 + kappa)^2 - (7 kappa + 1)/2) subtracts two nearly equal numbers (it
+    gives 0.0 at kappa = 1e17), so it is computed as ((7 kappa + 1)/2) / (1 + kappa + sqrt((kappa - 1)(kappa - 1/2))),
+    the square root taken factor by factor so that it does not overflow. kappa = inf (mu = 0) gives 7/4."""
+    if math.isinf(kappa):
+        return 1.75
+    return (3.5 * kappa + 0.5) / (1 + kappa + math.sqrt(kappa - 1) * math.sqrt(kappa - 0.5))
 
 
 def _axes(ax):

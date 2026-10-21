@@ -214,3 +214,49 @@ def test_strong_counterexample_tampered_fails():
     ce = json.loads((ROOT / "counterexamples" / "n1_h1801_1000_mu5_7_d1.json").read_text())
     ce["f"][1] = str(Fraction(ce["f"][1]) - Fraction(1, 10**4))  # v_1 ~ 6e-5 drops below 0
     assert not counterexample.check_exact(ce)[0]
+
+
+# --- malformed records: the checkers must reject them, not skip checks ---
+
+def test_malformed_certificates_are_rejected():
+    """With N = -1 the cancellation of the function values used to be skipped: a strongly convex record then
+    verified even with every multiplier set to 0."""
+    cert = json.loads((ROOT / "certificates" / "n1_h1799_1000_mu5_7.json").read_text())
+    assert certificate.verify_certificate(json.loads(json.dumps(cert)))
+    zero = {k: "0" for k in cert["lam"]}
+    for change in [{"N": -1}, {"N": -1, "lam": zero}, {"N": cert["n"] + 2}, {"w": cert["w"] + ["0"]},
+                   {"lam": {**cert["lam"], "0,7": "1"}}, {"lam": {**cert["lam"], "1,1": "1"}}, {"n": 0},
+                   {"kernel": ["1"]}]:
+        assert not certificate.verify_certificate({**json.loads(json.dumps(cert)), **change}), change
+    convex = json.loads((ROOT / "certificates" / "n2_h9_5.json").read_text())
+    assert not certificate.verify_certificate({**convex, "N": -1})
+
+
+def test_malformed_counterexamples_are_rejected():
+    ce = json.loads((ROOT / "counterexamples" / "n2_h19_10_d2.json").read_text())
+    for change in [lambda d: d["g"][1].append("5"), lambda d: d["g"].pop(), lambda d: d["f"].pop(),
+                   lambda d: d.update(n=3), lambda d: d.update(dim=3), lambda d: d.update(h="-19/10")]:
+        bad = json.loads(json.dumps(ce))
+        change(bad)
+        with pytest.raises(ValueError):
+            counterexample.check_exact(bad)
+
+
+# --- monotonicity in h for convex f (README section 1) ---
+
+def test_convex_counterexamples_survive_every_larger_step():
+    """If GD with step h breaks convexity n times on a 1-smooth convex f, GD with step h' > h does so on
+    (h/h') f: it is (h/h')-smooth, so 1-smooth, convex, with the same minimizer and the same iterates, and every
+    v_k is multiplied by h/h'. Exact check on every stored convex counterexample, at three larger steps."""
+    files = [p for p in CES if "mu" not in json.loads(p.read_text())]
+    assert len(files) >= 7
+    for path in files:
+        ce = json.loads(path.read_text())
+        h = Fraction(ce["h"])
+        for hp in (h + (2 - h) / 4, (h + 2) / 2, 2 - (2 - h) / 100):
+            s = h / hp
+            scaled = {"h": str(hp), "n": ce["n"], "x0": ce["x0"], "f": [str(s * Fraction(a)) for a in ce["f"]],
+                      "g": [[str(s * Fraction(a)) for a in gk] for gk in ce["g"]]}
+            ok, _, viol = counterexample.check_exact(scaled)
+            assert ok and viol == [s * Fraction(v) for v in ce["violations"]], (path.name, hp)
+    # The certificates are the other half: no violation at the left end of a bracket, hence at every smaller step.

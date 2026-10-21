@@ -41,7 +41,7 @@ Throughout, L = 1 (rescaling f covers every L), steps are h/L, and "convex" mean
 
 ## Results
 
-### 1. Consecutive violations happen; their PEP thresholds grow with n
+### 1. Consecutive violations happen, and each extra one needs a larger step size
 
 | n consecutive violations | impossible at h = `[exact]` | possible at h = `[exact]` | PEP threshold h_n `[numerical]` |
 |---|---|---|---|
@@ -63,12 +63,16 @@ Throughout, L = 1 (rescaling f covers every L), steps are h/L, and "convex" mean
   theorem of Taylor, Hendrickx and Glineur (2017, Thm. 4), such data come from a genuine 1-smooth convex
   f: ℝ^d → ℝ with a minimizer; gradient descent from x₀ then visits exactly the stored points. The theorem is the
   only external input.
-* So the exact data bracket each PEP threshold within 10⁻⁴: two consecutive violations are impossible at
-  h = 1.8634 and possible at h = 1.8635, three at h = 1.9 and h = 1.9001, and so on. The threshold h_n is the
-  infimum of the step sizes at which n consecutive violations are possible. Violations are strict, so it need not be
-  attained: for n = 1 the bad step sizes form the open interval (7/4, 2). The data prove that h_n is at most the
-  right end, and h_n ≥ 7/4 by Barzilai et al. That h_n is at least the left end needs the set of bad step sizes to be
-  an interval (monotonicity in h), which we did *not* prove; the PEP curves in the figure below suggest it.
+* **Monotonicity in h `[exact]`.** If gradient descent with step h breaks convexity n times in a row on a 1-smooth
+  convex f, then gradient descent with any step h′ > h does so on f̃ = (h/h′) f. Indeed f̃ is (h/h′)-smooth, hence
+  1-smooth, and convex with the same minimizers; h′∇f̃ = h∇f, so the iterates from x₀ are the same; and every v_k is
+  multiplied by h/h′ > 0. So the step sizes in (0, 2) with n consecutive violations form an interval ending at 2.
+  Its infimum is the threshold h_n, and a_n ≤ h_n ≤ b_n for the step sizes a_n (impossible) and b_n (possible) of the
+  table, since a violation at some h < a_n would give one at a_n. Hence **h₂ ∈ [1.8634, 1.8635]**,
+  **h₃ ∈ [1.9, 1.9001]**, the brackets of width 10⁻⁴ of the table for n = 4, 5, 6, and 7/4 = h₁ < h₂ < … < h₆.
+  Violations are strict, so h_n itself need not be a bad step: for n = 1 the bad steps are (7/4, 2). The tests check
+  the rescaling exactly on every stored convex counterexample. It does not carry over to μ-strongly convex f, where
+  f̃ is only (μh/h′)-strongly convex.
 * `[numerical]` PEP thresholds: PEPit 0.5.1, Clarabel 0.11.1, "no violation" = worst case ≤ 10⁻⁷, bisection on
   [1.5, 1.9999]. A point that Clarabel leaves "inaccurate" is solved again with SCS 3.3.1 (eps = 1e-9). If SCS does
   not reach "optimal" either, the point is *unresolved*: it decides nothing, the bisection tries another point of the
@@ -77,10 +81,9 @@ Throughout, L = 1 (rescaling f covers every L), steps are h/L, and "convex" mean
   starts at a free point. Two normalizations, ‖x₀ − x*‖ ≤ 1 (functions with a minimizer) and ‖∇f(x₀)‖ ≤ 1 (all
   functions), give thresholds within 3 × 10⁻⁵ of each other; the table shows the first. Both lie inside every
   exact bracket (checked in the tests).
-* Answer to the open question: yes, the curve can be concave at several consecutive steps. In our data each extra
-  step needs a larger step size: the PEP thresholds increase with n, by 0.113, 0.037, 0.020, 0.013 and 0.009 up to
-  h₆ ≈ 1.9412, and the exact brackets are disjoint and in the same order (with the caveat above: the bad step sizes
-  are not proved to form an interval). We computed n ≤ 6 only; whether h_n → 2 as n → ∞ is not known.
+* Answer to the open question: yes, the curve can be concave at several consecutive steps, and each extra step
+  needs a larger step size: 7/4 = h₁ < h₂ < … < h₆, proved by the brackets above. The PEP values increase by 0.113,
+  0.037, 0.020, 0.013 and 0.009 up to h₆ ≈ 1.9412. We computed n ≤ 6 only; whether h_n → 2 as n → ∞ is not known.
 
 ![Worst-case min(v₁, …, v_n) against h](figures/consecutive.png)
 
@@ -329,8 +332,10 @@ The PEP layer is cross-checked against the two hand-built SDPs in the tests.
 
 ## Limitations
 
-* Apart from the one-violation theorems of section 4 (every h and every κ > 1), exact statements are about the
-  listed step sizes only; for two or more consecutive violations nothing is proved for all h in an interval.
+* For convex f and two to six consecutive violations the thresholds are known to within 10⁻⁴ (section 1), with no
+  closed form. For μ-strongly convex f and two or more violations, exact statements are about the listed step sizes
+  only: the rescaling of section 1 does not apply, and the PEP thresholds assume that the bad step sizes form an
+  interval.
 * The Lean theorems assume the interpolation inequalities (bridge lemma not formalized).
 * The counterexamples, and the "possible" half of the theorem, rely on the interpolation theorem of Taylor,
   Hendrickx and Glineur (2017).
@@ -362,9 +367,10 @@ Single steps: `python -m optcurves.study consecutive|strong`, `python -m optcurv
 that tampering breaks them, that the exact brackets have width ≤ 10⁻⁴ (≤ 10⁻⁶ at κ = 7/5) and contain the numerical
 thresholds, that both ends of every PEP bracket were decided by solves that reached "optimal" (with no jump across a
 full-width bracket), every step of the two proofs in section 4 with exact instances on both sides of h₁(κ), the
-optimality conditions of the contour values on the plotting grid, the side experiments, and that the Lean file
-matches the generator. If any certificate or counterexample cannot be regenerated, its generator exits with an error,
-so `reproduce.sh` stops instead of testing the old file.
+rescaling of every convex counterexample to larger steps, the optimality conditions of the contour values on the
+plotting grid, the side experiments, that malformed certificate and counterexample records are rejected, and that the
+Lean file matches the generator. If any certificate or counterexample cannot be regenerated, its generator exits with
+an error, so `reproduce.sh` stops instead of testing the old file.
 
 Lean (needs elan; downloads the Mathlib cache):
 
@@ -428,9 +434,12 @@ repository; only its summary above records it.
 
 **ما ثبت:**
 - **[دقيق]** الانكساران المتتاليان مستحيلان عند h = 1.8634، وممكنان عند h = 1.8635. وبالمثل ثلاثة انكسارات:
-  مستحيلة عند 1.9 وممكنة عند 1.9001، ولأربعة وخمسة وستة نقطتان بينهما 10⁻⁴. والعتبة h₂ هي الحد الأدنى (infimum)
-  للخطوات التي يمكن عندها انكساران متتاليان، وقد لا تُبلغ لأن الانكسار صارم. فهي لا تتجاوز 1.8635، ولا تقل عن 7/4.
-  أما أنها لا تقل عن 1.8634 فيتطلب أن تكون الخطوات السيئة فترة، وهذا غير مبرهن (والقيمة العددية h₂ ≈ 1.86345).
+  مستحيلة عند 1.9 وممكنة عند 1.9001، ولأربعة وخمسة وستة نقطتان بينهما 10⁻⁴. والعتبة hₙ هي الحد الأدنى (infimum)
+  للخطوات التي يمكن عندها n انكسارات متتالية، وقد لا تُبلغ لأن الانكسار صارم.
+- **[دقيق]** للدوال المحدبة، الخطوات السيئة فترة تنتهي عند 2: إذا وقعت الانكسارات بالخطوة h على f فهي تقع بأي خطوة
+  h′ > h على (h/h′)f، وهي دالة 1-ملساء محدبة يزور فيها الانحدار التدريجي النقاط نفسها. فالفترات مبرهنة:
+  h₂ ∈ [1.8634، 1.8635] وh₃ ∈ [1.9، 1.9001]، وكذلك h₄ وh₅ وh₆، والعتبات تتزايد تمامًا حتى n = 6. ولا تمتد الحجة
+  إلى الدوال قوية التحدب، لأن (h/h′)f أقل تحدبًا من المطلوب.
 - **[دقيق]** الاستحالة شهادة كسرية تصح لكل دالة محدبة L-ملساء في أي فضاء ضرب داخلي. والإمكان مثال مضاد ببيانات
   كسرية، يتحول إلى دالة فعلية بمبرهنة الاستيفاء لـ Taylor وHendrickx وGlineur (2017).
 - **[Lean]** ست مبرهنات (عند 9/5 و1.8634 لانكسارين، وعند 19/10 لثلاثة) تحققت منها نواة Lean مع Mathlib، ولا
@@ -453,8 +462,8 @@ repository; only its summary above records it.
   ومع μ = 0 تصبح القيمة القصوى h²(4h − 7) / (2(2 + h²)) للدوال المحدبة. كانت هذه القيمة حدسية مستخلصة من
   تطابق عددي حتى 1.6 × 10⁻⁷ في 20 نقطة.
 
-**ما بقي مفتوحاً:** برهان أن مجموعة الخطوات السيئة فترة لانكسارين متتاليين فأكثر، وصيغة مغلقة لـ h₂ وما بعدها،
-وصياغة برهانَي العتبة h₁(κ) والقيمة الأسوأ في Lean، وطرق أخرى مثل Heavy Ball وNesterov.
+**ما بقي مفتوحاً:** برهان أن مجموعة الخطوات السيئة فترة لانكسارين متتاليين فأكثر في الدوال قوية التحدب، وصيغة
+مغلقة لـ h₂ وما بعدها، وصياغة برهانَي العتبة h₁(κ) والقيمة الأسوأ في Lean، وطرق أخرى مثل Heavy Ball وNesterov.
 
 ## Citation and license
 

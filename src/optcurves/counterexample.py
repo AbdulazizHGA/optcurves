@@ -33,7 +33,9 @@ def trajectory(h, x0, grads):
 
 
 def check_exact(ce):
-    """Exact check of (i) and (ii). Returns (ok, min interpolation slack, violations) as Fractions."""
+    """Exact check of (i) and (ii). Returns (ok, min interpolation slack, violations) as Fractions.
+    A record whose sizes disagree (gradients of another dimension than x_0, len(g) != len(f), "n" or "dim" not
+    matching the data) is not a counterexample of any size and raises ValueError, as does mu outside [0, 1)."""
     h = F(ce["h"])
     mu = F(ce.get("mu", "0"))
     if not 0 <= mu < 1:
@@ -42,6 +44,11 @@ def check_exact(ce):
     g = [[F(a) for a in gk] for gk in ce["g"]]
     f = [F(a) for a in ce["f"]]
     d = len(x0)
+    n = len(f) - 2
+    if not (h > 0 and d >= 1 and n >= 1 and len(g) == len(f) and all(len(gk) == d for gk in g)
+            and ce.get("n", n) == n and ce.get("dim", d) == d):
+        raise ValueError(f"malformed counterexample: dim {d}, {len(g)} gradients of dimensions "
+                         f"{sorted({len(gk) for gk in g})}, {len(f)} values, n = {ce.get('n')}, h = {h}")
     pts = {"s": ([F(0)] * d, [F(0)] * d, F(0))}
     for k, xk in enumerate(trajectory(h, x0, g)):
         pts[k] = (xk, g[k], f[k])
