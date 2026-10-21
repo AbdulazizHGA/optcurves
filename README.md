@@ -112,14 +112,15 @@ All six declarations depend only on `[propext, Classical.choice, Quot.sound]`.
   standard axioms), plus [scripts/check_axioms.py](scripts/check_axioms.py), which checks every `#print axioms`
   line. Also checked on live.lean-lang.org (19 Oct 2026).
 
-### 3. A picture of two consecutive violations `[exact]`
+### 3. A picture of two consecutive violations (data `[exact]`, contours `[numerical]`)
 
 A 1-smooth convex f: ℝ² → ℝ with minimizer x* = 0 on which gradient descent with h = 19/10 breaks convexity at
 steps 1 and 2 (v₁ = 0.00513, v₂ = 0.00643, exact rationals in
-[counterexamples/n2_h19_10_d2.json](counterexamples/n2_h19_10_d2.json)). The contours are those of the largest
-1-smooth convex interpolant of the data. Its dual formula is a small quadratic program over a simplex, solved exactly
-(up to rounding) face by face at each grid point; the tests check its optimality conditions on the whole plotting
-grid. It reproduces the stored values.
+[counterexamples/n2_h19_10_d2.json](counterexamples/n2_h19_10_d2.json)). The data and their two violations are exact
+rationals; the contours only illustrate them and are computed in floating point. They are those of the largest
+1-smooth convex interpolant of the data: at each grid point its dual formula, a small quadratic program over a
+simplex, is solved face by face, and the tests check the optimality (KKT) conditions on the whole plotting grid to
+10⁻¹⁰ (the largest residual is below 10⁻¹⁴) and the stored values to 10⁻¹².
 
 ![Two-dimensional counterexample at h = 19/10](figures/counterexample_2d.png)
 
@@ -134,7 +135,9 @@ its best margins, 4 × 10⁻¹⁴ and 2 × 10⁻¹⁴, are at the rounding level
 ### 4. Strongly convex functions: the exact threshold and worst case for one violation `[exact]`, PEP thresholds `[numerical]`
 
 For L-smooth μ-strongly convex f (κ = L/μ), the threshold for n consecutive violations, PEP with ‖x₀ − x*‖ ≤ 1
-`[numerical]`, next to the exact h₁(κ) of the theorem below:
+`[numerical]`, next to the exact h₁(κ) of the theorem below. For n ≥ 2 the bisection assumes that the step sizes
+with n consecutive violations form an interval. Section 1 proves this for convex f; for μ > 0 it is unproved,
+because the rescaling used there lowers the strong convexity.
 
 | κ | h₁(κ) | h₂(κ) | h₃(κ) | exact h₁(κ) (theorem) |
 |---|---|---|---|---|
