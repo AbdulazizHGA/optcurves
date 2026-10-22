@@ -38,7 +38,10 @@ def trajectory(h, x0, grads):
 def _require_types(ce):
     """Exact field types, else ValueError: "n" and "dim" (when present) are int, not bool (a subclass of int, so
     {"n": true} passed as n = 1) and not float; "x0", "f" and the gradients in "g" are lists; every rational ("h",
-    "mu", the coordinates and values) is a string such as "19/10"."""
+    "mu", the coordinates and values) is a string such as "19/10". The record itself must be a JSON object (dict):
+    None or a number raised TypeError, and a list or a string was rejected only for a missing field."""
+    if not isinstance(ce, dict):
+        raise ValueError(f"malformed counterexample: a record is a JSON object, not a {type(ce).__name__}")
     for key in ("h", "x0", "g", "f"):
         if key not in ce:
             raise ValueError(f"malformed counterexample: no field {key!r}")

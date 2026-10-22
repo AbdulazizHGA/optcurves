@@ -332,3 +332,23 @@ def test_counterexample_rational_must_be_a_string_and_fields_present():
     del ce["g"]
     with pytest.raises(ValueError, match="no field"):
         counterexample.check_exact(ce)
+
+
+# --- records that are not JSON objects ---
+
+@pytest.mark.parametrize("record", [None, 1, 1.5, True, [], ["h"], "x", "19/10"])
+def test_counterexample_record_must_be_an_object(record):
+    with pytest.raises(ValueError, match="JSON object"):
+        counterexample.check_exact(record)
+
+
+@pytest.mark.parametrize("record", [None, 1, True, [], "x"])
+def test_certificate_record_must_be_an_object(record):
+    assert certificate.verify_certificate(record) is False
+
+
+@pytest.mark.parametrize("content", ["null", "[1, 2]", "3", '"text"', '{"h": "9/5", "n": 2}'])
+def test_certificate_file_without_a_record_is_rejected(tmp_path, content):
+    path = tmp_path / "cert.json"
+    path.write_text(content)
+    assert certificate.verify(path) is False

@@ -2,13 +2,20 @@ cff-version: 1.2.0
 message: "If you use this software or its results, please cite it as below."
 title: "optcurves: consecutive convexity violations of gradient-descent optimization curves"
 abstract: >-
-  Performance-estimation study, exact rational certificates and counterexamples, and Lean-verified theorems on
-  when the optimization curve of gradient descent with constant step size can be concave at several consecutive
-  steps, for L-smooth convex and strongly convex functions. For one violation and L-smooth mu-strongly convex
-  functions, with step size h/L, kappa = L/mu and m = mu/L = 1/kappa, symbolic (SymPy-checked) proofs give the
-  exact threshold h_1(kappa) = (1 + kappa) - sqrt((1 + kappa)^2 - (7 kappa + 1)/2) (for 0 < h < 2, no f has a
-  violation exactly when h <= h_1(kappa)) and the exact worst-case violation above it,
-  L h^2 max(0, -q) / (2 (2 + h^2 (1 - m))) ||x_0 - x*||^2 with q = 2 m h^2 - 4 (1 + m) h + m + 7.
+  Performance-estimation (PEP) study, exact rational certificates and counterexamples, symbolic proofs and
+  selected Lean-verified theorems on when the optimization curve of gradient descent with constant step size h/L
+  can be concave at several consecutive steps, for L-smooth convex and strongly convex functions. For L-smooth
+  convex functions, exact certificates and counterexamples together with a rescaling argument bracket the
+  threshold h_n (the infimum of the step sizes with n consecutive violations) to within 1e-4 for n = 2 to 6, for
+  example h_2 in [1.8634, 1.8635] and h_3 in [1.9, 1.9001]. For one violation, symbolic proofs checked in SymPy
+  give, for every 0 < h < 2: the exact threshold for L-smooth mu-strongly convex functions with 0 < mu < L
+  (kappa = L/mu), h_1(kappa) = (1 + kappa) - sqrt((1 + kappa)^2 - (7 kappa + 1)/2), no such function having a
+  violation exactly when h <= h_1(kappa); and the exact worst case for 0 <= mu < L (for mu = 0, convex functions
+  with a minimizer), v_1 <= L h^2 max(0, -q) / (2 (2 + h^2 (1 - m))) ||x_0 - x*||^2 with m = mu/L and
+  q = 2 m h^2 - 4 (1 + m) h + m + 7, attained for every such h. The Lean theorems cover three exact certificates
+  (no two consecutive violations at h = 9/5 and h = 9317/5000, no three at h = 19/10) and take the interpolation
+  inequalities of smooth convex functions as hypotheses. The PEP thresholds for two or more consecutive
+  violations of strongly convex functions are numerical.
 type: software
 url: "https://github.com/AbdulazizHGA/optcurves"
 repository-code: "https://github.com/AbdulazizHGA/optcurves"

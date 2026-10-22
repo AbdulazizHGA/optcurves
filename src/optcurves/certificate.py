@@ -318,7 +318,11 @@ def verify_attained(cert):
 
 
 def verify(cert_file):
+    """Exact check of a stored certificate file. False for a file that does not hold a certificate record (a JSON
+    object with its sum of squares "sos"); such files raised AttributeError or TypeError before."""
     cert = json.loads(Path(cert_file).read_text())
+    if not isinstance(cert, dict) or "sos" not in cert:
+        return False
     stored = cert.pop("sos")
     if not (verify_certificate(cert) and cert["sos"] == stored):
         return False
