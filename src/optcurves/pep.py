@@ -30,8 +30,17 @@ SOLVER = "CLARABEL"
 FALLBACK = dict(solver="SCS", eps=1e-9, max_iters=200000)
 # "No violation" means PEP value <= TOL. Solver noise is ~1e-9 (Clarabel) / ~1e-12 (SCS).
 TOL = 1e-7
+# What each CVXPY status means here. A PEP of this repository is always feasible (the zero function, x_0 = x*) and
+# bounded (the normalisation), so a certified "infeasible" or "unbounded" means the model itself is wrong: an error.
+# The other non-optimal statuses are numerical trouble: the next solver is tried, and if none reaches "optimal" the
+# point is unresolved. Any status not listed is an error too, so that a new one cannot pass unnoticed.
+DECIDES = ("optimal",)
+UNRESOLVED = ("optimal_inaccurate", "user_limit", "infeasible_inaccurate", "unbounded_inaccurate", "solver error")
+MODEL_FAILURE = ("infeasible", "unbounded", "infeasible_or_unbounded")
 # Counts since the last reset_stats(): PEP solves, fallbacks to SCS, unresolved points.
 STATS = {"solves": 0, "fallbacks": 0, "unresolved": 0}
+# The solver statuses of the last evaluate(), e.g. "CLARABEL optimal_inaccurate, SCS optimal_inaccurate".
+LAST = {"status": ""}
 # Points of a bracket [lo, hi] tried in turn by one bisection step: lo + t (hi - lo).
 TRIES = (0.5, 0.25, 0.75)
 
@@ -42,32 +51,40 @@ def reset_stats():
 
 
 def _quiet_solve(pep, **options):
-    """pep.solve with the solvers' warnings (e.g. CVXPY's "solution may be inaccurate") silenced for this call only;
-    the status is checked by the caller instead."""
+    """pep.solve, silencing only CVXPY's "Solution may be inaccurate" warning (the status "optimal_inaccurate", which
+    _solve handles); any other warning is shown."""
     with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
+        warnings.filterwarnings("ignore", message="Solution may be inaccurate", category=UserWarning)
         return pep.solve(verbose=0, wrapper="cvxpy", **options)
 
 
+def _attempt(pep, options):
+    """(value, status) of one solver; the status is "solver error" when the solver raises."""
+    try:
+        value = _quiet_solve(pep, **options)
+        return value, pep.wrapper.prob.status
+    except SolverError:
+        return None, "solver error"
+
+
 def _solve(pep):
-    """(value, reliable); reliable is False when neither Clarabel nor the SCS fallback reaches status "optimal"."""
+    """(value, reliable): Clarabel, then the SCS fallback if Clarabel does not reach "optimal". reliable is False
+    when neither does (the point is unresolved; the value is SCS's, or None). Statuses are classified above; a model
+    failure or an unknown status raises RuntimeError. LAST["status"] records the statuses of this call."""
     STATS["solves"] += 1
-    try:
-        value = _quiet_solve(pep, solver=SOLVER)
-        if pep.wrapper.prob.status == "optimal":
+    trail = []
+    for k, options in enumerate(({"solver": SOLVER}, FALLBACK)):
+        STATS["fallbacks"] += k
+        value, status = _attempt(pep, options)
+        trail.append(f"{options['solver']} {status}")
+        LAST["status"] = ", ".join(trail)
+        if status in MODEL_FAILURE:
+            raise RuntimeError(f"PEP model failure ({LAST['status']}): this PEP is feasible and bounded by "
+                               "construction, so the model is wrong")
+        if status not in DECIDES + UNRESOLVED:
+            raise RuntimeError(f"unclassified solver status ({LAST['status']}); add it to pep.py")
+        if status in DECIDES:
             return value, True
-    except SolverError:
-        pass
-    STATS["fallbacks"] += 1
-    try:
-        value = _quiet_solve(pep, **FALLBACK)
-        status = pep.wrapper.prob.status
-    except SolverError:
-        value, status = None, "solver error"
-    if status == "optimal":
-        return value, True
-    if status not in ("optimal_inaccurate", "solver error"):
-        raise RuntimeError(f"PEP not solved (Clarabel, then SCS: {status})")
     STATS["unresolved"] += 1
     return value, False
 
@@ -102,8 +119,13 @@ def evaluate(h, n=1, mu=0.0, minimizer=True, L=1.0):
 
 
 def max_min_violation(h, n=1, mu=0.0, minimizer=True, L=1.0):
-    """The PEP value of evaluate(), whether reliable or not."""
-    return evaluate(h, n, mu, minimizer, L)[0]
+    """The PEP value of evaluate(), which must be reliable: raises RuntimeError when no solver reached status
+    "optimal", so that an undecided value cannot be used by mistake. Code that handles unresolved points
+    (study.py, side.py) calls evaluate() instead."""
+    value, reliable = evaluate(h, n, mu, minimizer, L)
+    if not reliable:
+        raise RuntimeError(f"PEP value at h = {h}, n = {n}, mu = {mu} is unresolved ({LAST['status']})")
+    return value
 
 
 def bisect_threshold(decide, lo, hi, width, tries=TRIES, max_steps=60):

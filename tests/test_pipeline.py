@@ -1,5 +1,7 @@
 """Failure handling of the pipeline: a target that cannot be regenerated must stop reproduce.sh, not leave the old
 file looking regenerated; a PEP point that no solver can decide must not decide a threshold."""
+import warnings
+
 import cvxpy as cp
 import pytest
 
@@ -101,3 +103,99 @@ def test_sdp_status_of_an_infeasible_problem():
     x = cp.Variable()
     name, status = sdp.solve(cp.Problem(cp.Minimize(x), [x >= 1, x <= 0]), 0, "test")
     assert name == "CLARABEL" and status not in sdp.USABLE
+
+
+# --- solver statuses (pep.py): decides / unresolved / model failure ---
+
+class _FakePep:
+    """Stand-in for a PEPit problem whose solves return given CVXPY statuses in turn."""
+    def __init__(self, statuses):
+        self.statuses, self.calls = list(statuses), []
+
+    def solve(self, verbose, wrapper, **options):
+        status = self.statuses.pop(0)
+        self.calls.append(options["solver"])
+        if status == "raise":
+            raise cp.error.SolverError("solver crashed")
+        self.wrapper = type("W", (), {"prob": type("P", (), {"status": status})()})()
+        return 0.25
+
+
+@pytest.mark.parametrize("statuses, reliable, calls", [
+    (["optimal"], True, ["CLARABEL"]),
+    (["optimal_inaccurate", "optimal"], True, ["CLARABEL", "SCS"]),
+    (["raise", "optimal"], True, ["CLARABEL", "SCS"]),
+    (["optimal_inaccurate", "optimal_inaccurate"], False, ["CLARABEL", "SCS"]),
+    (["user_limit", "infeasible_inaccurate"], False, ["CLARABEL", "SCS"]),
+    (["unbounded_inaccurate", "raise"], False, ["CLARABEL", "SCS"]),
+])
+def test_status_decides_or_leaves_unresolved(statuses, reliable, calls):
+    pep.reset_stats()
+    fake = _FakePep(statuses)
+    value, ok = pep._solve(fake)
+    assert ok is reliable and fake.calls == calls
+    assert pep.STATS == {"solves": 1, "fallbacks": len(calls) - 1, "unresolved": int(not reliable)}
+    assert pep.LAST["status"].startswith("CLARABEL ") and pep.LAST["status"].count(",") == len(calls) - 1
+
+
+@pytest.mark.parametrize("statuses", [["infeasible"], ["unbounded"], ["optimal_inaccurate", "infeasible"],
+                                      ["optimal_inaccurate", "infeasible_or_unbounded"]])
+def test_certified_infeasible_or_unbounded_is_a_model_failure(statuses):
+    with pytest.raises(RuntimeError, match="model failure"):
+        pep._solve(_FakePep(statuses))
+
+
+def test_unknown_status_is_an_error():
+    with pytest.raises(RuntimeError, match="unclassified"):
+        pep._solve(_FakePep(["optimal_inaccurate", "some new status"]))
+
+
+def test_max_min_violation_refuses_an_unresolved_value(monkeypatch):
+    monkeypatch.setattr(pep, "_solve", lambda problem: (0.0, False))
+    assert pep.evaluate(1.9, 2) == (0.0, False)  # evaluate reports it ...
+    with pytest.raises(RuntimeError, match="unresolved"):
+        pep.max_min_violation(1.9, 2)  # ... the shortcut refuses it
+    monkeypatch.setattr(pep, "_solve", lambda problem: (0.25, True))
+    assert pep.max_min_violation(1.9, 2) == 0.25
+
+
+def test_threshold_stores_the_statuses_of_unresolved_points(monkeypatch):
+    fake = _fake_evaluate(1.99, lambda h: h > 1.9992)
+
+    def evaluate(*args, **kwargs):
+        pep.LAST["status"] = "CLARABEL optimal_inaccurate, SCS optimal_inaccurate"
+        return fake(*args, **kwargs)
+    monkeypatch.setattr(pep, "evaluate", evaluate)
+    t = study._threshold(3, mu=20 / 21)
+    assert t["unresolved_at"] == [study.H_MAX, 1.9995]
+    assert t["unresolved_status"] == ["CLARABEL optimal_inaccurate, SCS optimal_inaccurate"] * 2
+
+
+# --- warnings: only CVXPY's "Solution may be inaccurate" is silenced ---
+
+def _warn_both():
+    warnings.warn("Solution may be inaccurate. Try another solver.", UserWarning)
+    warnings.warn("some other warning", DeprecationWarning)
+
+
+def test_pep_solve_shows_other_warnings():
+    class Warns(_FakePep):
+        def solve(self, verbose, wrapper, **options):
+            _warn_both()
+            return super().solve(verbose, wrapper, **options)
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        pep._quiet_solve(Warns(["optimal"]), solver="CLARABEL")
+    assert [str(w.message) for w in caught] == ["some other warning"]
+
+
+def test_sdp_solve_shows_other_warnings():
+    class Problem:
+        status = "optimal"
+
+        def solve(self, solver, **options):
+            _warn_both()
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        assert sdp.solve(Problem(), 0, "test") == ("CLARABEL", "optimal")
+    assert [str(w.message) for w in caught] == ["some other warning"]

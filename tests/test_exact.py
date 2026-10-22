@@ -290,3 +290,45 @@ def test_sdp_status_recorded():
                for r in from_sdp)
     inaccurate = [(r["h"], r["n"], r.get("mu")) for r in from_sdp if r["sdp_status"] != "optimal"]
     assert inaccurate == [("1999/1000", 3, "20/21")]
+
+
+# --- exact field types (bool is a subclass of int; a float equals an int) ---
+
+@pytest.mark.parametrize("field, value", [("n", True), ("N", 3.0), ("n", 2.0), ("h", 1.8), ("w", "81/124"),
+                                          ("lam", [])])
+def test_certificate_fields_need_exact_types(field, value):
+    path = "n1_h1799_1000_mu5_7.json" if (field, value) == ("n", True) else "n2_h9_5.json"
+    cert = json.loads((ROOT / "certificates" / path).read_text())
+    cert.pop("sos")
+    assert certificate.verify_certificate(json.loads(json.dumps(cert)))  # the record itself is valid
+    cert[field] = value
+    assert certificate.verify_certificate(cert) is False  # rejected, not accepted and not a TypeError
+
+
+def test_certificate_rational_must_be_a_string():
+    cert = json.loads((ROOT / "certificates" / "n2_h9_5.json").read_text())
+    cert.pop("sos")
+    key = next(iter(cert["lam"]))
+    cert["lam"][key] = float(Fraction(cert["lam"][key]))
+    assert certificate.verify_certificate(cert) is False
+
+
+@pytest.mark.parametrize("field, value", [("n", True), ("dim", True), ("dim", 1.0), ("h", 1.801),
+                                          ("x0", "8967/9529")])
+def test_counterexample_fields_need_exact_types(field, value):
+    ce = json.loads((ROOT / "counterexamples" / "n1_h1801_1000_mu5_7_d1.json").read_text())
+    assert counterexample.check_exact(ce)[0]
+    ce[field] = value
+    with pytest.raises(ValueError, match="malformed"):
+        counterexample.check_exact(ce)
+
+
+def test_counterexample_rational_must_be_a_string_and_fields_present():
+    ce = json.loads((ROOT / "counterexamples" / "n1_h1801_1000_mu5_7_d1.json").read_text())
+    bad = json.loads(json.dumps(ce))
+    bad["f"][0] = 0.44
+    with pytest.raises(ValueError, match="string"):
+        counterexample.check_exact(bad)
+    del ce["g"]
+    with pytest.raises(ValueError, match="no field"):
+        counterexample.check_exact(ce)

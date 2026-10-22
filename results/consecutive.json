@@ -17,7 +17,24 @@
    "eps": 1e-09,
    "max_iters": 200000
   },
-  "unresolved": "point where neither the solver nor the fallback reaches status optimal; it decides nothing",
+  "unresolved": "point where neither the solver nor the fallback reaches status optimal; it decides nothing (statuses in unresolved_status; classification in pep.py)",
+  "status_classes": {
+   "decides": [
+    "optimal"
+   ],
+   "unresolved": [
+    "optimal_inaccurate",
+    "user_limit",
+    "infeasible_inaccurate",
+    "unbounded_inaccurate",
+    "solver error"
+   ],
+   "model_failure (error)": [
+    "infeasible",
+    "unbounded",
+    "infeasible_or_unbounded"
+   ]
+  },
   "violation_tol": 1e-07,
   "bisection": {
    "interval": [
@@ -53,7 +70,8 @@
     "solves": 25,
     "fallbacks": 0,
     "unresolved": 0,
-    "unresolved_at": []
+    "unresolved_at": [],
+    "unresolved_status": []
    },
    "2": {
     "lo": 1.8634462197363382,
@@ -64,7 +82,8 @@
     "solves": 25,
     "fallbacks": 0,
     "unresolved": 0,
-    "unresolved_at": []
+    "unresolved_at": [],
+    "unresolved_status": []
    },
    "3": {
     "lo": 1.9000515271008016,
@@ -75,7 +94,8 @@
     "solves": 25,
     "fallbacks": 0,
     "unresolved": 0,
-    "unresolved_at": []
+    "unresolved_at": [],
+    "unresolved_status": []
    },
    "4": {
     "lo": 1.9196024099767208,
@@ -86,7 +106,8 @@
     "solves": 25,
     "fallbacks": 0,
     "unresolved": 0,
-    "unresolved_at": []
+    "unresolved_at": [],
+    "unresolved_status": []
    },
    "5": {
     "lo": 1.9322236423492436,
@@ -97,7 +118,8 @@
     "solves": 25,
     "fallbacks": 0,
     "unresolved": 0,
-    "unresolved_at": []
+    "unresolved_at": [],
+    "unresolved_status": []
    },
    "6": {
     "lo": 1.9411975616514687,
@@ -108,7 +130,8 @@
     "solves": 25,
     "fallbacks": 0,
     "unresolved": 0,
-    "unresolved_at": []
+    "unresolved_at": [],
+    "unresolved_status": []
    }
   },
   "convex_all": {
@@ -121,7 +144,8 @@
     "solves": 25,
     "fallbacks": 0,
     "unresolved": 0,
-    "unresolved_at": []
+    "unresolved_at": [],
+    "unresolved_status": []
    },
    "2": {
     "lo": 1.863428669679165,
@@ -132,7 +156,8 @@
     "solves": 25,
     "fallbacks": 0,
     "unresolved": 0,
-    "unresolved_at": []
+    "unresolved_at": [],
+    "unresolved_status": []
    },
    "3": {
     "lo": 1.9000325766146182,
@@ -143,7 +168,8 @@
     "solves": 25,
     "fallbacks": 0,
     "unresolved": 0,
-    "unresolved_at": []
+    "unresolved_at": [],
+    "unresolved_status": []
    },
    "4": {
     "lo": 1.9195791986107829,
@@ -154,7 +180,8 @@
     "solves": 25,
     "fallbacks": 0,
     "unresolved": 0,
-    "unresolved_at": []
+    "unresolved_at": [],
+    "unresolved_status": []
    },
    "5": {
     "lo": 1.9321994477033617,
@@ -165,7 +192,8 @@
     "solves": 25,
     "fallbacks": 1,
     "unresolved": 0,
-    "unresolved_at": []
+    "unresolved_at": [],
+    "unresolved_status": []
    },
    "6": {
     "lo": 1.941172145354748,
@@ -176,7 +204,8 @@
     "solves": 25,
     "fallbacks": 0,
     "unresolved": 0,
-    "unresolved_at": []
+    "unresolved_at": [],
+    "unresolved_status": []
    }
   }
  },

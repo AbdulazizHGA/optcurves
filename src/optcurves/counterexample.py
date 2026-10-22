@@ -35,10 +35,30 @@ def trajectory(h, x0, grads):
     return xs
 
 
+def _require_types(ce):
+    """Exact field types, else ValueError: "n" and "dim" (when present) are int, not bool (a subclass of int, so
+    {"n": true} passed as n = 1) and not float; "x0", "f" and the gradients in "g" are lists; every rational ("h",
+    "mu", the coordinates and values) is a string such as "19/10"."""
+    for key in ("h", "x0", "g", "f"):
+        if key not in ce:
+            raise ValueError(f"malformed counterexample: no field {key!r}")
+    for key in ("n", "dim"):
+        if key in ce and type(ce[key]) is not int:
+            raise ValueError(f"malformed counterexample: {key} is a {type(ce[key]).__name__}, not an int")
+    lists = [ce["x0"], ce["f"], ce["g"], *ce["g"]] if isinstance(ce["g"], list) else [ce["g"]]
+    if not all(isinstance(v, list) for v in lists):
+        raise ValueError("malformed counterexample: x0, f, g and each gradient must be lists")
+    rationals = [ce["h"], ce.get("mu", "0"), *ce["x0"], *ce["f"], *(a for gk in ce["g"] for a in gk)]
+    if not all(isinstance(a, str) for a in rationals):
+        raise ValueError('malformed counterexample: every rational must be a string such as "19/10"')
+
+
 def check_exact(ce):
     """Exact check of (i) and (ii). Returns (ok, min interpolation slack, violations) as Fractions.
     A record whose sizes disagree (gradients of another dimension than x_0, len(g) != len(f), "n" or "dim" not
-    matching the data) is not a counterexample of any size and raises ValueError, as does mu outside [0, 1)."""
+    matching the data) is not a counterexample of any size and raises ValueError, as does mu outside [0, 1) or a field
+    of the wrong type (see _require_types)."""
+    _require_types(ce)
     h = F(ce["h"])
     mu = F(ce.get("mu", "0"))
     if not 0 <= mu < 1:

@@ -188,3 +188,20 @@ def test_h1_closed_form_is_stable():
     for kappa in [1e8, 1e17, 1e200, 1e300, 1e308, sys.float_info.max]:  # 7 kappa overflowed to NaN at 1e308
         assert 1.75 <= figures.h1_closed_form(kappa) < 1.75 + 1e-6  # h_1 - 7/4 ~ 1 / (32 kappa)
     assert figures.h1_closed_form(math.inf) == 1.75
+
+
+def test_strong_trends_stated_in_the_readme():
+    """README section 4: "Every bracket we computed lies above its convex counterpart and decreases in kappa". For
+    n = 1, 2, 3 and every record (None, no violation up to H_MAX, counts as h_n >= H_MAX): its lower end is at least
+    that of mu = 0, the lower ends do not increase with kappa, and the brackets admit a threshold that does not
+    increase with kappa (no lower end at a larger kappa lies above the upper end at a smaller one)."""
+    from optcurves import study
+    rows = json.loads((ROOT / "results" / "strong.json").read_text())["rows"]
+    convex = next(r for r in rows if r["kappa"] == "inf")
+    finite = sorted((r for r in rows if r["kappa"] != "inf"), key=lambda r: r["kappa"])
+    for n in (1, 2, 3):
+        lo = [study.H_MAX if r[f"h{n}"] is None else r[f"h{n}"]["lo"] for r in finite]
+        hi = [math.inf if r[f"h{n}"] is None or r[f"h{n}"]["hi"] is None else r[f"h{n}"]["hi"] for r in finite]
+        assert all(v >= convex[f"h{n}"]["lo"] for v in lo), n
+        assert all(a >= b for a, b in zip(lo, lo[1:])), n
+        assert all(max(lo[i + 1:], default=-math.inf) <= hi[i] for i in range(len(finite))), n

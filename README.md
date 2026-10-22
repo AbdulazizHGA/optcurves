@@ -152,7 +152,7 @@ because the rescaling used there lowers the strong convexity.
 Every bracket we computed lies above its convex counterpart and decreases in κ (for n = 1 this is part 4 of the
 theorem). Of the 2337 solves behind [results/strong.json](results/strong.json), 179 fell back to SCS (in 36 of the
 93 thresholds, all with κ ≤ 6), and 52 points, in 18 thresholds with κ ≤ 3, stayed unresolved; each threshold stores
-these counts and the unresolved points. Five brackets are left open: h₁ at κ = 1.5 and 2 and h₃ at κ = 3 (widths
+these counts, the unresolved points and the solver statuses that left each one unresolved. Five brackets are left open: h₁ at κ = 1.5 and 2 and h₃ at κ = 3 (widths
 9.5 × 10⁻⁷, 6.7 × 10⁻⁸ and 4.5 × 10⁻⁸), and h₂ and h₃ at κ = 1.05 (below). Since h₁(κ) is proved, it measures the
 pipeline: the 29 full-width brackets of h₁(κ) lie 5.4 × 10⁻⁸ to 2.5 × 10⁻⁷ above the exact value (PEP values
 ≤ 10⁻⁷ count as no violation), and the two open ones are within 7.3 × 10⁻⁷ of it. (An earlier version used the
@@ -303,6 +303,9 @@ definite Gram part. Above 9/5 the max-slack SDP optimum has numerical rank 1, wi
 
 ![Thresholds against the condition number](figures/strong_threshold.png)
 
+A hollow marker is a threshold whose search stopped at unresolved points (the five open brackets above), however
+narrow its bracket; a filled one reached full width.
+
 `python -m optcurves.study strong && python -m optcurves.figures`
 
 ## Method
@@ -331,9 +334,14 @@ definite Gram part. Above 9/5 the max-slack SDP optimum has numerical rank 1, wi
    the worst case above it: multipliers, Gram matrices and extremal data in closed form in (h, μ), every identity
    checked by SymPy polynomial arithmetic.
 
-The PEP layer is cross-checked against the two hand-built SDPs in the tests. Every PEP value records whether a
-solver reached status "optimal"; an unresolved point decides no threshold and would be drawn as a gap in the first
-figure (none is). The solutions of the hand-built SDPs (items 2 and 3) are only candidates for the exact check
+The PEP layer is cross-checked against the two hand-built SDPs in the tests. Every PEP solve is classified by its
+CVXPY status ([src/optcurves/pep.py](src/optcurves/pep.py)): "optimal" decides; "optimal_inaccurate", "user_limit",
+the inaccurate infeasible and unbounded statuses and a solver error leave the point unresolved once both Clarabel and
+SCS have tried, and each threshold stores those points with their statuses (`unresolved_status`); a certified
+"infeasible" or "unbounded" stops the run, since every PEP here is feasible and bounded by construction. An unresolved
+point decides no threshold, would be a gap in the first figure (none is), and is refused by `pep.max_min_violation`,
+the shortcut the tests use. During a solve only CVXPY's "Solution may be inaccurate" warning is silenced (that status
+is handled); any other warning is shown. The solutions of the hand-built SDPs (items 2 and 3) are only candidates for the exact check
 ([src/optcurves/sdp.py](src/optcurves/sdp.py)): Clarabel first, SCS if Clarabel gives no candidate or its candidate
 fails the exact check, and a clear failure if neither gives one. Each record stores the solver and its status. All
 are "optimal" except the three violations at κ = 1.05, where Clarabel stops "optimal_inaccurate" and its rounded data
@@ -386,10 +394,13 @@ that tampering breaks them, that the exact brackets have width ≤ 10⁻⁴ (≤
 thresholds, that both ends of every PEP bracket were decided by solves that reached "optimal" (with no jump across a
 full-width bracket), every step of the two proofs in section 4 with exact instances on both sides of h₁(κ), the
 rescaling of every convex counterexample to larger steps, the optimality conditions of the contour values on the
-plotting grid, the side experiments, that malformed certificate and counterexample records are rejected, that every
-curve point of the first figure was solved to "optimal", that every SDP record stores its solver status (and that
-Clarabel failing falls back to SCS, and both failing gives no record), and that the Lean file matches the generator. If any certificate or counterexample cannot be regenerated, its generator exits with
-an error, so `reproduce.sh` stops instead of testing the old file.
+plotting grid, the side experiments, that malformed certificate and counterexample records (including fields of the
+wrong type, such as `"n": true` or `"N": 3.0`) are rejected, that every curve point of the first figure was solved to
+"optimal", how each solver status is classified, that the threshold figure draws exactly the open brackets as open,
+that the trends stated in section 4 hold on every bracket, that every SDP record stores its solver status (and that
+Clarabel failing falls back to SCS, and both failing gives no record), and that the Lean file matches the generator.
+If any certificate or counterexample cannot be regenerated, its generator exits with an error, so `reproduce.sh`
+stops instead of testing the old file.
 
 Lean (needs elan; downloads the Mathlib cache):
 

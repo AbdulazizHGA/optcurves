@@ -235,7 +235,15 @@ def _well_formed(cert):
     values was never tested."""
     try:
         n, N = cert["n"], cert["N"]
-        if not (isinstance(n, int) and n >= 1 and N == n + 1 and len(cert["w"]) == n and sp.Rational(cert["h"]) > 0):
+        # Exact types: bool is a subclass of int ({"n": true} passed as n = 1) and a float N = 3.0 equalled 3, then
+        # failed later with a TypeError. Every rational is a string such as "9/5".
+        if (type(n) is not int or type(N) is not int or not isinstance(cert["w"], list)
+                or not isinstance(cert["lam"], dict) or not isinstance(cert.get("kernel", []), list)):
+            return False
+        rationals = [cert["h"], cert.get("mu", "0"), *cert["w"], *cert["lam"].values(), *cert.get("kernel", [])]
+        if not all(isinstance(a, str) for a in rationals):
+            return False
+        if not (n >= 1 and N == n + 1 and len(cert["w"]) == n and sp.Rational(cert["h"]) > 0):
             return False
         for p, q in multipliers(cert):
             if p == q or not (0 <= p <= N and 0 <= q <= N):

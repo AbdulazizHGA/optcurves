@@ -52,6 +52,19 @@ def curve_xy(pts):
     return xs, ys
 
 
+def threshold_kind(t):
+    """How a threshold record of study._threshold is drawn, from its own fields (not from the bracket's width):
+    None: no record (no violation up to H_MAX) or nothing decided (hi None at lo = 1.5), not drawn;
+    "resolved": the bracket reached full width, a filled marker;
+    "open": both ends decided but the bracket stopped early at unresolved points, a hollow marker and the bracket;
+    "lower_only": no upper end could be decided, a hollow marker at lo and an arrow upwards."""
+    if t is None or (t["hi"] is None and t["lo"] <= 1.5):
+        return None
+    if t["hi"] is None:
+        return "lower_only"
+    return "resolved" if t["resolved"] else "open"
+
+
 def consecutive(plt):
     cons = json.loads((RESULTS / "consecutive.json").read_text())
     fig, ax = plt.subplots(figsize=(7, 4.4), dpi=150)
@@ -59,10 +72,14 @@ def consecutive(plt):
         pts = cons["curves"][str(n)]
         ax.plot(*curve_xy(pts), color=COLORS[n], linewidth=1.6, marker="o", markersize=2.2,
                 label="1 violation" if n == 1 else f"{n} consecutive violations")
-        t = cons["thresholds"]["convex_with_minimizer"][str(n)]["lo"]
+        record = cons["thresholds"]["convex_with_minimizer"][str(n)]
+        kind = threshold_kind(record)
+        if kind is None:
+            continue  # no violation up to H_MAX, or nothing decided: no threshold line
+        t = record["lo"]
         ax.axvline(t, color=COLORS[n], linewidth=1, linestyle=":")
-        ax.text(t - 0.003, 0.97, f"h$_{n}$ ≈ {t:.4f}", transform=ax.get_xaxis_transform(), rotation=90,
-                va="top", ha="right", color=INK, fontsize=8)
+        ax.text(t - 0.003, 0.97, f"h$_{n}$ {'≈' if kind == 'resolved' else '≥'} {t:.4f}",
+                transform=ax.get_xaxis_transform(), rotation=90, va="top", ha="right", color=INK, fontsize=8)
     ax.set_xlabel("step size h (units of 1/L)", color=INK, fontsize=9)
     ax.set_ylabel("worst case of min(v$_1$, …, v$_n$),  ‖x$_0$ − x*‖ ≤ 1", color=INK, fontsize=9)
     ax.set_title("Consecutive convexity violations of the GD curve, L-smooth convex f (PEP)",
@@ -86,25 +103,23 @@ def strong(plt):
     ax.plot(ks, [h1_closed_form(k) for k in ks], color=INK, linewidth=1, linestyle="--",
             label="h$_1$(κ), exact (theorem)")
     for n in (1, 2, 3):
-        recs = [(r["kappa"], r[f"h{n}"]) for r in finite if r[f"h{n}"] and r[f"h{n}"]["hi"] is not None]
-        # a bracket that points no solver could decide left wider than 1e-5 is drawn whole; narrower ones are points
-        wide = lambda t: t["hi"] - t["lo"] > 1e-5
-        pts = [(k, t["lo"]) for k, t in recs if not wide(t)]
-        ax.plot([p[0] for p in pts], [p[1] for p in pts], color=COLORS[n], linewidth=0, marker=MARKERS[n],
-                markersize=5, label=f"h$_{n}$(κ), PEP")
-        for i, (k, t) in enumerate((k, t) for k, t in recs if wide(t)):
+        recs = {kind: [(r["kappa"], r[f"h{n}"]) for r in finite if threshold_kind(r[f"h{n}"]) == kind]
+                for kind in ("resolved", "open", "lower_only")}
+        ax.plot([k for k, _ in recs["resolved"]], [t["lo"] for _, t in recs["resolved"]], color=COLORS[n],
+                linewidth=0, marker=MARKERS[n], markersize=5, label=f"h$_{n}$(κ), PEP")
+        # stopped early at unresolved points (even when narrow): the bracket and a hollow marker at lo
+        for i, (k, t) in enumerate(recs["open"]):
             ax.plot([k, k], [t["lo"], t["hi"]], color=COLORS[n], linewidth=2, solid_capstyle="butt")
             ax.plot([k], [t["lo"]], color=COLORS[n], linewidth=0, marker=MARKERS[n], markersize=5,
                     markerfacecolor="white", label=None if i else f"h$_{n}$(κ), PEP bracket left open")
         # no upper end could be decided (only "no violation at lo"): a hollow marker at lo and an arrow upwards
-        lower_only = [(r["kappa"], r[f"h{n}"]) for r in finite
-                      if r[f"h{n}"] and r[f"h{n}"]["hi"] is None and r[f"h{n}"]["lo"] > 1.5]
-        for i, (k, t) in enumerate(lower_only):
+        for i, (k, t) in enumerate(recs["lower_only"]):
             ax.annotate("", xy=(k, min(t["lo"] + 0.012, 2.003)), xytext=(k, t["lo"]),
                         arrowprops=dict(arrowstyle="->", color=COLORS[n], lw=1.2))
             ax.plot([k], [t["lo"]], color=COLORS[n], linewidth=0, marker=MARKERS[n], markersize=5,
                     markerfacecolor="white", label=None if i else f"h$_{n}$(κ), PEP: lower end only")
-        ax.axhline(inf_row[f"h{n}"]["lo"], color=COLORS[n], linewidth=1, linestyle=":")
+        if threshold_kind(inf_row[f"h{n}"]) is not None:
+            ax.axhline(inf_row[f"h{n}"]["lo"], color=COLORS[n], linewidth=1, linestyle=":")
     exact = [json.loads(p.read_text()) for p in sorted((ROOT / "counterexamples").glob("*.json"))
              if not p.name.startswith("._")]
     exact = [c for c in exact if "mu" in c and c["n"] > 1]

@@ -58,3 +58,46 @@ def test_curve_points_are_reliable():
 def test_unreliable_curve_point_is_a_gap():
     xs, ys = figures.curve_xy([[1.8, 0.06, True], [1.85, 0.12, False], [1.9, -1e-9, True]])
     assert xs == [1.8, 1.85, 1.9] and ys[0] == 0.06 and math.isnan(ys[1]) and ys[2] == 0.0
+
+
+# --- threshold figures: the marker follows the record's "resolved" field, not the bracket's width ---
+
+def _t(lo, hi, resolved):
+    return {"lo": lo, "hi": hi, "resolved": resolved}
+
+
+def test_threshold_kind():
+    assert figures.threshold_kind(None) is None                        # no violation up to H_MAX
+    assert figures.threshold_kind(_t(1.5, None, False)) is None        # nothing decided
+    assert figures.threshold_kind(_t(1.99, None, False)) == "lower_only"
+    assert figures.threshold_kind(_t(1.8, 1.8 + 3e-8, True)) == "resolved"
+    assert figures.threshold_kind(_t(1.8, 1.8 + 7e-8, False)) == "open"  # narrow, but stopped early: still open
+
+
+def test_published_threshold_markers():
+    """The brackets drawn open in figures/strong_threshold.png are exactly those the README calls open: h_1 at
+    kappa = 1.5 and 2, h_3 at kappa = 1.05 and 3 (bracket), h_2 at kappa = 1.05 (lower end only). The first three
+    are narrower than 1e-6 and were drawn as resolved points before."""
+    rows = json.loads((figures.RESULTS / "strong.json").read_text())["rows"]
+    kinds = {(r["kappa"], n): figures.threshold_kind(r[f"h{n}"]) for r in rows for n in (1, 2, 3)}
+    assert {key for key, kind in kinds.items() if kind not in ("resolved", None)} == {
+        (1.5, 1), (2, 1), (1.05, 3), (3, 3), (1.05, 2)}
+    assert kinds[(1.05, 2)] == "lower_only"
+    for r in rows:
+        for n in (1, 2, 3):
+            t = r[f"h{n}"]
+            assert t is None or (kinds[(r["kappa"], n)] == "resolved") == t["resolved"]
+
+
+def test_consecutive_figure_skips_a_missing_threshold(monkeypatch, tmp_path):
+    """study._threshold returns None when there is no violation up to H_MAX; the figure must not index it."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    cons = json.loads((figures.RESULTS / "consecutive.json").read_text())
+    cons["thresholds"]["convex_with_minimizer"]["3"] = None
+    (tmp_path / "consecutive.json").write_text(json.dumps(cons))
+    monkeypatch.setattr(figures, "RESULTS", tmp_path)
+    monkeypatch.setattr(figures, "FIGURES", tmp_path)
+    figures.consecutive(plt)
+    assert (tmp_path / "consecutive.png").exists()

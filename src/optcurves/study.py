@@ -38,7 +38,10 @@ def _meta():
         "sympy": version("sympy"),
         "solver": pep.SOLVER,
         "fallback": pep.FALLBACK,
-        "unresolved": "point where neither the solver nor the fallback reaches status optimal; it decides nothing",
+        "unresolved": "point where neither the solver nor the fallback reaches status optimal; it decides nothing "
+                      "(statuses in unresolved_status; classification in pep.py)",
+        "status_classes": {"decides": list(pep.DECIDES), "unresolved": list(pep.UNRESOLVED),
+                           "model_failure (error)": list(pep.MODEL_FAILURE)},
         "violation_tol": pep.TOL,
         "bisection": {"interval": [1.5, H_MAX], "upper_ends_tried": list(TOPS), "iterations": ITERS,
                       "bracket_width": WIDTH, "points_tried_per_step": list(pep.TRIES)},
@@ -52,15 +55,16 @@ def _threshold(n, mu=0.0, minimizer=True):
     one, both from solves that reached "optimal";
     lo = 1.5 needs no solve (v_1 <= 0 for h <= 7/4 by Barzilai, Shamir and Zamani, also for mu > 0).
     None: no violation at H_MAX. hi = None: no upper end could be decided (then lo is the largest top end without a
-    violation, or 1.5). resolved: the bracket reached the width WIDTH. The counts of pep.STATS and the points left
-    unresolved are stored with it."""
+    violation, or 1.5). resolved: the bracket reached the width WIDTH. The counts of pep.STATS, the points left
+    unresolved and, for each, the solver statuses that left it so (pep.LAST) are stored with it."""
     pep.reset_stats()
-    values, unresolved_at = {}, []
+    values, unresolved_at, unresolved_status = {}, [], []
 
     def decide(h):
         value, reliable = pep.evaluate(h, n, mu=mu, minimizer=minimizer)
         if not reliable:
             unresolved_at.append(h)
+            unresolved_status.append(pep.LAST["status"])
             return None
         values[h] = value
         return value > pep.TOL
@@ -77,7 +81,7 @@ def _threshold(n, mu=0.0, minimizer=True):
     elif answer is False:
         lo = top
     return {"lo": lo, "hi": hi, "value_at_lo": values.get(lo), "value_at_hi": values.get(hi),
-            "resolved": resolved, **pep.STATS, "unresolved_at": unresolved_at}
+            "resolved": resolved, **pep.STATS, "unresolved_at": unresolved_at, "unresolved_status": unresolved_status}
 
 
 def consecutive(n_max=6, grid=None):

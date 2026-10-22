@@ -21,12 +21,13 @@ USABLE = ("optimal", "optimal_inaccurate")
 
 def solve(problem, which, label):
     """Solve a cvxpy problem with SOLVERS[which]; returns (solver name, status). The status is "solver error"
-    when the solver raises. The solver's own warnings are silenced for this call: the status is reported instead."""
+    when the solver raises. Only CVXPY's "Solution may be inaccurate" warning is silenced (the status
+    "optimal_inaccurate", reported below instead); any other warning is shown."""
     from cvxpy.error import SolverError
     name, options = SOLVERS[which]
     try:
         with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
+            warnings.filterwarnings("ignore", message="Solution may be inaccurate", category=UserWarning)
             problem.solve(solver=name, **options)
         status = problem.status
     except SolverError:
