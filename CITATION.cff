@@ -15,8 +15,8 @@ repository-code: "https://github.com/AbdulazizHGA/optcurves"
 authors:
   - given-names: "Abdulaziz"
     email: abdulaziz787hlal@gmail.com
-version: 0.2.0
-date-released: 2026-10-20
+version: 0.3.0
+date-released: 2026-10-22
 license: Apache-2.0
 keywords:
   - gradient descent
