@@ -76,8 +76,8 @@ def test_threshold_kind():
 
 def test_published_threshold_markers():
     """The brackets drawn open in figures/strong_threshold.png are exactly those the README calls open: h_1 at
-    kappa = 1.5 and 2, h_3 at kappa = 1.05 and 3 (bracket), h_2 at kappa = 1.05 (lower end only). The first three
-    are narrower than 1e-6 and were drawn as resolved points before."""
+    kappa = 1.5 and 2, h_3 at kappa = 1.05 and 3 (bracket), h_2 at kappa = 1.05 (lower end only). Those of h_1 at
+    kappa = 1.5 and 2 and h_3 at kappa = 3 are narrower than 1e-6 and were drawn as resolved points before."""
     rows = json.loads((figures.RESULTS / "strong.json").read_text())["rows"]
     kinds = {(r["kappa"], n): figures.threshold_kind(r[f"h{n}"]) for r in rows for n in (1, 2, 3)}
     assert {key for key, kind in kinds.items() if kind not in ("resolved", None)} == {

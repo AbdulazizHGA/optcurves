@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "optcurves"
 version = "0.3.1"
-description = "Convexity of gradient-descent optimization curves: consecutive violations (PEP study, exact certificates, Lean proofs) and the exact one-violation threshold and worst case for strongly convex functions"
+description = "Convexity of gradient-descent optimization curves: consecutive violations (PEP study, exact certificates, selected Lean proofs) and the exact one-violation threshold and worst case for strongly convex functions"
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.11"

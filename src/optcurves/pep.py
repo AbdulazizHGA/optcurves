@@ -10,11 +10,11 @@ n consecutive steps of every trajectory. The value is > 0 (up to solver toleranc
 possible.
 
 Function classes (L = 1 without loss of generality: the problem is invariant under rescaling f):
-  * mu = 0, minimizer=True:  L-smooth convex f with a minimizer x*, normalised by ||x_0 - x*||^2 <= 1.
-  * mu = 0, minimizer=False: all L-smooth convex f, normalised by ||grad f(x_0)||^2 <= 1.
+  * mu = 0, minimizer=True:  L-smooth convex f with a minimizer x*, normalized by ||x_0 - x*||^2 <= 1.
+  * mu = 0, minimizer=False: all L-smooth convex f, normalized by ||grad f(x_0)||^2 <= 1.
   * mu > 0:                  L-smooth mu-strongly convex f, ||x_0 - x*||^2 <= 1 (a minimizer exists here because
                              PEPit works in R^d; on an incomplete inner-product space it need not).
-Both normalisations only fix the scale (v_k is 2-homogeneous), so the sign of the value is unaffected.
+Both normalizations only fix the scale (v_k is 2-homogeneous), so the sign of the value is unaffected.
 """
 import warnings
 
@@ -30,8 +30,9 @@ SOLVER = "CLARABEL"
 FALLBACK = dict(solver="SCS", eps=1e-9, max_iters=200000)
 # "No violation" means PEP value <= TOL. Solver noise is ~1e-9 (Clarabel) / ~1e-12 (SCS).
 TOL = 1e-7
-# What each CVXPY status means here. A PEP of this repository is always feasible (the zero function, x_0 = x*) and
-# bounded (the normalisation), so a certified "infeasible" or "unbounded" means the model itself is wrong: an error.
+# What each CVXPY status means here. A PEP of this repository is always feasible (every iterate at the minimizer with
+# zero gradients, e.g. for f = mu ||x - x*||^2 / 2) and bounded (the normalization), so a certified "infeasible" or
+# "unbounded" means the model itself is wrong: an error.
 # The other non-optimal statuses are numerical trouble: the next solver is tried, and if none reaches "optimal" the
 # point is unresolved. Any status not listed is an error too, so that a new one cannot pass unnoticed.
 DECIDES = ("optimal",)

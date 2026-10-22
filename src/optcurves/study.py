@@ -1,4 +1,4 @@
-"""Numerical study (PEP, PEPit + Clarabel). Writes results/*.json.
+"""Numerical study (PEP: PEPit with Clarabel, and SCS as a fallback). Writes results/*.json.
 
     python -m optcurves.study consecutive   # h_n for n = 1..6, both convex classes; curves for n = 1..3
     python -m optcurves.study strong        # h_n(kappa) for mu-strongly convex f, n = 1..3

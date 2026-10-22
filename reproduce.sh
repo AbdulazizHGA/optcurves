@@ -18,7 +18,7 @@ if [ -n "${PYTHON:-}" ]; then
     fi
     PY="$PYTHON"
 else
-    # Prefer the first candidate that also has the packages; else the first with a right version (for the message).
+    # Prefer the first candidate that also has the packages; else the first with a suitable version (for the message).
     PY="" FIRST_OK=""
     for candidate in $CANDIDATES; do
         if command -v "$candidate" >/dev/null 2>&1 && version_ok "$candidate"; then
@@ -36,7 +36,7 @@ else
     fi
 fi
 echo "reproduce.sh: using $PY ($("$PY" -V 2>&1))"
-# A right version can still lack the packages: say so before the first step fails on an import.
+# A suitable version can still lack the packages: say so before the first step fails on an import.
 if ! deps_ok "$PY"; then
     echo "reproduce.sh: $PY lacks the dependencies; install them with" >&2
     echo "  $PY -m pip install -r requirements-lock.txt && $PY -m pip install -e . --no-deps" >&2

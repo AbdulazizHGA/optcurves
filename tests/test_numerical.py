@@ -18,7 +18,7 @@ def _jsons(folder):
 
 
 @pytest.mark.parametrize("h, n, positive", [
-    (1.5, 1, False), (1.74, 1, False), (1.76, 1, True),    # Barzilai & Shamir: threshold 7/4
+    (1.5, 1, False), (1.74, 1, False), (1.76, 1, True),    # Barzilai, Shamir and Zamani: threshold 7/4
     (1.85, 2, False), (1.87, 2, True), (1.89, 3, False), (1.91, 3, True),
 ])
 def test_pep_signs(h, n, positive):
@@ -27,7 +27,7 @@ def test_pep_signs(h, n, positive):
         assert (v > 1e-4) if positive else (v <= pep.TOL)
 
 
-def test_pep_one_violation_matches_known_slope():
+def test_pep_one_violation_matches_worst_case():
     # Worst single violation past 7/4 is h^2 (4h - 7) / (2 (2 + h^2)) for ||x0 - x*|| <= 1 (worstcase.py, mu = 0):
     # 0.0618 at h = 1.8.
     assert abs(pep.max_min_violation(1.8, 1) - 0.0618) < 1e-3
@@ -35,7 +35,8 @@ def test_pep_one_violation_matches_known_slope():
 
 @pytest.mark.parametrize("h, n", [("9/5", 2), ("19/10", 3)])
 def test_independent_dual_sdp_agrees(h, n):
-    """Our hand-built dual SDP (certificate.py) is feasible exactly where PEPit says 'no violation'."""
+    """Our hand-built dual SDP (certificate.py) has a positive margin where PEPit says 'no violation': at h = 9/5
+    (n = 2) and h = 19/10 (n = 3)."""
     N, pairs, Q, A, b = certificate._system(h, n)
     _, margin = certificate._numeric(N, Q, A, b, len(pairs), n)
     assert margin > 0
@@ -43,7 +44,8 @@ def test_independent_dual_sdp_agrees(h, n):
 
 
 def test_independent_primal_sdp_agrees():
-    """Our hand-built primal SDP (counterexample.py) finds slack exactly where PEPit finds violations."""
+    """Our hand-built primal SDP (counterexample.py) finds positive slack where PEPit finds a violation: at h = 1.9,
+    n = 2."""
     _, _, t = counterexample._sdp(1.9, 2)
     assert t > 0 and pep.max_min_violation(1.9, 2) > 0.02
 

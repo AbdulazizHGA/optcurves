@@ -135,8 +135,9 @@ def strong(plt):
                  fontsize=10, color=INK)
     ax.legend(frameon=False, fontsize=8, loc="upper right")
     _axes(ax)
-    _footnote(fig, "n = 1: exact (proved closed form). n ≥ 2: numerical PEP brackets of the smallest step with n "
-                   "violations, assuming such steps form an interval (proved for μ = 0, not for μ > 0).")
+    _footnote(fig, "n = 1: exact (proved closed form). n ≥ 2: numerical PEP brackets of the threshold h$_n$ (the "
+                   "infimum of the steps with n consecutive violations), assuming these steps form an interval "
+                   "(proved for μ = 0, not for μ > 0).")
     fig.tight_layout(rect=(0, 0.05, 1, 1))
     fig.savefig(FIGURES / "strong_threshold.png")
     plt.close(fig)

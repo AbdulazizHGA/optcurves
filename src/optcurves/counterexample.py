@@ -182,7 +182,7 @@ def find(h, n, dim=None, mu="0", rank=None,
             ce["sdp_solver"], ce["sdp_status"] = _sdp.last
             return ce
         if which + 1 < len(sdp.SOLVERS):
-            reason = ("its slack is not positive" if found[2] <= 0 else "its candidate fails the exact check")
+            reason = ("gives no positive slack" if found[2] <= 0 else "gives a candidate that fails the exact check")
             print(f"  SDP {label}: {_sdp.last[0]} {reason}; trying {sdp.SOLVERS[which + 1][0]}",
                   file=sys.stderr, flush=True)
     return None

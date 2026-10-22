@@ -75,7 +75,7 @@ def test_counterexample_tampered_fails():
 
 
 def test_exact_brackets():
-    """For every n, an exact certificate at a and an exact counterexample at b > a, b - a <= 1e-4 (convex f)."""
+    """For n = 2..6, an exact certificate at a and an exact counterexample at b > a, b - a <= 1e-4 (convex f)."""
     certs = {}
     for p in CERTS:
         c = json.loads(p.read_text())

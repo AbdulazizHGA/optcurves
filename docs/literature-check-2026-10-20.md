@@ -85,8 +85,7 @@ case"` (53), `"convex optimization curves" strongly` (14), `"optimization curve"
 `repo:PerformanceEstimation/PEPit curve` (0), `repo:pepflow-lib/PEPFlow curve` (3, all about rate curves in
 plots); also the arXiv ids `"2503.10138"` and `"2509.08954"`. The hits are arXiv listing mirrors, copies of the
 GPT-5 report and corpus copies of Hieu's paper. Two further queries were refused by the rate limit and not rerun.
-PEPit
-(master, last pushed 21 May 2026; release 0.5.1): no example on optimization curves and no example beyond 0.5.1.
+PEPit (master, last pushed 21 May 2026; release 0.5.1): no example on optimization curves and no example beyond 0.5.1.
 PEPFlow (main, last pushed 28 Sep 2026): its examples (gradient descent, AGM, APPM, DRS, OGM, OGM-G, PGM, Lyapunov)
 verify convergence rates only.
 
@@ -98,4 +97,5 @@ a browser verification, which was not bypassed.
 ## Outcome
 
 Nothing found states the worst-case size of a curve violation, for convex or strongly convex f, or the threshold
-h₁(κ). The 18–19 October check left no log in this repository; only its summary in the README records it.
+h₁(κ). The 18–19 October check left no log in this repository; only its summary in the README records it. The API
+queries were rerun on 21 October with stored responses: [literature-check-2026-10-21.md](literature-check-2026-10-21.md).

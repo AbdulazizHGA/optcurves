@@ -56,7 +56,8 @@ def test_symbolic_gram_matches_certificate_code(hv, muv):
 
 def test_both_sides_at_random_rational_points():
     """Exact instances with the repo's own checkers: the certificate of (a) is valid iff q >= 0 (h <= h_1), and the
-    data of (b) satisfy all 12 interpolation inequalities, with v_1 = -h^2 q / (2D) > 0 iff q < 0."""
+    data of (b) satisfy all 12 interpolation inequalities (checked for h >= 1, where they are claimed), with
+    v_1 = -h^2 q / (2D) > 0 iff q < 0."""
     rng = random.Random(0)
     sides = {True: 0, False: 0}
     for _ in range(150):

@@ -16,5 +16,6 @@ for name, ax in found:
 if "error" in log.lower() or "sorry" in log.lower():
     sys.exit("Lean log contains an error or sorry")
 if len(found) != expected or bad:
-    sys.exit(f"expected {expected} theorems on {STANDARD}; found {len(found)}, non-standard: {bad}")
+    sys.exit(f"expected {expected} theorems depending only on {STANDARD}; found {len(found)} '#print axioms' "
+             f"lines, these with other axioms: {bad}")
 print(f"OK: {expected} theorems depend only on {STANDARD}")

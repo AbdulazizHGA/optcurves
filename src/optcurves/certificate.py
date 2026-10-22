@@ -22,7 +22,7 @@ mu = 0. Linear functions make every term zero with all g_a equal, which forces S
 impose it and certify instead that M = S[:n+1, :n+1] (the form in the coordinates c_a = g_a - g_{n+1}) is positive
 definite, by an exact LDL^T:
 
-    sum S_ab <g_a, g_b> = sum_k d_k || sum_a Lo_ka (g_a - g_{n+1}) ||^2,   d_k > 0.
+    sum S_ab <g_a, g_b> = sum_k d_k || sum_a Lo_ak (g_a - g_{n+1}) ||^2,   d_k > 0.
 
 mu > 0. Linear functions are not in the class and nothing forces a face: the quadratics (mu/2)||x||^2 and
 (1/2)||x||^2 make every Q_pq vanish, but their v_k are < 0. Below the threshold S can be positive definite, and the
@@ -30,7 +30,7 @@ LDL^T is of S itself, in the coordinates g_0..g_{n+1}. At the threshold S is sin
 pivots, allowed only when the rest of their column vanishes, so that S = Lo diag(d) Lo^T with d >= 0 still proves
 S >= 0 (only the squares with d_k > 0 are stored). TIGHT gives such a certificate in closed form.
 
-The multipliers come from a numerical SDP (cvxpy + Clarabel), are rounded to rationals, and the linear
+The multipliers come from a numerical SDP (cvxpy; Clarabel, then SCS), are rounded to rationals, and the linear
 equalities are then repaired exactly; every check below is in exact rational arithmetic (SymPy).
 """
 import itertools
@@ -162,13 +162,13 @@ def find_certificate(h, n, mu=0, denominators=(100, 1000, 10**4, 10**5, 10**6, 1
         if zf is None:
             continue  # sdp.solve has reported the status
         if margin < 1e-10:
-            reason = f"numerical margin {margin:.1e} is not positive"
+            reason = f"gives a numerical margin {margin:.1e}, which is not positive"
         else:
             cert = _round_certificate(h, n, mu, pairs, A, b, zf, margin, denominators)
             if cert:
                 cert["sdp_solver"], cert["sdp_status"] = _numeric.last
                 return cert
-            reason = "its candidate fails the exact check"
+            reason = "gives a candidate that fails the exact check"
         if which + 1 < len(sdp.SOLVERS):
             print(f"  SDP {label}: {_numeric.last[0]} {reason}; trying {sdp.SOLVERS[which + 1][0]}",
                   file=sys.stderr, flush=True)
@@ -206,8 +206,9 @@ def _round_certificate(h, n, mu, pairs, A, b, zf, margin, denominators):
 
 
 def multipliers(cert):
-    """cert["lam"] as {(p, q): Rational}. Every key must be written exactly "p,q" (no leading zeros, signs or
-    spaces), so that two keys cannot name the same pair. Otherwise "0,1" and "00,1" were one pair for the check of
+    """cert["lam"] as {(p, q): Rational}. Every key must be written exactly "p,q" (no leading zeros, plus signs or
+    spaces), so that two keys cannot name the same pair; a negative index such as "-1,0" passes here and is rejected
+    by _well_formed. Otherwise "0,1" and "00,1" were one pair for the check of
     the function values but two terms of S: a record with both verified a false claim (v_1 <= 0 at kappa = 7/5,
     h = 181/100, where v_1 > 0 is possible). Raises ValueError on such a key."""
     lam = {}
@@ -235,7 +236,7 @@ def _well_formed(cert):
     values was never tested."""
     try:
         n, N = cert["n"], cert["N"]
-        # Exact types: bool is a subclass of int ({"n": true} passed as n = 1) and a float N = 3.0 equalled 3, then
+        # Exact types: bool is a subclass of int ({"n": true} passed as n = 1) and a float N = 3.0 equaled 3, then
         # failed later with a TypeError. Every rational is a string such as "9/5".
         if (type(n) is not int or type(N) is not int or not isinstance(cert["w"], list)
                 or not isinstance(cert["lam"], dict) or not isinstance(cert.get("kernel", []), list)):

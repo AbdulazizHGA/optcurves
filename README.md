@@ -45,9 +45,9 @@ Throughout, L = 1 (rescaling f covers every L), steps are h/L, and "convex" mean
 
 | n consecutive violations | impossible at h = `[exact]` | possible at h = `[exact]` | PEP threshold h_n `[numerical]` |
 |---|---|---|---|
-| 1 | 1.75 (Barzilai et al.) | any h > 1.75 (Barzilai et al.) | 1.75000 |
+| 1 | 1.75 (Barzilai et al.) | every h in (1.75, 2) (Barzilai et al.) | 1.75000 |
 | 2 | 1.8634 = 9317/5000 | 1.8635 = 3727/2000 (in ℝ³) | 1.86345 |
-| 3 | 1.9 = 19/10 | 1.9001 = 19001/10000 (in ℝ⁴) | 1.90005 |
+| 3 | 1.9 = 19/10 | 1.9001 = 19001/10000 (in ℝ³, stored in ℚ⁴) | 1.90005 |
 | 4 | 1.91955 = 38391/20000 | 1.91965 = 38393/20000 (in ℝ⁴) | 1.91960 |
 | 5 | 1.93215 = 38643/20000 | 1.93225 = 38645/20000 (in ℝ⁵) | 1.93222 |
 | 6 | 1.9411 = 19411/10000 | 1.9412 = 9706/5000 (in ℝ⁵) | 1.94120 |
@@ -75,15 +75,15 @@ Throughout, L = 1 (rescaling f covers every L), steps are h/L, and "convex" mean
   f̃ is only (μh/h′)-strongly convex.
 * `[numerical]` PEP thresholds: PEPit 0.5.1, Clarabel 0.11.1, "no violation" = worst case ≤ 10⁻⁷, bisection on
   [1.5, 1.9999]. A point that Clarabel leaves "inaccurate" is solved again with SCS 3.3.1 (eps = 1e-9). If SCS does
-  not reach "optimal" either, the point is *unresolved*: it decides nothing, the bisection tries another point of the
-  bracket, and if no point can be decided the bracket stays wider. Every threshold in [results/](results/) stores
-  its number of solves, of SCS fallbacks and of unresolved points, and where these were. The window x₀, …, x_{n+1}
-  starts at a free point. Two normalizations, ‖x₀ − x*‖ ≤ 1 (functions with a minimizer) and ‖∇f(x₀)‖ ≤ 1 (all
-  functions), give thresholds within 3 × 10⁻⁵ of each other; the table shows the first. Both lie inside every
-  exact bracket (checked in the tests).
-* Answer to the open question: yes, the curve can be concave at several consecutive steps, and each extra step
-  needs a larger step size: 7/4 = h₁ < h₂ < … < h₆, proved by the brackets above. The PEP values increase by 0.113,
-  0.037, 0.020, 0.013 and 0.009 up to h₆ ≈ 1.9412. We computed n ≤ 6 only; whether h_n → 2 as n → ∞ is not known.
+  not reach "optimal" either, the point is *unresolved*: it decides nothing, the bisection tries another point of
+  the bracket, and if no point can be decided the bracket stays wider. Every threshold in [results/](results/)
+  stores its numbers of solves, SCS fallbacks and unresolved points, and for each unresolved point where it was and
+  the solver statuses that left it so. The window x₀, …, x_{n+1} starts at a free point. Two normalizations,
+  ‖x₀ − x*‖ ≤ 1 (functions with a minimizer) and ‖∇f(x₀)‖ ≤ 1 (all functions), give thresholds within 3 × 10⁻⁵ of
+  each other; the table shows the first. Both lie inside every exact bracket (checked in the tests).
+* Answer to the open question: yes, the curve can be concave at several consecutive steps, and each extra
+  violation needs a larger step size: 7/4 = h₁ < h₂ < … < h₆, proved by the brackets above. The PEP thresholds
+  increase by 0.113, 0.037, 0.020, 0.013 and 0.009 up to h₆ ≈ 1.9412. We computed n ≤ 6 only; whether h_n → 2 as n → ∞ is not known.
 
 ![Worst-case min(v₁, …, v_n) against h](figures/consecutive.png)
 
@@ -150,14 +150,14 @@ because the rescaling used there lowers the strong convexity.
 | ∞ (μ = 0) | 1.7500 | 1.8634 | 1.9001 | 1.75 |
 
 Every bracket we computed lies above its convex counterpart and decreases in κ (for n = 1 this is part 4 of the
-theorem). Of the 2337 solves behind [results/strong.json](results/strong.json), 179 fell back to SCS (in 36 of the
-93 thresholds, all with κ ≤ 6), and 52 points, in 18 thresholds with κ ≤ 3, stayed unresolved; each threshold stores
-these counts, the unresolved points and the solver statuses that left each one unresolved. Five brackets are left open: h₁ at κ = 1.5 and 2 and h₃ at κ = 3 (widths
-9.5 × 10⁻⁷, 6.7 × 10⁻⁸ and 4.5 × 10⁻⁸), and h₂ and h₃ at κ = 1.05 (below). Since h₁(κ) is proved, it measures the
-pipeline: the 29 full-width brackets of h₁(κ) lie 5.4 × 10⁻⁸ to 2.5 × 10⁻⁷ above the exact value (PEP values
-≤ 10⁻⁷ count as no violation), and the two open ones are within 7.3 × 10⁻⁷ of it. (An earlier version used the
-inaccurate SCS values. It was then up to 4.3 × 10⁻⁶ off in h₁, reported h₂(1.05) = 1.99209 and found no three
-consecutive violations at κ = 1.05.)
+theorem). Of the 2337 solves behind [results/strong.json](results/strong.json), 179 fell back to SCS (in 36 of the 93
+thresholds, all with κ ≤ 6), and 52 points, in 18 thresholds with κ ≤ 3, stayed unresolved; each threshold stores
+these counts, the unresolved points and the solver statuses that left each one unresolved. Five brackets are left
+open: h₁ at κ = 1.5 and 2 and h₃ at κ = 3 (widths 9.5 × 10⁻⁷, 6.7 × 10⁻⁸ and 4.5 × 10⁻⁸), and h₂ and h₃ at κ = 1.05
+(below). Since h₁(κ) is proved, it measures the pipeline: the 29 full-width brackets of h₁(κ) lie 5.4 × 10⁻⁸ to 2.5 ×
+10⁻⁷ above the exact value (PEP values ≤ 10⁻⁷ count as no violation), and the two open ones are within 7.3 × 10⁻⁷ of
+it. (An earlier version used the inaccurate SCS values. It was then up to 4.3 × 10⁻⁶ off in h₁, reported h₂(1.05) =
+1.99209 and found no three consecutive violations at κ = 1.05.)
 
 At κ = 1.05 both solvers fail at some points near h = 2. For n = 3 the bracket stays [1.99218, 1.99510]
 `[numerical]` (the points tried between 1.9929 and 1.9944, and 1.9995 and 1.9999, are unresolved), and an exact
@@ -180,8 +180,8 @@ contain two, h₂(1.05) ≤ 1.99510 `[numerical]`, and the same exact data have 
 
 So for one violation the set of bad step sizes is exactly the interval (h₁(κ), 2). The formula was first found by
 fitting integer quadratics to the PEP numbers (it was listed here as a conjecture); the exact study at κ = 7/5 below
-exposed the certificate that proves it. The literature checks below (18–20 October 2026) found no earlier statement of
-this threshold.
+exposed the certificate that proves it. The literature checks below (18–21 October 2026) found no earlier statement
+of this threshold.
 
 *Proof.* Put q = 2μh² − 4(1 + μ)h + μ + 7 = μ(2h² − 4(1 + κ)h + 7κ + 1). Since q(0) = 7 + μ > 0 > μ − 1 = q(2)
 and q is convex in h, for 0 < h < 2 we have q ≥ 0 iff h ≤ h₁(κ). The interpolation inequalities of 1-smooth
@@ -235,8 +235,8 @@ and the bound is attained for every h: by x₀ = x* when h ≤ h₁(κ) (then c 
 h₁ = 7/4, the theorem of Barzilai, Shamir and Zamani), and by the one-dimensional data of part 2 when
 h₁(κ) < h < 2. So the PEP worst case of one violation, the largest v₁ over f and ‖x₀ − x*‖ ≤ 1, is exactly
 h² max(0, −q) / (2D) (times L for a general L). For μ = 0 it is h²(4h − 7)/(2(2 + h²)) for 7/4 < h < 2, for
-example 0.0618 at h = 1.8. The literature check below (20 October 2026) found no earlier statement of this value,
-also not for μ = 0. The nearest is the inequality that ends the proof of Theorem 1 of Barzilai, Shamir and Zamani:
+example 0.0618 at h = 1.8. The literature checks below (20 and 21 October 2026) found no earlier statement of
+this value, also not for μ = 0. The nearest is the inequality that ends the proof of Theorem 1 of Barzilai, Shamir and Zamani:
 for h > 7/4 it gives v₁ ≤ (h/2 − 7/8)‖g₁ − g₀‖² ≤ h²(4h − 7)/8 · ‖x₀ − x\*‖² (as ‖g₁ − g₀‖ ≤ h‖g₀‖ ≤ h‖x₀ − x\*‖),
 a constant (2 + h²)/4 times the exact one, that is 1.27 to 1.5 times as large.
 
@@ -270,7 +270,9 @@ random rational points, that the certificate is valid (exact LDLᵀ) exactly whe
 of part 1 at rational points of the threshold curve, and that the violations of every stored counterexample obey the
 bound. Numerically, the PEP maximum of v₁ over ‖x₀ − x*‖ ≤ 1 agrees with h²(−q)/(2D) within a relative 1.6 × 10⁻⁷
 at 20 points (κ = 1.1, 1.5, 2, 10 and 100; h = h₁(κ) + 0.01, (h₁(κ) + 2)/2, 1.95 and 1.99), all solved to "optimal"
-([results/side.json](results/side.json)); four of them are also in the tests. The proof is not formalized in Lean.
+([results/side.json](results/side.json)). The tests check these 20 stored values and solve the PEP again at four
+further points (κ = 1.5, 2 and 10, and μ = 0; one of them, κ = 2 with h = 1.95, is among the 20), within a relative
+10⁻⁴. The proof is not formalized in Lean.
 
 **The case κ = 7/5 `[exact]`, which led to the proof.** There h₁ = 9/5 is rational, so before the theorem the
 formula could be tested in exact arithmetic. One violation v₁ > 0 for 1-smooth 5/7-strongly convex f ("impossible":
@@ -341,11 +343,11 @@ SCS have tried, and each threshold stores those points with their statuses (`unr
 "infeasible" or "unbounded" stops the run, since every PEP here is feasible and bounded by construction. An unresolved
 point decides no threshold, would be a gap in the first figure (none is), and is refused by `pep.max_min_violation`,
 the shortcut the tests use. During a solve only CVXPY's "Solution may be inaccurate" warning is silenced (that status
-is handled); any other warning is shown. The solutions of the hand-built SDPs (items 2 and 3) are only candidates for the exact check
-([src/optcurves/sdp.py](src/optcurves/sdp.py)): Clarabel first, SCS if Clarabel gives no candidate or its candidate
-fails the exact check, and a clear failure if neither gives one. Each record stores the solver and its status. All
-are "optimal" except the three violations at κ = 1.05, where Clarabel stops "optimal_inaccurate" and its rounded data
-pass the exact check (the SCS candidate there, also inaccurate, fails it).
+is handled); any other warning is shown. The solutions of the hand-built SDPs (items 2 and 3) are only candidates for
+the exact check ([src/optcurves/sdp.py](src/optcurves/sdp.py)): Clarabel first, SCS if Clarabel gives no candidate or
+its candidate fails the exact check, and a clear failure if neither gives one. Each record stores the solver and its
+status. All are "optimal" except the three violations at κ = 1.05, where Clarabel stops "optimal_inaccurate" and its
+rounded data pass the exact check (the SCS candidate there, also inaccurate, fails it).
 
 ## Limitations
 
@@ -366,7 +368,7 @@ pass the exact check (the SCS candidate there, also inaccurate, fails it).
 ## Reproduce
 
 Python ≥ 3.11 (CVXPY 1.8 and later need it; the tests pass with Python 3.11 and 3.13). Every number above comes from
-these commands (about 7 minutes in total on an M1 laptop, mostly `study strong` and `side`).
+these commands (about 10 minutes in total on an M1 laptop, mostly `study strong` and `side`).
 
 **Exact reproduction**, with the package versions of our run pinned in [requirements-lock.txt](requirements-lock.txt)
 (Python 3.13, macOS arm64):
@@ -479,41 +481,46 @@ verification, which was not bypassed.
 
 ## ملخص بالعربية
 
-**السؤال:** هل يمكن أن يفقد منحنى التحسين k ↦ f(x_k) لطريقة الانحدار التدريجي بخطوة ثابتة h/L تحدّبه في عدة
-خطوات متتالية؟ هذا سؤال مفتوح طرحه Barzilai وShamir وZamani (مجلة TMLR، 2025).
+**السؤال:** نكتب v_k = 2f(x_k) − f(x_{k−1}) − f(x_{k+1})، ونقول إن في الخطوة k انكسارًا للتحدّب إذا كان v_k > 0.
+هل يمكن أن يقع الانكسار في عدة خطوات متتالية لمنحنى التحسين k ↦ f(x_k) لطريقة الانحدار التدريجي بطول خطوة ثابت
+h/L على دالة محدبة L-ملساء؟ هذا سؤال مفتوح طرحه Barzilai وShamir وZamani (مجلة TMLR، 2025). **والجواب: نعم**،
+وكل انكسار إضافي يحتاج إلى طول خطوة أكبر.
 
-**ما ثبت:**
-- **[دقيق]** الانكساران المتتاليان مستحيلان عند h = 1.8634، وممكنان عند h = 1.8635. وبالمثل ثلاثة انكسارات:
-  مستحيلة عند 1.9 وممكنة عند 1.9001، ولأربعة وخمسة وستة نقطتان بينهما 10⁻⁴. والعتبة hₙ هي الحد الأدنى (infimum)
-  للخطوات التي يمكن عندها n انكسارات متتالية، وقد لا تُبلغ لأن الانكسار صارم.
-- **[دقيق]** للدوال المحدبة، الخطوات السيئة فترة تنتهي عند 2: إذا وقعت الانكسارات بالخطوة h على f فهي تقع بأي خطوة
-  h′ > h على (h/h′)f، وهي دالة 1-ملساء محدبة يزور فيها الانحدار التدريجي النقاط نفسها. فالفترات مبرهنة:
-  h₂ ∈ [1.8634، 1.8635] وh₃ ∈ [1.9، 1.9001]، وكذلك h₄ وh₅ وh₆، والعتبات تتزايد تمامًا حتى n = 6. ولا تمتد الحجة
-  إلى الدوال قوية التحدب، لأن (h/h′)f أقل تحدبًا من المطلوب.
-- **[دقيق]** الاستحالة شهادة كسرية تصح لكل دالة محدبة L-ملساء في أي فضاء ضرب داخلي. والإمكان مثال مضاد ببيانات
+**النتائج:**
+- **[دقيق]** الانكساران المتتاليان مستحيلان عند h = 1.8634 وممكنان عند h = 1.8635، والانكسارات الثلاثة مستحيلة عند
+  1.9 وممكنة عند 1.9001، وللأربعة والخمسة والستة فترات حصر عرضها 10⁻⁴. والعتبة hₙ هي أكبر حد أدنى (infimum)
+  لأطوال الخطوة التي تقع عندها n انكسارات متتالية، وقد لا تُبلغ، لأن شرط الانكسار v_k > 0 متباينة تامة.
+- **[دقيق]** للدوال المحدبة، أطوال الخطوة السيئة فترة تنتهي عند 2: إذا وقعت الانكسارات بطول الخطوة h على f فإنها
+  تقع بأي طول h′ > h على (h/h′)f، وهي دالة 1-ملساء محدبة يزور فيها الانحدار التدريجي النقاط نفسها، وتُضرب فيها كل
+  v_k في h/h′ > 0. لذلك فترات الحصر مبرهنة: h₂ ∈ [1.8634، 1.8635] وh₃ ∈ [1.9، 1.9001]، وكذلك h₄ وh₅ وh₆،
+  والعتبات متزايدة تمامًا: 7/4 = h₁ < h₂ < … < h₆. ولا تمتد الحجة إلى الدوال قوية التحدب، لأن ثابت التحدب القوي
+  للدالة (h/h′)f هو μh/h′ < μ.
+- **[دقيق]** الاستحالة شهادة كسرية تصح لكل دالة محدبة L-ملساء على أي فضاء ضرب داخلي. والإمكان مثال مضاد ببيانات
   كسرية، يتحول إلى دالة فعلية بمبرهنة الاستيفاء لـ Taylor وHendrickx وGlineur (2017).
-- **[Lean]** ست مبرهنات (عند 9/5 و1.8634 لانكسارين، وعند 19/10 لثلاثة) تحققت منها نواة Lean مع Mathlib، ولا
-  تعتمد إلا على المسلّمات الثلاث القياسية. فرضياتها متباينات الاستيفاء، ولمّة الجسر إلى الدوال غير مبرهنة.
-- **[عددي]** للدوال قوية التحدب: العتبات ترتفع كلما صغر κ = L/μ. النقاط التي لا يصل فيها أيٌّ من المحلّلين
-  (Clarabel ثم SCS) إلى الحالة optimal ضمن تسامحه لا تُستعمل في الحكم، فتبقى خمس فترات مفتوحة. والحالة optimal
-  نفسها نتيجة عددية، لا برهان بحساب كسري.
-- **[دقيق]** عند κ = 1.05 ثلاثة انكسارات متتالية ممكنة عند h = 1.999 (مثال مضاد ببيانات كسرية في مستوى). كانت النسخة السابقة
-  تقبل قيمة SCS غير الدقيقة فتقول إنه لا انكسار.
-- **[دقيق، مبرهنة]** لانكسار واحد في الدوال قوية التحدب، ولكل κ > 1، العتبة هي بالضبط
-  h₁(κ) = (1 + κ) − √((1 + κ)² − (7κ + 1)/2). إذا كان h ≤ h₁(κ) فالانكسار مستحيل لكل دالة في أي فضاء ضرب داخلي
+- **[Lean]** ثلاث شهادات (عند 9/5 و1.8634 لانكسارين، وعند 19/10 لثلاثة)، في ست مبرهنات بصيغتيها الموزونة
+  والعادية، تحققت منها نواة Lean مع Mathlib، ولا تعتمد إلا على المسلّمات الثلاث القياسية. فرضياتها متباينات
+  الاستيفاء، ولمّة الجسر إلى الدوال (مبرهنة Nesterov 2.1.5) معروفة لكنها غير مصاغة في Lean.
+- **[عددي]** للدوال قوية التحدب: ترتفع العتبات كلما صغر κ = L/μ، وتبقى فوق نظيراتها للدوال المحدبة. والنقاط التي
+  لا يصل فيها أيٌّ من برنامجَي الحل (Clarabel ثم SCS) إلى الحالة optimal ضمن تسامحه لا تُستعمل في الحكم، فتبقى
+  خمس فترات حصر غير محسومة. والحالة optimal نفسها نتيجة عددية، لا برهان بحساب كسري.
+- **[دقيق]** عند κ = 1.05 تقع ثلاثة انكسارات متتالية عند h = 1.999 (مثال مضاد ببيانات كسرية في مستوٍ). وكانت
+  نسخة سابقة من المستودع تقبل قيمة SCS غير الدقيقة، فلم تجد ثلاثة انكسارات متتالية عند κ = 1.05.
+- **[دقيق، مبرهنة]** لانكسار واحد في الدوال قوية التحدب، ولكل κ > 1 و0 < h < 2، العتبة هي بالضبط
+  h₁(κ) = (1 + κ) − √((1 + κ)² − (7κ + 1)/2). إذا كان h ≤ h₁(κ) فالانكسار مستحيل لكل دالة على أي فضاء ضرب داخلي
   (شهادة من ثلاث متباينات استيفاء بمعاملات صريحة في h وμ)، وإذا كان h₁(κ) < h < 2 فهو ممكن بدالة في متغير واحد،
-  وعند h = h₁(κ) تتحقق المساواة v₁ = 0. فمجموعة الخطوات السيئة هي الفترة (h₁(κ)، 2) بالضبط. تحقّقنا من كل
+  وعند h = h₁(κ) تتحقق المساواة v₁ = 0. فمجموعة أطوال الخطوة السيئة هي الفترة (h₁(κ)، 2) بالضبط. تحققنا من كل
   متطابقات البرهان رمزيًا في SymPy (لا في Lean). كانت الصيغة حدسية مستخلصة من الأرقام، وحالة κ = 7/5 (حيث
   h₁ = 9/5) هي التي كشفت بنية البرهان. ومع μ = 0 تعطي الصيغ نفسها العتبة المعروفة 7/4.
-- **[دقيق، مبرهنة]** وفوق العتبة، هذا المثال أحادي البعد هو الحالة الأسوأ بالضبط: لكل دالة 1-ملساء μ-قوية التحدب
-  (ومع μ = 0 لكل دالة محدبة لها نقطة صغرى) ولكل نقطة بداية يتحقق v₁ ≤ c‖x₀ − x*‖² حيث
-  c = h²(−q) / (2(2 + h²(1 − μ)))، وq = 2μh² − 4(1 + μ)h + μ + 7، والمساواة تتحقق. البرهان شهادة من خمس متباينات
-  استيفاء تشمل النقطة الصغرى x*، وهي امتداد لشهادة العتبة نفسها بعد تجاوزها، وتحقّقنا منها رمزيًا في SymPy.
-  ومع μ = 0 تصبح القيمة القصوى h²(4h − 7) / (2(2 + h²)) للدوال المحدبة. كانت هذه القيمة حدسية مستخلصة من
-  تطابق عددي حتى 1.6 × 10⁻⁷ في 20 نقطة.
+- **[دقيق، مبرهنة]** القيمة القصوى للانكسار: لكل 0 < h < 2، ولكل دالة 1-ملساء μ-قوية التحدب (ومع μ = 0 لكل دالة
+  محدبة لها نقطة صغرى)، ولكل نقطة بداية، يتحقق v₁ ≤ c‖x₀ − x*‖² حيث c = h² max(0, −q) / (2(2 + h²(1 − μ)))
+  وq = 2μh² − 4(1 + μ)h + μ + 7. والحد يُبلغ لكل h: تحت العتبة عند x₀ = x*، وفوقها بالمثال أحادي البعد السابق.
+  البرهان شهادة من خمس متباينات استيفاء تشمل النقطة الصغرى x*، وهي امتداد لشهادة العتبة بعد تجاوزها، وتحققنا
+  منها رمزيًا في SymPy. ومع μ = 0 تصبح القيمة القصوى h²(4h − 7) / (2(2 + h²)) للدوال المحدبة عندما h > 7/4.
+  وتتفق هذه القيمة عدديًا مع القيمة العظمى في PEP بفرق نسبي لا يتجاوز 1.6 × 10⁻⁷ في 20 نقطة.
 
-**ما بقي مفتوحاً:** برهان أن مجموعة الخطوات السيئة فترة لانكسارين متتاليين فأكثر في الدوال قوية التحدب، وصيغة
-مغلقة لـ h₂ وما بعدها، وصياغة برهانَي العتبة h₁(κ) والقيمة الأسوأ في Lean، وطرق أخرى مثل Heavy Ball وNesterov.
+**ما بقي مفتوحًا:** برهان أن أطوال الخطوة السيئة فترة لانكسارين متتاليين فأكثر في الدوال قوية التحدب، وصيغة مغلقة
+لـ h₂ وما بعدها، وهل hₙ → 2 عندما n → ∞، وصياغة برهانَي العتبة h₁(κ) والقيمة القصوى للانكسار في Lean، وطرق أخرى
+مثل Heavy Ball وNesterov.
 
 ## Citation and license
 

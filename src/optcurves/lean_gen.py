@@ -3,9 +3,9 @@ and 9317/5000 for n = 2, h = 19/10 for n = 3); the other certificates are checke
 
     python -m optcurves.lean_gen      # writes lean/Optcurves/Certificates.lean
 
-Each theorem says: for any sequence x_k, g_k, f_k in a real inner-product space with
+Each theorem says: for any sequences x_k, g_k in a real inner-product space and reals f_k with
 x_{k+1} = x_k - h g_k and the interpolation inequality of 1-smooth convex functions between every two
-points of the window, sum_k w_k v_k <= 0; a corollary rules out n consecutive violations.
+iterates, sum_k w_k v_k <= 0; a corollary rules out n consecutive violations.
 The proof is the certificate: the multipliers lam and the LDL^T sum of squares are fed to `linarith`.
 """
 import json
