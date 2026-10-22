@@ -1,7 +1,9 @@
-# optcurves: gradient descent optimization curves, convexity and consecutive violations
+<h1 align="center">optcurves: gradient descent optimization curves, convexity and consecutive violations</h1>
 
-[![Lean](https://github.com/AbdulazizHGA/optcurves/actions/workflows/lean.yml/badge.svg)](https://github.com/AbdulazizHGA/optcurves/actions/workflows/lean.yml)
-[![Python](https://github.com/AbdulazizHGA/optcurves/actions/workflows/python.yml/badge.svg)](https://github.com/AbdulazizHGA/optcurves/actions/workflows/python.yml)
+<p align="center">
+  <a href="https://github.com/AbdulazizHGA/optcurves/actions/workflows/lean.yml"><img src="https://github.com/AbdulazizHGA/optcurves/actions/workflows/lean.yml/badge.svg" alt="Lean"></a>
+  <a href="https://github.com/AbdulazizHGA/optcurves/actions/workflows/python.yml"><img src="https://github.com/AbdulazizHGA/optcurves/actions/workflows/python.yml/badge.svg" alt="Python"></a>
+</p>
 
 `optcurves` studies **consecutive convexity violations of gradient descent optimization curves** for smooth
 convex and strongly convex functions. It combines **performance estimation problems (PEP)** using PEPit and
@@ -16,8 +18,10 @@ reproducible experiments.
 وللقيمة القصوى الدقيقة للانكسار فوق هذه العتبة.
 [اقرأ الملخص العربي](#ملخص-بالعربية).
 
-[Results](#results) · [Method](#method) · [Reproduce](#reproduce) ·
-[Related work](#related-work-and-literature-check) · [Citation and license](#citation-and-license)
+<p align="center">
+  <a href="#results">Results</a> · <a href="#method">Method</a> · <a href="#reproduce">Reproduce</a> ·
+  <a href="#related-work-and-literature-check">Related work</a> · <a href="#citation-and-license">Citation and license</a>
+</p>
 
 ## Research question
 
