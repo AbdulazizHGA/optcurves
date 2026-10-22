@@ -3,6 +3,10 @@
 <p align="center">
   <a href="https://github.com/AbdulazizHGA/optcurves/actions/workflows/lean.yml"><img src="https://github.com/AbdulazizHGA/optcurves/actions/workflows/lean.yml/badge.svg" alt="Lean"></a>
   <a href="https://github.com/AbdulazizHGA/optcurves/actions/workflows/python.yml"><img src="https://github.com/AbdulazizHGA/optcurves/actions/workflows/python.yml/badge.svg" alt="Python"></a>
+  <a href="https://github.com/AbdulazizHGA/optcurves/releases/latest"><img src="https://img.shields.io/github/v/release/AbdulazizHGA/optcurves?label=release" alt="Latest release"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/AbdulazizHGA/optcurves" alt="License: Apache-2.0"></a>
+  <a href="pyproject.toml"><img src="https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2FAbdulazizHGA%2Foptcurves%2Fmain%2Fpyproject.toml" alt="Python version"></a>
+  <a href="lean/lean-toolchain"><img src="https://img.shields.io/badge/Lean-4.35.0%20%2B%20Mathlib-blue" alt="Lean 4.35.0 + Mathlib"></a>
 </p>
 
 `optcurves` studies **consecutive convexity violations of gradient descent optimization curves** for smooth
